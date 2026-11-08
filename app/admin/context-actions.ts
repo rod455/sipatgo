@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { ADMIN_CAMPAIGN_COOKIE, ADMIN_COMPANY_COOKIE, getAdminContext } from "@/lib/auth";
 
 export async function selectCampaign(id: string) {
@@ -18,4 +19,5 @@ export async function selectCompany(id: string) {
   jar.set(ADMIN_COMPANY_COOKIE, id, { path: "/", httpOnly: true, sameSite: "lax" });
   jar.delete(ADMIN_CAMPAIGN_COOKIE);
   revalidatePath("/admin", "layout");
+  redirect("/admin");
 }

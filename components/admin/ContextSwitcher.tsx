@@ -26,3 +26,14 @@ export function ContextSwitcher({ campaigns, campaignId, companies, companyId }:
     </div>
   );
 }
+
+export function CompanySwitcher({ companies, companyId }: { companies: { id: string; name: string }[]; companyId: string }) {
+  const [pending, start] = useTransition();
+  return (
+    <select disabled={pending} value={companyId} onChange={(e) => start(() => selectCompany(e.target.value))}
+      aria-label="Empresa gerenciada"
+      className="h-10 w-full rounded-lg border-0 bg-white/10 px-2 text-sm font-semibold text-white [&>option]:text-slate-900">
+      {companies.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+    </select>
+  );
+}

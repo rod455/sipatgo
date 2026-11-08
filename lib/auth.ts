@@ -59,10 +59,21 @@ export async function getAdminContext(): Promise<AdminContext | null> {
   let adminCompany = v.company;
   if (v.participant.role === "superadmin") {
     const cid = jar.get(ADMIN_COMPANY_COOKIE)?.value;
+    let picked: Company | undefined;
     if (cid && /^[0-9a-f-]{36}$/.test(cid)) {
-      const [c] = await sql<Company[]>`select * from sipatgo.companies where id = ${cid}`;
-      if (c) adminCompany = c;
+      [picked] = await sql<Company[]>`select * from sipatgo.companies where id = ${cid}`;
     }
+    if (!picked) {
+      // sem escolha: empresa cliente mais recente que tenha campanha (nunca a interna)
+      [picked] = await sql<Company[]>`
+        select co.* from sipatgo.companies co
+         where co.id <> ${v.company.id}
+         order by exists(select 1 from sipatgo.campaigns ca where ca.company_id = co.id and ca.status <> 'closed') desc,
+                  exists(select 1 from sipatgo.campaigns ca where ca.company_id = co.id) desc,
+                  co.created_at desc
+         limit 1`;
+    }
+    if (picked) adminCompany = picked;
   }
   const campaigns = await sql<Campaign[]>`
     select * from sipatgo.campaigns where company_id = ${adminCompany.id} order by start_date desc, created_at desc`;

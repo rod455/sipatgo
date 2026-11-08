@@ -4,7 +4,7 @@ import { requireAdmin } from "@/lib/auth";
 import { sql } from "@/lib/db";
 import { brandStyle } from "@/lib/theme";
 import { AdminNav } from "@/components/admin/AdminNav";
-import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
+import { CompanySwitcher, ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { MadeWith } from "@/components/app/MadeWith";
 
 export const metadata: Metadata = { title: "Painel — SipatGo", robots: { index: false } };
@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const ctx = await requireAdmin();
   const superadmin = ctx.participant.role === "superadmin";
-  const companies = superadmin ? await sql<{ id: string; name: string }[]>`select id, name from sipatgo.companies order by name` : undefined;
+  const companies = superadmin ? await sql<{ id: string; name: string }[]>`select id, name from sipatgo.companies order by (slug = 'sipatgo'), name` : undefined;
   const badges: Record<string, number> = {};
   if (ctx.campaign) {
     const [b] = await sql<{ posts: number; prizes: number }[]>`
@@ -34,14 +34,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <span className="hidden sm:inline">{ctx.adminCompany.name}</span>
           </Link>
           <div className="ml-auto flex items-center gap-3">
-            <ContextSwitcher campaigns={ctx.campaigns.map((c) => ({ id: c.id, name: c.name, status: c.status }))} campaignId={ctx.campaign?.id ?? null}
-              companies={companies} companyId={ctx.adminCompany.id} />
+            <ContextSwitcher campaigns={ctx.campaigns.map((c) => ({ id: c.id, name: c.name, status: c.status }))} campaignId={ctx.campaign?.id ?? null} companyId={ctx.adminCompany.id} />
             <Link href="/app" className="hidden text-sm font-medium text-slate-600 hover:text-slate-900 sm:inline">Ver como participante</Link>
           </div>
         </div>
       </header>
       <div className="lg:flex">
-        <aside className="border-b border-slate-200 bg-white pt-2 lg:sticky lg:top-14 lg:h-[calc(100dvh-3.5rem)] lg:w-60 lg:shrink-0 lg:border-b-0 lg:border-r lg:pt-4">
+        <aside className="border-b border-slate-200 bg-white pt-2 lg:sticky lg:top-14 lg:h-[calc(100dvh-3.5rem)] lg:w-60 lg:shrink-0 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:pt-4">
+          {companies && (
+            <div className="mx-3 mb-3 rounded-xl bg-slate-900 p-3 text-white">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-white/60">Empresa gerenciada</p>
+              <CompanySwitcher companies={companies} companyId={ctx.adminCompany.id} />
+            </div>
+          )}
           <AdminNav superadmin={superadmin} badges={badges} />
           <MadeWith className="mt-6 hidden lg:block" />
         </aside>

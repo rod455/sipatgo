@@ -6,6 +6,8 @@ import { TZDate } from "@date-fns/tz";
 import { Card, Field, Input, PageTitle, Select, Textarea, Alert } from "@/components/ui";
 import { ActionButton, ActionForm } from "@/components/admin/ActionForm";
 import { closeNow, createCampaign, reissueCertificates, saveCampaign } from "./actions";
+import { selectCompany } from "../context-actions";
+import { sql } from "@/lib/db";
 
 function toLocalInput(d: Date, tz: string) {
   const z = new TZDate(d.getTime(), tz);
@@ -19,6 +21,12 @@ export default async function CampaignPage({ searchParams }: { searchParams: Pro
   const c = ctx.campaign;
   const tz = ctx.adminCompany.timezone;
   const days = c ? await loadDays(c.id) : [];
+  const others = !c && ctx.participant.role === "superadmin"
+    ? await sql<{ id: string; name: string }[]>`
+        select co.id, co.name from sipatgo.companies co
+         where co.id <> ${ctx.adminCompany.id} and exists(select 1 from sipatgo.campaigns ca where ca.company_id = co.id)
+         order by co.name`
+    : [];
 
   return (
     <div className="max-w-3xl space-y-6">
@@ -66,10 +74,23 @@ export default async function CampaignPage({ searchParams }: { searchParams: Pro
         </Card>
       )}
 
+      {!c && others.length > 0 && (
+        <Card className="space-y-3 border-amber-200 bg-amber-50">
+          <p className="text-sm text-amber-900">Quer gerenciar outra empresa? Estas já têm campanha:</p>
+          <div className="flex flex-wrap gap-2">
+            {others.map((o) => (
+              <form key={o.id} action={selectCompany.bind(null, o.id)}>
+                <button className="rounded-lg bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-amber-200 hover:bg-amber-100">{o.name} →</button>
+              </form>
+            ))}
+          </div>
+        </Card>
+      )}
+
       <Card className="space-y-3">
         <h2 className="font-display font-bold">Nova campanha</h2>
         <p className="text-sm text-slate-600">Cria a semana completa (5 dias, dinâmicas e games de exemplo) para você só ajustar.</p>
-        {!c && <Alert tone="blue">Comece criando a primeira campanha da empresa.</Alert>}
+        {!c && <Alert tone="blue">A empresa <strong>{ctx.adminCompany.name}</strong> ainda não tem campanha. Crie a primeira abaixo.</Alert>}
         <ActionForm action={createCampaign} submitLabel="Criar campanha" className="space-y-3">
           <div className="grid gap-3 sm:grid-cols-3">
             <Field label="Nome"><Input name="name" placeholder="SIPAT 2026" required /></Field>
