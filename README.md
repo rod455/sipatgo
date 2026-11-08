@@ -88,7 +88,7 @@ Cada disparo tem `dedupe_key`, então rodar várias vezes não duplica nada. O e
 
 - **Supabase `pg_cron` (principal, de hora em hora, grátis):** a migration `20261108000002_cron.sql` liga `pg_cron` + `pg_net` e cria uma chave guardada em `sipatgo.app_settings`. Depois do deploy, rode uma vez no SQL Editor:
   ```sql
-  select sipatgo.schedule_tick('https://SEU-DOMINIO');
+  select sipatgo.schedule_tick('https://SEU-DOMINIO');   -- já feito para https://sipatgo.vercel.app
   ```
 - **Vercel Cron (reserva):** `vercel.json` agenda uma chamada diária às 21:05 UTC (18:05 em Brasília, logo após o fechamento da sexta). O plano Hobby só aceita crons diários. Requer `CRON_SECRET`.
 
