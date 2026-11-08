@@ -11,8 +11,8 @@ export const PRIVACY_EMAIL = "privacidade@sipatgo.com.br";
 export const CNPJ = "CNPJ 00.000.000/0000-00 (a definir)";
 export const COPYRIGHT_YEAR = 2026;
 
-/** Número de WhatsApp só com dígitos (ex.: 5511999999999). Sem ele, os botões de WhatsApp somem. */
-export const WHATSAPP_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "").replace(/\D/g, "");
+/** WhatsApp comercial (só dígitos, com DDI 55). NEXT_PUBLIC_WHATSAPP_NUMBER sobrescreve. */
+export const WHATSAPP_NUMBER = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "5531994826794").replace(/\D/g, "");
 
 export function whatsappUrl(
   text = "Olá! Quero saber mais sobre a SipatGo para a SIPAT da minha empresa.",
