@@ -12,21 +12,20 @@ const S = DEMO_CLIENT.secondary;
 /**
  * O avanço é comandado pela própria barra do dia: quando ela termina de
  * encher (animationend), troca para o próximo. Assim barra e tela nunca
- * ficam fora de sincronia, e pausar (mouse em cima) pausa os dois juntos.
+ * ficam fora de sincronia. Não pausa com o mouse: o avanço é contínuo.
  */
 function useRotation(count: number) {
   const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
   const next = useCallback(() => setI((v) => (v + 1) % count), [count]);
-  return { i, setI, next, paused, setPaused };
+  return { i, setI, next };
 }
 
 /** Hero: verbo que troca + celular mostrando a semana avançar + cartão do RH. */
 export function HeroRotator({ children }: { children: React.ReactNode }) {
-  const { i, setI, next, paused, setPaused } = useRotation(HERO_DRIVERS.length);
+  const { i, setI, next } = useRotation(HERO_DRIVERS.length);
   const d = HERO_DRIVERS[i];
   return (
-    <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-8" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+    <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-8">
       <div>
         <h1 className="display-xl font-display text-[42px] font-extrabold leading-[1.04] text-sg-navy-900 sm:text-[56px] lg:text-[70px]">
           A SIPAT que todo mundo quer
@@ -42,7 +41,7 @@ export function HeroRotator({ children }: { children: React.ReactNode }) {
       </div>
 
       <div className="relative">
-        <Week index={i} paused={paused} onDone={next} />
+        <Week index={i} onDone={next} />
         <div className="relative mx-auto mt-5 flex max-w-[520px] justify-center">
           <div aria-hidden className="absolute inset-x-8 bottom-4 top-10 rotate-[-4deg] rounded-[48px] bg-sg-yellow-400 sm:inset-x-16" />
           <div aria-hidden className="absolute inset-x-12 bottom-0 top-16 rotate-[3deg] rounded-[48px] bg-sg-navy-900 sm:inset-x-20" />
@@ -68,7 +67,7 @@ export function HeroRotator({ children }: { children: React.ReactNode }) {
 }
 
 /** Seg→Sex: a semana avança junto com os slides. */
-function Week({ index, paused, onDone }: { index: number; paused: boolean; onDone: () => void }) {
+function Week({ index, onDone }: { index: number; onDone: () => void }) {
   return (
     <ol className="mx-auto flex max-w-[460px] items-center gap-1.5" aria-label="Semana da campanha">
       {HERO_DRIVERS.map((x, k) => (
@@ -79,7 +78,6 @@ function Week({ index, paused, onDone }: { index: number; paused: boolean; onDon
               <div
                 key={`f-${index}`}
                 className="sg-fill h-full w-full rounded-full bg-sg-orange-500"
-                style={{ animationPlayState: paused ? "paused" : "running" }}
                 onAnimationEnd={onDone}
               />
             ) : null}
