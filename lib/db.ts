@@ -9,10 +9,25 @@ declare global {
   var __sipatgoSql: postgres.Sql | undefined;
 }
 
+/**
+ * DATABASE_URL (preferencial) ou POSTGRES_URL (injetada pela integração
+ * Supabase da Vercel). Parâmetros extras da URL (ex.: "supa=base-pooler.x")
+ * são removidos, pois o driver os enviaria como parâmetros de sessão.
+ */
+export function databaseUrl(): { url: string; ssl: false | "require" } {
+  const raw = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL;
+  if (!raw) throw new Error("DATABASE_URL (ou POSTGRES_URL) não configurada");
+  const u = new URL(raw);
+  const local = ["localhost", "127.0.0.1", "::1"].includes(u.hostname);
+  const sslmode = u.searchParams.get("sslmode");
+  u.search = "";
+  return { url: u.toString(), ssl: local || sslmode === "disable" ? false : "require" };
+}
+
 function create(): postgres.Sql {
-  const url = process.env.DATABASE_URL;
-  if (!url) throw new Error("DATABASE_URL não configurada");
+  const { url, ssl } = databaseUrl();
   return postgres(url, {
+    ssl,
     prepare: false,
     max: Number(process.env.DB_POOL_MAX || 5),
     idle_timeout: 20,

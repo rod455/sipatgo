@@ -19,7 +19,8 @@ export function pct(n: number, d: number): number {
 }
 
 export function appBaseUrl(): string {
-  return (process.env.APP_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  return (process.env.APP_BASE_URL || (vercel ? `https://${vercel}` : "http://localhost:3000")).replace(/\/$/, "");
 }
 
 export function campaignUrl(slug: string): string {

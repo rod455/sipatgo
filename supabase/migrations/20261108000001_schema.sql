@@ -7,7 +7,7 @@
 -- =====================================================================
 
 create schema if not exists sipatgo;
-create extension if not exists pgcrypto;
+
 
 set search_path = sipatgo, public;
 
@@ -290,7 +290,7 @@ create table sipatgo.events (
   starts_at timestamptz not null,
   ends_at timestamptz not null,
   points int not null default 100,
-  secret text not null default encode(gen_random_bytes(16), 'hex'),
+  secret text not null default replace(gen_random_uuid()::text, '-', ''),
   code text not null unique,                 -- código curto de 6 chars para digitar
   created_at timestamptz not null default now(),
   check (ends_at > starts_at)

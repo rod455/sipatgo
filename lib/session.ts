@@ -11,7 +11,9 @@ export type SessionPayload = {
 };
 
 function key(): Uint8Array {
-  const s = process.env.SESSION_SECRET;
+  // SESSION_SECRET é o recomendado; na falta dele, usa um segredo de servidor
+  // já injetado pela integração Supabase (nunca exposto ao navegador).
+  const s = process.env.SESSION_SECRET || process.env.SUPABASE_JWT_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
   if (!s && process.env.NODE_ENV === "production") throw new Error("SESSION_SECRET não configurado");
   return new TextEncoder().encode(s || "dev-only-insecure-session-secret-change-me");
 }

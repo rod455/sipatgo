@@ -4,12 +4,13 @@
 import postgres from "postgres";
 
 const [name, cpfRaw, birth] = process.argv.slice(2);
-if (!process.env.DATABASE_URL || !name || !cpfRaw || !/^\d{4}-\d{2}-\d{2}$/.test(birth ?? "")) {
+if (!(process.env.DATABASE_URL || process.env.POSTGRES_URL) || !name || !cpfRaw || !/^\d{4}-\d{2}-\d{2}$/.test(birth ?? "")) {
   console.error('Uso: DATABASE_URL=... node scripts/create-superadmin.mjs "Nome" CPF AAAA-MM-DD');
   process.exit(1);
 }
 const cpf = cpfRaw.replace(/\D/g, "");
-const sql = postgres(process.env.DATABASE_URL, { prepare: false, max: 1 });
+const u = new URL(process.env.DATABASE_URL || process.env.POSTGRES_URL); const local = ["localhost", "127.0.0.1"].includes(u.hostname); u.search = "";
+const sql = postgres(u.toString(), { prepare: false, max: 1, ssl: local ? false : "require" });
 try {
   const [c] = await sql`
     insert into sipatgo.companies (slug, name, primary_color, secondary_color, accent_color)

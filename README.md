@@ -74,7 +74,7 @@ tests/               unitários + integração
 
 ## Jobs agendados
 
-Há um único endpoint idempotente, `GET /api/cron/tick` (com `Authorization: Bearer $CRON_SECRET`). `vercel.json` o chama de hora em hora. Cada empresa é avaliada no próprio fuso:
+Há um único endpoint idempotente, `GET /api/cron/tick`. Cada empresa é avaliada no próprio fuso:
 
 | Horário | O que faz |
 |---|---|
@@ -84,9 +84,15 @@ Há um único endpoint idempotente, `GET /api/cron/tick` (com `Authorization: Be
 | 00h | elege o post mais votado do mural |
 | Sexta 18h | encerramento da campanha |
 
-Cada disparo tem `dedupe_key`, então rodar várias vezes não duplica nada. Sem a Vercel, o mesmo endpoint pode ser chamado por `pg_cron`/`pg_net` ou pelo n8n. O encerramento também acontece de forma "preguiçosa" quando alguém acessa o app depois do prazo.
+Cada disparo tem `dedupe_key`, então rodar várias vezes não duplica nada. O endpoint aceita duas formas de chamada:
 
-> Vercel Hobby só permite crons diários. Para a frequência horária use o plano Pro ou um agendador externo (n8n/pg_cron).
+- **Supabase `pg_cron` (principal, de hora em hora, grátis):** a migration `20261108000002_cron.sql` liga `pg_cron` + `pg_net` e cria uma chave guardada em `sipatgo.app_settings`. Depois do deploy, rode uma vez no SQL Editor:
+  ```sql
+  select sipatgo.schedule_tick('https://SEU-DOMINIO');
+  ```
+- **Vercel Cron (reserva):** `vercel.json` agenda uma chamada diária às 21:05 UTC (18:05 em Brasília, logo após o fechamento da sexta). O plano Hobby só aceita crons diários. Requer `CRON_SECRET`.
+
+O encerramento também acontece de forma "preguiçosa" quando alguém acessa o app depois do prazo.
 
 ## Webhooks (n8n)
 
@@ -110,7 +116,17 @@ Tudo fica registrado em `sipatgo.notification_log`, e as últimas notificações
 
 ## Variáveis de ambiente
 
-Veja [`.env.example`](.env.example). Mínimo para rodar: `DATABASE_URL` e `SESSION_SECRET`. Para uploads (mural, logo, imagens, PDFs) e ranking ao vivo instantâneo, configure também as chaves do Supabase.
+Veja [`.env.example`](.env.example). Mínimo para rodar: `DATABASE_URL` e `SESSION_SECRET`.
+
+Com a integração Supabase da Vercel, o app também aceita as variáveis que ela injeta:
+
+| Variável recomendada | Fallback usado na falta dela |
+|---|---|
+| `DATABASE_URL` | `POSTGRES_URL` |
+| `SESSION_SECRET` | `SUPABASE_JWT_SECRET` / `SUPABASE_SERVICE_ROLE_KEY` |
+| `APP_BASE_URL` | `VERCEL_PROJECT_PRODUCTION_URL` |
+
+Ainda assim, defina `SESSION_SECRET` próprio: com ele, trocar as chaves do Supabase não desloga todo mundo. Para uploads (mural, logo, imagens, PDFs) e ranking ao vivo instantâneo, configure também as chaves do Supabase.
 
 ## Deploy (Vercel)
 

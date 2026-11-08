@@ -4,9 +4,10 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import postgres from "postgres";
 
-const url = process.env.DATABASE_URL;
-if (!url) { console.error("DATABASE_URL não definida"); process.exit(1); }
-const sql = postgres(url, { prepare: false, max: 1, onnotice: () => {} });
+const raw = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+if (!raw) { console.error("DATABASE_URL não definida"); process.exit(1); }
+const u = new URL(raw); const local = ["localhost", "127.0.0.1"].includes(u.hostname); u.search = "";
+const sql = postgres(u.toString(), { prepare: false, max: 1, onnotice: () => {}, ssl: local ? false : "require" });
 const dir = join(process.cwd(), "supabase", "migrations");
 
 try {

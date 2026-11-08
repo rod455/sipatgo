@@ -8,13 +8,13 @@ let client: SupabaseClient | null = null;
 const ensured = new Set<string>();
 
 export function storageEnabled() {
-  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+  return Boolean((process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL) && (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY));
 }
 
 function supa(): SupabaseClient {
   if (!storageEnabled()) throw new Error("Storage não configurado (NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)");
   if (!client) {
-    client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
+    client = createClient((process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)!, (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY)!, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
   }
@@ -47,7 +47,7 @@ export async function uploadFile(kind: BucketKind, path: string, body: ArrayBuff
 }
 
 export function publicUrl(path: string) {
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucketName("public")}/${path}`;
+  return `${(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL)}/storage/v1/object/public/${bucketName("public")}/${path}`;
 }
 
 export async function signedUrls(paths: string[], expiresIn = 3600): Promise<Record<string, string>> {

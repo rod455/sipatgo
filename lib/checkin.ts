@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 function secret(): string {
-  return process.env.CHECKIN_HMAC_SECRET || process.env.SESSION_SECRET || "dev-checkin-secret";
+  return process.env.CHECKIN_HMAC_SECRET || process.env.SESSION_SECRET || process.env.SUPABASE_JWT_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || "dev-checkin-secret";
 }
 
 function sign(eventId: string, eventSecret: string): string {
