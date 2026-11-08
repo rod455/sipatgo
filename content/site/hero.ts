@@ -1,25 +1,28 @@
 /**
- * Slides do hero da home. A palavra em destaque troca junto com a foto.
- * Imagens (opcionais) em /public/site/hero/: `{key}-cena.jpg` (fundo P&B) e
- * `{key}-pessoa.png` (recorte com fundo transparente). Prompts em
- * docs/site/hero-imagens.md. Sem as imagens, o hero usa um fundo ilustrado.
+ * Hero da home: "A SIPAT que todo mundo quer {verbo}."
+ * Cada verbo é um motor de engajamento que a plataforma já entrega, mostrado
+ * na tela do celular (participante) e no cartão do RH (empresa). A semana
+ * avança de segunda a sexta conforme os slides.
  */
-export type HeroSlide = {
-  key: string;
-  word: string;
-  segment: string;
-  /** Números do cartão de exemplo do painel. */
-  adesao: number;
-  setor: string;
-  dia: string;
+export type HeroDriver = {
+  key: "jogar" | "disputar" | "ganhar" | "familia" | "reconhecer";
+  verb: string;
+  tab: string;
+  day: string;
+  dayTheme: string;
+  /** O que a empresa ganha com isso (cartão do RH). */
+  rh: { label: string; value: string; note: string };
 };
 
-export const HERO_SLIDES: HeroSlide[] = [
-  { key: "industria", word: "SIPAT", segment: "Indústria", adesao: 91, setor: "Manutenção", dia: "Olhar de risco" },
-  { key: "rural", word: "SIPATR", segment: "Rural e agro", adesao: 87, setor: "Colheita", dia: "Máquinas agrícolas" },
-  { key: "mineracao", word: "SIPATMIN", segment: "Mineração", adesao: 89, setor: "Lavra", dia: "Bloqueio e etiquetagem" },
-  { key: "transporte", word: "Maio Amarelo", segment: "Transporte e frotas", adesao: 93, setor: "Motoristas", dia: "Fadiga ao volante" },
-  { key: "escritorio", word: "Semana da Saúde", segment: "Escritório e serviços", adesao: 88, setor: "Atendimento", dia: "Saúde mental" },
+export const HERO_DRIVERS: HeroDriver[] = [
+  { key: "jogar", verb: "jogar", tab: "Desafio diário", day: "Seg", dayTheme: "Abertura",
+    rh: { label: "Adesão no 1º dia", value: "78%", note: "5 min por pessoa, no celular" } },
+  { key: "disputar", verb: "disputar", tab: "Ranking por setor", day: "Ter", dayTheme: "Ergonomia",
+    rh: { label: "Setores com adesão acima de 70%", value: "9 de 10", note: "líderes puxando as equipes" } },
+  { key: "ganhar", verb: "ganhar", tab: "Roleta de brindes", day: "Qua", dayTheme: "Olhar de risco",
+    rh: { label: "Brindes entregues", value: "41/60", note: "estoque e retirada controlados" } },
+  { key: "familia", verb: "levar pra casa", tab: "Jogos em família", day: "Qui", dayTheme: "Casa segura",
+    rh: { label: "Partidas em família", value: "214", note: "a prevenção chega em casa" } },
+  { key: "reconhecer", verb: "concluir", tab: "Certificado e selos", day: "Sex", dayTheme: "Novos hábitos",
+    rh: { label: "Relatório final", value: "PDF", note: "presença e evidências para a CIPA" } },
 ];
-
-export const HERO_CHIPS = ["+ engajamento", "+ presença", "+ prevenção", "+ resultado"];

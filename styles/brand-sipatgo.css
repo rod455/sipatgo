@@ -21,8 +21,16 @@
 .sg-float { animation: sg-float 5s ease-in-out infinite; }
 @keyframes sg-word-in { 0% { opacity: 0; transform: translateY(.35em) scale(.96) } 100% { opacity: 1; transform: none } }
 .sg-word-in { animation: sg-word-in .5s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes sg-screen-in { 0% { opacity: 0; transform: translateY(14px) } 100% { opacity: 1; transform: none } }
+.sg-screen-in { animation: sg-screen-in .55s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes sg-fill { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+.sg-fill { transform-origin: left; animation: sg-fill 4.2s linear both; }
+@keyframes sg-draw { from { stroke-dashoffset: 1 } to { stroke-dashoffset: 0 } }
+.sg-underline path { stroke-dasharray: 1; animation: sg-draw .7s .15s ease-out both; }
+@keyframes sg-spin { 0% { transform: rotate(0) } 100% { transform: rotate(1065deg) } }
+.sg-spin { animation: sg-spin 2.6s cubic-bezier(.15,.8,.2,1) both; }
 @media (prefers-reduced-motion: reduce) {
-  .sg-float, .sg-word-in { animation: none; }
+  .sg-float, .sg-word-in, .sg-screen-in, .sg-fill, .sg-underline path, .sg-spin { animation: none; }
 }
 @media print {
   .sg-print-plain { background: #fff !important; color: #000 !important; box-shadow: none !important; }

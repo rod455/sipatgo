@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { existsSync } from "node:fs";
-import path from "node:path";
-import { Smartphone } from "lucide-react";
+import { Check, Smartphone } from "lucide-react";
 import { CampaignTiles } from "@/components/site/CampaignTiles";
 import { IncludedPanel } from "@/components/site/IncludedPanel";
 import { AdminMockup } from "@/components/site/AdminMockup";
@@ -25,8 +23,7 @@ import { PLATFORM_DYNAMICS } from "@/content/site/dynamics";
 import { HOME_FAQ } from "@/content/site/faq";
 import { ENGAGEMENT_EXTRAS, ENGAGEMENT_FEATURES, HR_FEATURES, TRUST_ITEMS } from "@/content/site/features";
 import { PLANS } from "@/content/site/pricing";
-import { HERO_CHIPS, HERO_SLIDES } from "@/content/site/hero";
-import { HeroRotator, type ShowcaseSlide } from "@/components/site/HeroShowcase";
+import { HeroRotator } from "@/components/site/HeroShowcase";
 import { SEGMENT_NOTE } from "@/content/site/segments";
 
 export const metadata: Metadata = pageMetadata({
@@ -37,36 +34,20 @@ export const metadata: Metadata = pageMetadata({
   keywords: ["sipat online", "sipat gamificada", "plataforma sipat", "sipat digital", "sipat 2026"],
 });
 
-/** Usa as fotos do hero só quando existem em /public/site/hero (ver docs/site/hero-imagens.md). */
-function heroSlides(): ShowcaseSlide[] {
-  const has = (f: string) => existsSync(path.join(process.cwd(), "public", "site", "hero", f));
-  return HERO_SLIDES.map((s) => ({
-    ...s,
-    scene: has(`${s.key}-cena.jpg`) ? `/site/hero/${s.key}-cena.jpg` : undefined,
-    person: has(`${s.key}-pessoa.png`) ? `/site/hero/${s.key}-pessoa.png` : undefined,
-  }));
-}
-
 export default function HomePage() {
   return (
     <>
       <JsonLd data={[organizationJsonLd(), softwareApplicationJsonLd()]} />
 
       {/* 3.2 Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white via-sg-sand-50 to-[#FFF1DA]">
+      <section className="relative overflow-clip bg-white">
         <div aria-hidden className="pointer-events-none absolute -top-48 right-[-10%] size-[640px] rounded-full bg-sg-yellow-400/20 blur-3xl" />
         <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-32 size-[420px] rounded-full bg-sg-orange-500/10 blur-3xl" />
         <Container className="relative pb-16 pt-10 md:pb-24 md:pt-16">
-          <HeroRotator slides={heroSlides()}>
+          <HeroRotator>
             <p className="mt-7 max-w-xl text-lg leading-8 text-sg-navy-700/80 md:text-xl">
               Campanhas de prevenção gamificadas e 100% personalizadas para a sua empresa: vídeo, desafio e ranking ao vivo, junto com as palestras e ações presenciais da CIPA. Pronto em dias, com a documentação organizada.
             </p>
-            <ul className="mt-7 flex flex-wrap gap-2.5" aria-label="O que a SipatGo traz">
-              {HERO_CHIPS.map((c) => (
-                <li key={c} className="rounded-full bg-sg-navy-900 px-4 py-2 text-sm font-semibold text-white">{c}</li>
-              ))}
-              <li className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-sg-navy-900 ring-1 ring-sg-navy-900/10">tudo em um só lugar</li>
-            </ul>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <CtaButton href="/contato" size="lg" arrow trackLabel="hero_monte_sua_sipat">
                 Monte sua SIPAT
@@ -75,6 +56,16 @@ export default function HomePage() {
                 Ver demo em 2 min
               </CtaButton>
             </div>
+            <ul className="mt-9 flex flex-col gap-2 text-[15px] font-semibold text-sg-navy-700 sm:flex-row sm:flex-wrap sm:gap-x-6">
+              {["Sem instalar nada", "Check-in nas ações presenciais", "100% personalizada"].map((m) => (
+                <li key={m} className="flex items-center gap-2">
+                  <span className="flex size-5 items-center justify-center rounded-full bg-sg-green-500/15">
+                    <Check aria-hidden className="size-3.5 text-sg-green-500" strokeWidth={3.5} />
+                  </span>
+                  {m}
+                </li>
+              ))}
+            </ul>
           </HeroRotator>
         </Container>
       </section>

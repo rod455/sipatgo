@@ -1,16 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Check, HardHat, HeartPulse, Pickaxe, Tractor, Trophy, Truck } from "lucide-react";
-import type { HeroSlide } from "@/content/site/hero";
+import { Award, BadgeCheck, Building2, Check, FileText, Gift, Home, Lock, Play, Sparkles, Timer, Trophy, Users } from "lucide-react";
+import { HERO_DRIVERS, type HeroDriver } from "@/content/site/hero";
+import { DEMO_CLIENT } from "@/content/site/demo-client";
 import { cn } from "@/lib/utils";
 
-const ICONS: Record<string, typeof HardHat> = {
-  industria: HardHat, rural: Tractor, mineracao: Pickaxe, transporte: Truck, escritorio: HeartPulse,
-};
-const INTERVAL = 3600;
-
-export type ShowcaseSlide = HeroSlide & { scene?: string; person?: string };
+const INTERVAL = 4200;
+const P = DEMO_CLIENT.primary;
+const S = DEMO_CLIENT.secondary;
 
 function useRotation(count: number) {
   const [i, setI] = useState(0);
@@ -24,50 +22,45 @@ function useRotation(count: number) {
   return { i, setI, setPaused };
 }
 
-/** Título com a palavra em destaque que troca a cada slide. */
-export function HeroWord({ slides, index }: { slides: HeroSlide[]; index: number }) {
-  const s = slides[index];
+/** Hero: verbo que troca + celular mostrando a semana avançar + cartão do RH. */
+export function HeroRotator({ children }: { children: React.ReactNode }) {
+  const { i, setI, setPaused } = useRotation(HERO_DRIVERS.length);
+  const d = HERO_DRIVERS[i];
   return (
-    <span className="relative my-1 inline-flex align-middle">
-      <span
-        key={s.key}
-        className="sg-word-in inline-block whitespace-nowrap rounded-[0.42em] bg-gradient-to-r from-sg-yellow-400 to-[#FFB13B] px-[0.28em] pb-[0.06em] text-sg-navy-900 shadow-[0_18px_40px_-20px_rgba(255,160,40,.9)]"
-      >
-        {s.word}
-      </span>
-    </span>
-  );
-}
-
-/** Hero completo: título com palavra rotativa + vitrine com foto e cartões do painel. */
-export function HeroRotator({ slides, children }: { slides: ShowcaseSlide[]; children: React.ReactNode }) {
-  const { i, setI, setPaused } = useRotation(slides.length);
-  return (
-    <div
-      className="grid items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-10"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
+    <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-8" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       <div>
-        <h1 className="display-xl font-display text-[42px] font-extrabold leading-[1.08] text-sg-navy-900 sm:text-[56px] lg:text-[68px]">
-          A <HeroWord slides={slides} index={i} />
+        <h1 className="display-xl font-display text-[42px] font-extrabold leading-[1.04] text-sg-navy-900 sm:text-[56px] lg:text-[70px]">
+          A SIPAT que todo mundo quer
           <br />
-          que todo mundo quer jogar.
+          <span className="relative inline-block text-sg-orange-500">
+            <span key={d.key} className="sg-word-in inline-block">{d.verb}.</span>
+            <svg key={`u-${d.key}`} aria-hidden viewBox="0 0 200 18" preserveAspectRatio="none" className="sg-underline absolute -bottom-2 left-0 h-3 w-full text-sg-yellow-400 md:-bottom-3 md:h-4">
+              <path d="M3 12 C 50 3, 120 3, 197 9" fill="none" stroke="currentColor" strokeWidth="7" strokeLinecap="round" pathLength={1} />
+            </svg>
+          </span>
         </h1>
         {children}
       </div>
-      <div>
-        <Showcase slides={slides} index={i} />
-        <div className="mt-6 flex items-center justify-center gap-2" role="tablist" aria-label="Segmentos">
-          {slides.map((s, k) => (
+
+      <div className="relative">
+        <Week index={i} />
+        <div className="relative mx-auto mt-5 flex max-w-[520px] justify-center">
+          <div aria-hidden className="absolute inset-x-8 bottom-4 top-10 rotate-[-4deg] rounded-[48px] bg-sg-yellow-400 sm:inset-x-16" />
+          <div aria-hidden className="absolute inset-x-12 bottom-0 top-16 rotate-[3deg] rounded-[48px] bg-sg-navy-900 sm:inset-x-20" />
+          <Phone driver={d} />
+          <RhCard driver={d} />
+        </div>
+        <div role="tablist" aria-label="O que engaja" className="mt-7 flex flex-wrap justify-center gap-2">
+          {HERO_DRIVERS.map((x, k) => (
             <button
-              key={s.key}
-              role="tab"
-              aria-selected={k === i}
-              aria-label={`${s.word} · ${s.segment}`}
-              onClick={() => setI(k)}
-              className={cn("h-2 rounded-full transition-all", k === i ? "w-8 bg-sg-orange-500" : "w-2 bg-sg-navy-900/20 hover:bg-sg-navy-900/40")}
-            />
+              key={x.key} role="tab" aria-selected={k === i} onClick={() => setI(k)}
+              className={cn(
+                "rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition",
+                k === i ? "bg-sg-navy-900 text-white" : "bg-white text-sg-navy-700 ring-1 ring-sg-navy-900/10 hover:ring-sg-navy-900/30",
+              )}
+            >
+              {x.tab}
+            </button>
           ))}
         </div>
       </div>
@@ -75,98 +68,172 @@ export function HeroRotator({ slides, children }: { slides: ShowcaseSlide[]; chi
   );
 }
 
-function Showcase({ slides, index }: { slides: ShowcaseSlide[]; index: number }) {
-  const s = slides[index];
+/** Seg→Sex: a semana avança junto com os slides. */
+function Week({ index }: { index: number }) {
   return (
-    <div className="relative mx-auto w-full max-w-[560px] pt-10">
-      {/* moldura */}
-      <div className="relative aspect-[5/4] w-full">
-        <div className="absolute inset-0 overflow-hidden rounded-[40px] bg-sg-navy-900 ring-1 ring-sg-navy-900/10">
-          {slides.map((sl, k) => {
-            const Icon = ICONS[sl.key] ?? HardHat;
-            return (
-              <div key={sl.key} aria-hidden={k !== index} className={cn("absolute inset-0 transition-opacity duration-700", k === index ? "opacity-100" : "opacity-0")}>
-                {sl.scene ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={sl.scene} alt="" className="h-full w-full object-cover grayscale contrast-[1.05]" loading={k === 0 ? "eager" : "lazy"} />
-                ) : (
-                  <div className="relative h-full w-full bg-[radial-gradient(circle_at_70%_20%,#1F5A8C_0%,#0B1F33_62%)]">
-                    <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,.09)_1px,transparent_1px)] [background-size:18px_18px]" />
-                    <Icon aria-hidden className="absolute bottom-[-8%] right-[6%] size-[62%] text-white/[0.07]" strokeWidth={1.2} />
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-        {/* pessoa recortada, saindo da moldura */}
-        {slides.map((sl, k) =>
-          sl.person ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={sl.key}
-              src={sl.person}
-              alt=""
-              aria-hidden
-              className={cn(
-                "pointer-events-none absolute bottom-0 left-1/2 h-[118%] w-auto max-w-none -translate-x-1/2 object-contain transition-all duration-700",
-                k === index ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
-              )}
-            />
-          ) : null,
-        )}
+    <ol className="mx-auto flex max-w-[460px] items-center gap-1.5" aria-label="Semana da campanha">
+      {HERO_DRIVERS.map((x, k) => (
+        <li key={x.key} className="flex-1">
+          <div className="h-1.5 overflow-hidden rounded-full bg-sg-navy-900/10">
+            <div className={cn("h-full rounded-full bg-sg-orange-500 transition-all duration-700", k < index ? "w-full" : k === index ? "sg-fill w-full" : "w-0")} key={k === index ? `f-${index}` : undefined} />
+          </div>
+          <p className={cn("mt-1.5 text-center text-[11px] font-bold uppercase tracking-wide", k <= index ? "text-sg-navy-900" : "text-sg-navy-900/35")}>{x.day}</p>
+        </li>
+      ))}
+    </ol>
+  );
+}
 
-        {/* cartões do painel (exemplo) */}
-        <div className="absolute -left-3 top-[8%] w-[46%] space-y-3 sm:-left-10 sm:w-[40%]">
-          <StatCard value={`${s.adesao}%`} title="Adesão" text="jogaram ao menos 1 dia" />
-          <StatCard value="5/5" title="Dias concluídos" text="com recuperação até sexta" className="hidden sm:block" />
-          <StatCard value="QR" title="Check-in presencial" text="nas palestras da CIPA" className="hidden sm:block" />
-        </div>
-        <div className="absolute -right-8 top-[4%] hidden w-[48%] sm:block">
-          <div className="rounded-2xl bg-sg-navy-900 p-4 text-white shadow-[0_24px_50px_-20px_rgba(11,31,51,.7)] ring-1 ring-white/10">
-            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-sg-yellow-400">
-              <Trophy aria-hidden className="size-3.5" /> Ranking por setor
-            </div>
-            {[
-              [s.setor, 96],
-              ["Logística", 81],
-              ["Administrativo", 64],
-            ].map(([n, v], k) => (
-              <div key={String(n)} className="mt-2.5">
-                <div className="flex justify-between text-xs font-semibold">
-                  <span>{k + 1}º {n}</span>
-                  <span className="tabular-nums text-white/70">{Number(v) * 12} pts</span>
-                </div>
-                <div className="mt-1 h-1.5 rounded-full bg-white/10">
-                  <div className="h-full rounded-full bg-sg-yellow-400 transition-all duration-700" style={{ width: `${v}%` }} />
-                </div>
-              </div>
-            ))}
+function Phone({ driver }: { driver: HeroDriver }) {
+  return (
+    <div className="relative w-[250px] shrink-0 rounded-[38px] bg-sg-navy-900 p-2.5 shadow-[0_40px_80px_-30px_rgba(11,31,51,.7)] sm:w-[270px]">
+      <div className="relative h-[500px] overflow-hidden rounded-[30px] bg-slate-50 sm:h-[530px]">
+        <div className="absolute left-1/2 top-2 z-10 h-5 w-24 -translate-x-1/2 rounded-full bg-sg-navy-900" aria-hidden />
+        <div key={driver.key} className="sg-screen-in h-full">
+          <div className="px-4 pb-3 pt-9 text-white" style={{ background: P }}>
+            <p className="text-[10px] font-semibold opacity-85">{DEMO_CLIENT.name} · SIPAT 2026</p>
+            <p className="text-[14px] font-bold">{driver.day} · {driver.dayTheme}</p>
           </div>
-        </div>
-        <div className="absolute -right-2 bottom-[6%] w-[64%] sm:-right-12 sm:bottom-[12%] sm:w-[56%]">
-          <div className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-sg-orange-500 to-[#FF8A3D] p-3 pr-4 text-white shadow-[0_24px_50px_-20px_rgba(255,106,19,.8)]">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-sg-green-500">
-              <Check aria-hidden className="size-5" strokeWidth={3.5} />
-            </span>
-            <div className="min-w-0">
-              <p className="font-display text-sm font-extrabold leading-tight sm:text-base">Meta de adesão atingida</p>
-              <p className="truncate text-[11px] text-white/85">Hoje: {s.dia}</p>
-            </div>
-          </div>
+          {driver.key === "jogar" && <ScreenPlay />}
+          {driver.key === "disputar" && <ScreenRanking />}
+          {driver.key === "ganhar" && <ScreenWheel />}
+          {driver.key === "familia" && <ScreenFamily />}
+          {driver.key === "reconhecer" && <ScreenCertificate />}
         </div>
       </div>
-      <p className="mt-3 text-center text-xs text-sg-gray-600">Exemplo do painel · {s.segment}</p>
     </div>
   );
 }
 
-function StatCard({ value, title, text, className }: { value: string; title: string; text: string; className?: string }) {
+function ScreenPlay() {
   return (
-    <div className={cn("rounded-2xl bg-white/95 p-3.5 shadow-[0_20px_40px_-22px_rgba(11,31,51,.55)] ring-1 ring-sg-navy-900/5 backdrop-blur", className)}>
-      <p className="font-display text-2xl font-extrabold leading-none text-sg-navy-900 tabular-nums sm:text-[28px]">{value}</p>
-      <p className="mt-1.5 text-sm font-bold text-sg-navy-900">{title}</p>
-      <p className="text-xs text-sg-gray-600">{text}</p>
+    <div className="space-y-3 p-4">
+      <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-xl bg-slate-800">
+        <span className="flex size-10 items-center justify-center rounded-full bg-white/90"><Play className="size-4 translate-x-px" style={{ color: P }} fill={P} /></span>
+        <span className="absolute bottom-1.5 right-2 rounded bg-black/60 px-1.5 text-[9px] font-semibold text-white">1:30</span>
+      </div>
+      <div className="flex items-center justify-between text-[10px] font-semibold text-slate-500"><span>Pergunta 2 de 5</span><span className="flex items-center gap-1"><Timer className="size-3" /> 0:12</span></div>
+      <p className="rounded-xl bg-white p-3 text-[12px] font-bold leading-4 text-slate-900 shadow-sm">Antes de começar a tarefa, o que você confere primeiro?</p>
+      {["Se o celular tem bateria", "Os riscos e o EPI certo", "Quem está de folga"].map((o, k) => (
+        <div key={o} className={cn("rounded-xl border-2 px-3 py-2 text-[11px] font-bold", k === 1 ? "border-green-500 bg-green-50 text-green-800" : "border-slate-200 bg-white text-slate-700")}>
+          {o} {k === 1 ? "✓" : ""}
+        </div>
+      ))}
+      <p className="text-center text-[11px] font-extrabold text-green-700">+100 pts · +12 de bônus de tempo</p>
+    </div>
+  );
+}
+
+function ScreenRanking() {
+  const rows: [string, number, boolean?][] = [["Manutenção", 94], ["Produção A", 88], ["Logística", 81, true], ["Qualidade", 72], ["Administrativo", 64]];
+  return (
+    <div className="p-4">
+      <div className="mb-3 grid grid-cols-2 gap-1 rounded-xl bg-slate-200/70 p-1 text-center text-[10px] font-bold">
+        <span className="rounded-lg py-1 text-slate-500">Individual</span><span className="rounded-lg bg-white py-1 text-slate-900 shadow-sm">Por setor</span>
+      </div>
+      <ul className="space-y-2">
+        {rows.map(([n, v, me], k) => (
+          <li key={n} className={cn("rounded-xl bg-white p-2.5 shadow-sm", me && "ring-2")} style={me ? { ["--tw-ring-color" as string]: P } : undefined}>
+            <div className="flex items-center justify-between text-[11px] font-bold text-slate-900">
+              <span className="flex items-center gap-1.5">{k === 0 ? <Trophy className="size-3.5 text-amber-500" /> : <span className="w-3.5 text-center text-slate-400">{k + 1}</span>}{n}{me ? <span className="rounded bg-slate-900 px-1 text-[8px] text-white">SEU</span> : null}</span>
+              <span className="tabular-nums text-slate-500">{v}%</span>
+            </div>
+            <div className="mt-1.5 h-1.5 rounded-full bg-slate-100"><div className="h-full rounded-full" style={{ width: `${v}%`, background: k === 0 ? "#F59E0B" : S }} /></div>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 rounded-lg bg-amber-50 p-2 text-center text-[10px] font-bold text-amber-900">Faltam 7% de adesão para a Logística passar a Produção A</p>
+    </div>
+  );
+}
+
+function ScreenWheel() {
+  const colors = [P, S, DEMO_CLIENT.accent, "#0F172A"];
+  const n = 8;
+  return (
+    <div className="flex flex-col items-center p-4">
+      <p className="text-[12px] font-extrabold text-slate-900">Dia de roleta! Concluiu, girou.</p>
+      <div className="relative mt-3">
+        <svg viewBox="-52 -52 104 104" className="sg-spin size-40">
+          {Array.from({ length: n }).map((_, k) => {
+            const a0 = (k / n) * Math.PI * 2, a1 = ((k + 1) / n) * Math.PI * 2;
+            return <path key={k} d={`M0 0 L${50 * Math.cos(a0)} ${50 * Math.sin(a0)} A50 50 0 0 1 ${50 * Math.cos(a1)} ${50 * Math.sin(a1)} Z`} fill={colors[k % 4]} />;
+          })}
+          <circle r="9" fill="#fff" />
+        </svg>
+        <span className="absolute -top-1 left-1/2 -translate-x-1/2 border-x-[7px] border-t-[12px] border-x-transparent border-t-slate-900" aria-hidden />
+      </div>
+      <div className="mt-4 w-full rounded-xl bg-white p-3 text-center shadow-sm">
+        <Gift className="mx-auto size-5" style={{ color: P }} />
+        <p className="mt-1 text-[13px] font-extrabold text-slate-900">Você ganhou: Garrafa térmica</p>
+        <p className="mt-1 font-mono text-[11px] font-bold tracking-widest text-slate-500">RETIRADA · K7Q2</p>
+      </div>
+      <p className="mt-2 text-[10px] text-slate-500">O RH foi avisado. Retire até sexta.</p>
+    </div>
+  );
+}
+
+function ScreenFamily() {
+  const grid = ["CAPACETE", "LUVAXRBO", "OCULOSTA", "PAUSAMEU", "RISCOIAX"];
+  return (
+    <div className="p-4">
+      <div className="flex items-center gap-2 rounded-xl bg-white p-2.5 shadow-sm">
+        <span className="flex size-8 items-center justify-center rounded-full bg-amber-100"><Home className="size-4 text-amber-700" /></span>
+        <div className="leading-tight"><p className="text-[11px] font-extrabold text-slate-900">Jogue com quem você ama</p><p className="text-[10px] text-slate-500">Caça-palavras da prevenção</p></div>
+      </div>
+      <div className="mt-3 grid grid-cols-8 gap-0.5 rounded-xl bg-white p-2 shadow-sm">
+        {grid.join("").split("").map((ch, k) => {
+          const row = Math.floor(k / 8);
+          const hit = row === 0 || (row === 1 && k % 8 < 4) || (row === 3 && k % 8 < 5);
+          return <span key={k} className={cn("flex aspect-square items-center justify-center rounded text-[10px] font-bold", hit ? "text-white" : "text-slate-600")} style={hit ? { background: row === 0 ? P : row === 1 ? S : "#F59E0B" } : undefined}>{ch}</span>;
+        })}
+      </div>
+      <div className="mt-3 flex flex-wrap gap-1">
+        {["CAPACETE ✓", "LUVA ✓", "PAUSA ✓", "ÓCULOS", "RISCO"].map((w) => (
+          <span key={w} className={cn("rounded-full px-2 py-0.5 text-[9px] font-bold", w.includes("✓") ? "bg-green-100 text-green-800" : "bg-slate-200 text-slate-600")}>{w}</span>
+        ))}
+      </div>
+      <p className="mt-3 flex items-center justify-center gap-1 text-[10px] font-semibold text-slate-600"><Users className="size-3.5" /> Jogado com a Lara, 9 anos</p>
+    </div>
+  );
+}
+
+function ScreenCertificate() {
+  return (
+    <div className="p-4">
+      <div className="rounded-xl border-2 border-dashed border-slate-300 bg-white p-3 text-center">
+        <Award className="mx-auto size-7" style={{ color: P }} />
+        <p className="mt-1 text-[9px] font-bold uppercase tracking-widest text-slate-500">Certificado</p>
+        <p className="text-[13px] font-extrabold text-slate-900">Ana Souza</p>
+        <p className="text-[10px] leading-3 text-slate-500">concluiu a SIPAT 2026 · 5 de 5 dias</p>
+        <p className="mt-1.5 font-mono text-[9px] text-slate-400">verificar: SG-4F9K-21</p>
+      </div>
+      <p className="mt-3 text-[11px] font-extrabold text-slate-900">Selos da semana</p>
+      <div className="mt-2 grid grid-cols-4 gap-2">
+        {[Sparkles, BadgeCheck, Trophy, Lock].map((I, k) => (
+          <span key={k} className={cn("flex aspect-square items-center justify-center rounded-xl", k < 3 ? "text-white" : "bg-slate-200 text-slate-400")} style={k < 3 ? { background: [P, S, "#F59E0B"][k] } : undefined}><I className="size-5" /></span>
+        ))}
+      </div>
+      <div className="mt-3 flex items-center gap-2 rounded-xl bg-green-50 p-2.5 text-[10px] font-bold text-green-800">
+        <Check className="size-4 shrink-0" strokeWidth={3} /> 4 dias no prazo + 1 recuperado
+      </div>
+    </div>
+  );
+}
+
+const RH_ICON = { jogar: Users, disputar: Building2, ganhar: Gift, familia: Home, reconhecer: FileText } as const;
+
+/** O lado da empresa: o que o RH/CIPA vê no painel. */
+function RhCard({ driver }: { driver: HeroDriver }) {
+  const Icon = RH_ICON[driver.key];
+  return (
+    <div className="absolute -bottom-4 -right-1 w-[200px] sm:bottom-8 sm:right-[-12px] sm:w-[220px] xl:right-[-70px]">
+      <div key={driver.key} className="sg-screen-in rounded-2xl bg-white p-4 shadow-[0_24px_50px_-20px_rgba(11,31,51,.55)] ring-1 ring-sg-navy-900/5">
+        <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-sg-orange-500"><Icon className="size-3.5" /> Painel do RH</p>
+        <p className="mt-2 font-display text-[30px] font-extrabold leading-none text-sg-navy-900 tabular-nums">{driver.rh.value}</p>
+        <p className="mt-1 text-[12px] font-bold leading-4 text-sg-navy-900">{driver.rh.label}</p>
+        <p className="text-[11px] text-sg-gray-600">{driver.rh.note}</p>
+      </div>
     </div>
   );
 }
