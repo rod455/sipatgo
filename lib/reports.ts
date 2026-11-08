@@ -12,6 +12,12 @@ export function toCsv(header: string[], rows: (string | number | null | undefine
   return "﻿" + [header, ...rows].map((r) => r.map(esc).join(";")).join("\r\n");
 }
 
+/** Data e hora no fuso de Brasília, no formato que o Excel entende (dd/mm/aaaa hh:mm). */
+export function brDateTime(d: Date | string | null | undefined): string {
+  if (!d) return "";
+  return new Date(d).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }).replace(",", "");
+}
+
 const STATUS = { done: "Concluído", makeup: "Recuperação", none: "Não realizado" } as const;
 
 export async function attendance(campaignId: string) {
@@ -65,7 +71,7 @@ export async function awardsCsv(campaignId: string) {
       from sipatgo.prize_awards a join sipatgo.prizes pr on pr.id = a.prize_id join sipatgo.participants p on p.id = a.participant_id
      where pr.campaign_id = ${campaignId} order by a.created_at`;
   return toCsv(["Código", "Nome", "CPF", "Setor", "Brinde", "Status", "Sorteado em", "Entregue em"],
-    rows.map((r) => [r.code, r.name, formatCpf(r.cpf), r.sector, r.prize, r.status, new Date(r.created_at).toISOString(), r.delivered_at ? new Date(r.delivered_at).toISOString() : ""]));
+    rows.map((r) => [r.code, r.name, formatCpf(r.cpf), r.sector, r.prize, r.status, brDateTime(r.created_at), brDateTime(r.delivered_at)]));
 }
 
 export async function learning(campaignId: string) {
@@ -97,7 +103,7 @@ export async function certificatesCsv(campaignId: string) {
     select c.code, p.name, p.cpf, p.sector, c.hours, c.days_completed, c.issued_at from sipatgo.certificates c join sipatgo.participants p on p.id = c.participant_id
      where c.campaign_id = ${campaignId} order by p.name`;
   return toCsv(["Código", "Nome", "CPF", "Setor", "Carga horária (h)", "Dias", "Emitido em"],
-    rows.map((r) => [r.code, r.name, formatCpf(r.cpf), r.sector, String(r.hours).replace(".", ","), r.days_completed, new Date(r.issued_at).toISOString()]));
+    rows.map((r) => [r.code, r.name, formatCpf(r.cpf), r.sector, String(r.hours).replace(".", ","), r.days_completed, brDateTime(r.issued_at)]));
 }
 
 export async function reportSummary(campaignId: string) {
@@ -125,4 +131,65 @@ export async function reportSummary(campaignId: string) {
   const sectors = await sql<{ position: number; sector: string; members: number; adhesion_pct: number; avg_points: number }[]>`
     select position::int, sector, members, coalesce(adhesion_pct,0) as adhesion_pct, avg_points from sipatgo.v_ranking_sector where campaign_id = ${campaignId} order by position`;
   return { s, perDay, top, sectors, learning: await learning(campaignId) };
+}
+
+/** Acessos: um colaborador por linha, com primeiro/último acesso e resumo da participação. */
+export async function accessCsv(campaignId: string) {
+  const rows = await sql<{ name: string; cpf: string; sector: string; role: string; first_login_at: Date | null; last_login_at: Date | null; login_count: number; consent_at: Date | null; days_completed: number; total_points: number }[]>`
+    select p.name, p.cpf, p.sector, p.role, p.first_login_at, p.last_login_at, p.login_count, p.consent_at,
+           (select count(*)::int from sipatgo.day_completions dc where dc.participant_id = p.id) as days_completed,
+           coalesce(sc.total_points, 0)::int as total_points
+      from sipatgo.participants p
+      left join sipatgo.participant_scores sc on sc.participant_id = p.id
+     where p.campaign_id = ${campaignId} and p.role in ('participant', 'leader')
+     order by p.name`;
+  return toCsv(
+    ["Nome", "CPF", "Setor", "Perfil", "Já acessou?", "Primeiro acesso", "Último acesso", "Nº de acessos", "Aceite LGPD", "Dias concluídos", "Pontos"],
+    rows.map((r) => [r.name, formatCpf(r.cpf), r.sector, r.role === "leader" ? "Líder" : "Participante", r.first_login_at ? "Sim" : "Não",
+      brDateTime(r.first_login_at), brDateTime(r.last_login_at), r.login_count, brDateTime(r.consent_at), r.days_completed, r.total_points]),
+  );
+}
+
+/** Log completo: cada ação de cada colaborador, em ordem cronológica. */
+export async function activityLogCsv(campaignId: string) {
+  const rows = await sql<{ at: Date; name: string; cpf: string; sector: string; kind: string; detail: string; points: number | null }[]>`
+    with ps as (select id, name, cpf, sector from sipatgo.participants where campaign_id = ${campaignId})
+    select l.created_at as at, ps.name, ps.cpf, ps.sector,
+           case l.kind when 'pin' then 'Login' else 'Primeiro acesso' end as kind, '' as detail, null::int as points
+      from sipatgo.login_events l join ps on ps.id = l.participant_id
+    union all
+    select c.accepted_at, ps.name, ps.cpf, ps.sector, 'Aceite LGPD', 'versão ' || c.text_version, null
+      from sipatgo.consents c join ps on ps.id = c.participant_id
+    union all
+    select dc.completed_at, ps.name, ps.cpf, ps.sector,
+           case when dc.is_makeup then 'Dia concluído (recuperação)' else 'Dia concluído' end,
+           'Dia ' || d.day_index || ' · ' || d.title || ' · ' || dc.correct_first_try || ' acertos de 1ª · ' || round(dc.total_time_ms / 1000.0) || 's',
+           dc.total_points
+      from sipatgo.day_completions dc join ps on ps.id = dc.participant_id join sipatgo.campaign_days d on d.id = dc.campaign_day_id
+    union all
+    select ck.created_at, ps.name, ps.cpf, ps.sector, 'Check-in presencial', e.name, ck.points_awarded
+      from sipatgo.checkins ck join ps on ps.id = ck.participant_id join sipatgo.events e on e.id = ck.event_id
+    union all
+    select ws.created_at, ps.name, ps.cpf, ps.sector, 'Giro na roleta', 'Dia ' || d.day_index || coalesce(' · ' || pr.internal_name, ' · sem brinde'), null
+      from sipatgo.wheel_spins ws join ps on ps.id = ws.participant_id join sipatgo.campaign_days d on d.id = ws.campaign_day_id
+      left join sipatgo.prizes pr on pr.id = ws.prize_id
+    union all
+    select a.delivered_at, ps.name, ps.cpf, ps.sector, 'Brinde entregue', pr.internal_name || ' · código ' || a.code, null
+      from sipatgo.prize_awards a join ps on ps.id = a.participant_id join sipatgo.prizes pr on pr.id = a.prize_id
+     where a.delivered_at is not null
+    union all
+    select w.created_at, ps.name, ps.cpf, ps.sector, 'Post no mural',
+           case w.status when 'approved' then 'aprovado' when 'rejected' then 'recusado' else 'aguardando aprovação' end || coalesce(nullif(' · ' || left(w.caption, 80), ' · '), ''),
+           w.points_awarded
+      from sipatgo.wall_posts w join ps on ps.id = w.participant_id
+    union all
+    select f.completed_at, ps.name, ps.cpf, ps.sector, 'Game da família', 'Dia ' || d.day_index || ' · ' || coalesce(g.config->>'title', g.type), null
+      from sipatgo.family_game_completions f join ps on ps.id = f.participant_id
+      join sipatgo.family_games g on g.id = f.family_game_id join sipatgo.campaign_days d on d.id = g.campaign_day_id
+    union all
+    select ce.issued_at, ps.name, ps.cpf, ps.sector, 'Certificado emitido', ce.code || ' · ' || ce.hours || 'h', null
+      from sipatgo.certificates ce join ps on ps.id = ce.participant_id where ce.campaign_id = ${campaignId}
+    order by 1, 2`;
+  return toCsv(["Data e hora", "Nome", "CPF", "Setor", "Ação", "Detalhe", "Pontos"],
+    rows.map((r) => [brDateTime(r.at), r.name, formatCpf(r.cpf), r.sector, r.kind, r.detail, r.points ?? ""]));
 }

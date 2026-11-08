@@ -4,7 +4,7 @@ import { pct } from "@/lib/utils";
 import { Card, PageTitle, Pill, buttonClass } from "@/components/ui";
 
 const EXPORTS = [
-  ["presenca", "Presença (participante × dia)"], ["ranking", "Ranking individual"], ["setores", "Ranking por setor"],
+  ["acessos", "Acessos por colaborador"], ["atividades", "Log completo de atividades"], ["presenca", "Presença (participante × dia)"], ["ranking", "Ranking individual"], ["setores", "Ranking por setor"],
   ["aprendizado", "Aprendizado por item"], ["brindes", "Brindes e entregas"], ["certificados", "Certificados emitidos"],
 ] as const;
 

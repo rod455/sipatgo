@@ -1,9 +1,9 @@
 import { getAdminContext } from "@/lib/auth";
-import { attendanceCsv, awardsCsv, certificatesCsv, learningCsv, rankingCsv, sectorsCsv } from "@/lib/reports";
+import { accessCsv, activityLogCsv, attendanceCsv, awardsCsv, certificatesCsv, learningCsv, rankingCsv, sectorsCsv } from "@/lib/reports";
 
 export const dynamic = "force-dynamic";
 
-const TYPES = { presenca: attendanceCsv, ranking: rankingCsv, setores: sectorsCsv, brindes: awardsCsv, aprendizado: learningCsv, certificados: certificatesCsv } as const;
+const TYPES = { acessos: accessCsv, atividades: activityLogCsv, presenca: attendanceCsv, ranking: rankingCsv, setores: sectorsCsv, brindes: awardsCsv, aprendizado: learningCsv, certificados: certificatesCsv } as const;
 
 export async function GET(req: Request) {
   const ctx = await getAdminContext();

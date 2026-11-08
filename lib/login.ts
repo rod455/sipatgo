@@ -97,3 +97,13 @@ export async function setPin(p: Participant, pin: string) {
      where id = ${p.id} returning session_version`;
   return row.session_version;
 }
+
+/** Registra um acesso bem-sucedido (nunca derruba o login se falhar). */
+export async function recordLogin(participantId: string, kind: "pin" | "primeiro_acesso", userAgent?: string | null) {
+  try {
+    await sql`insert into sipatgo.login_events (participant_id, kind, user_agent) values (${participantId}, ${kind}, ${userAgent?.slice(0, 300) ?? null})`;
+    await sql`update sipatgo.participants set last_login_at = now(), login_count = login_count + 1 where id = ${participantId}`;
+  } catch (err) {
+    console.error("[login] Falha ao registrar acesso:", err instanceof Error ? err.message : err);
+  }
+}

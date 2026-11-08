@@ -1,5 +1,5 @@
 import { body, handle } from "@/lib/api";
-import { companyBySlug, verifyBirthDate } from "@/lib/login";
+import { companyBySlug, recordLogin, verifyBirthDate } from "@/lib/login";
 import { setSession } from "@/lib/session";
 import { firstName } from "@/lib/utils";
 import { photoAvatarAllowed } from "@/lib/avatar-server";
@@ -9,6 +9,7 @@ export const POST = handle(async (req: Request) => {
   const company = await companyBySlug(b.slug);
   const p = await verifyBirthDate(company, b.cpf, b.birth_date);
   await setSession({ pid: p.id, cid: company.id, v: p.session_version, stage: "onboarding" });
+  await recordLogin(p.id, "primeiro_acesso", req.headers.get("user-agent"));
   return {
     name: p.name,
     first_name: firstName(p.name),
