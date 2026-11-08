@@ -19,8 +19,10 @@
 @keyframes sg-countdown { from { transform: scaleX(1) } to { transform: scaleX(0) } }
 @keyframes sg-float { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
 .sg-float { animation: sg-float 5s ease-in-out infinite; }
+@keyframes sg-word-in { 0% { opacity: 0; transform: translateY(.35em) scale(.96) } 100% { opacity: 1; transform: none } }
+.sg-word-in { animation: sg-word-in .5s cubic-bezier(.2,.8,.2,1) both; }
 @media (prefers-reduced-motion: reduce) {
-  .sg-float { animation: none; }
+  .sg-float, .sg-word-in { animation: none; }
 }
 @media print {
   .sg-print-plain { background: #fff !important; color: #000 !important; box-shadow: none !important; }

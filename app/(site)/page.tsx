@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { Check, Smartphone } from "lucide-react";
+import { existsSync } from "node:fs";
+import path from "node:path";
+import { Smartphone } from "lucide-react";
 import { CampaignTiles } from "@/components/site/CampaignTiles";
 import { IncludedPanel } from "@/components/site/IncludedPanel";
 import { AdminMockup } from "@/components/site/AdminMockup";
@@ -11,7 +13,6 @@ import { FaqAccordion } from "@/components/site/FaqAccordion";
 import { FeatureGrid } from "@/components/site/FeatureGrid";
 import { FinalCta } from "@/components/site/FinalCta";
 import { JsonLd } from "@/components/site/JsonLd";
-import { MiniRanking, PhoneMockup } from "@/components/site/PhoneMockup";
 import { PricingCard } from "@/components/site/PricingCard";
 import { Container, Section } from "@/components/site/Section";
 import { SectionHeading } from "@/components/site/SectionHeading";
@@ -24,6 +25,8 @@ import { PLATFORM_DYNAMICS } from "@/content/site/dynamics";
 import { HOME_FAQ } from "@/content/site/faq";
 import { ENGAGEMENT_EXTRAS, ENGAGEMENT_FEATURES, HR_FEATURES, TRUST_ITEMS } from "@/content/site/features";
 import { PLANS } from "@/content/site/pricing";
+import { HERO_CHIPS, HERO_SLIDES } from "@/content/site/hero";
+import { HeroRotator, type ShowcaseSlide } from "@/components/site/HeroShowcase";
 import { SEGMENT_NOTE } from "@/content/site/segments";
 
 export const metadata: Metadata = pageMetadata({
@@ -34,33 +37,36 @@ export const metadata: Metadata = pageMetadata({
   keywords: ["sipat online", "sipat gamificada", "plataforma sipat", "sipat digital", "sipat 2026"],
 });
 
+/** Usa as fotos do hero só quando existem em /public/site/hero (ver docs/site/hero-imagens.md). */
+function heroSlides(): ShowcaseSlide[] {
+  const has = (f: string) => existsSync(path.join(process.cwd(), "public", "site", "hero", f));
+  return HERO_SLIDES.map((s) => ({
+    ...s,
+    scene: has(`${s.key}-cena.jpg`) ? `/site/hero/${s.key}-cena.jpg` : undefined,
+    person: has(`${s.key}-pessoa.png`) ? `/site/hero/${s.key}-pessoa.png` : undefined,
+  }));
+}
+
 export default function HomePage() {
   return (
     <>
       <JsonLd data={[organizationJsonLd(), softwareApplicationJsonLd()]} />
 
       {/* 3.2 Hero */}
-      <section className="relative overflow-hidden bg-white">
-        <div aria-hidden className="pointer-events-none absolute -top-48 right-[-10%] size-[640px] rounded-full bg-sg-yellow-400/25 blur-3xl" />
+      <section className="relative overflow-hidden bg-gradient-to-b from-white via-sg-sand-50 to-[#FFF1DA]">
+        <div aria-hidden className="pointer-events-none absolute -top-48 right-[-10%] size-[640px] rounded-full bg-sg-yellow-400/20 blur-3xl" />
         <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-32 size-[420px] rounded-full bg-sg-orange-500/10 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(11,31,51,.07)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_75%)]" />
-        <Container className="relative grid items-center gap-14 pb-16 pt-12 md:pb-24 md:pt-20 lg:grid-cols-[1.15fr_1fr]">
-          <div>
-            <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-sg-sand-50 px-4 py-1.5 text-sm font-semibold text-sg-navy-700 ring-1 ring-sg-navy-900/10">
-              <span aria-hidden className="size-2 rounded-full bg-sg-orange-500" /> SIPAT 2026 · digital + presencial
-            </p>
-            <h1 className="display-xl font-display text-[44px] font-extrabold leading-[1.02] text-sg-navy-900 text-balance sm:text-[56px] lg:text-[72px]">
-              A SIPAT que todo mundo quer{" "}
-              <span className="relative inline-block text-sg-orange-500">
-                jogar.
-                <svg aria-hidden viewBox="0 0 200 18" preserveAspectRatio="none" className="absolute -bottom-2 left-0 h-3 w-full text-sg-yellow-400 md:-bottom-3 md:h-4">
-                  <path d="M3 12 C 50 3, 120 3, 197 9" fill="none" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
-                </svg>
-              </span>
-            </h1>
+        <Container className="relative pb-16 pt-10 md:pb-24 md:pt-16">
+          <HeroRotator slides={heroSlides()}>
             <p className="mt-7 max-w-xl text-lg leading-8 text-sg-navy-700/80 md:text-xl">
-              Transforme a Semana de Prevenção em um jogo de 5 dias: vídeo, desafio e ranking ao vivo, junto com as palestras e ações presenciais da sua CIPA. 100% personalizada para a sua empresa, pronta em dias e com a documentação organizada para comprovar a SIPAT.
+              Campanhas de prevenção gamificadas e 100% personalizadas para a sua empresa: vídeo, desafio e ranking ao vivo, junto com as palestras e ações presenciais da CIPA. Pronto em dias, com a documentação organizada.
             </p>
+            <ul className="mt-7 flex flex-wrap gap-2.5" aria-label="O que a SipatGo traz">
+              {HERO_CHIPS.map((c) => (
+                <li key={c} className="rounded-full bg-sg-navy-900 px-4 py-2 text-sm font-semibold text-white">{c}</li>
+              ))}
+              <li className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-sg-navy-900 ring-1 ring-sg-navy-900/10">tudo em um só lugar</li>
+            </ul>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <CtaButton href="/contato" size="lg" arrow trackLabel="hero_monte_sua_sipat">
                 Monte sua SIPAT
@@ -69,25 +75,7 @@ export default function HomePage() {
                 Ver demo em 2 min
               </CtaButton>
             </div>
-            <ul className="mt-9 flex flex-col gap-2 text-[15px] font-semibold text-sg-navy-700 sm:flex-row sm:flex-wrap sm:gap-x-6">
-              {["Sem instalar nada", "Check-in nas ações presenciais", "100% personalizada para sua empresa"].map((m) => (
-                <li key={m} className="flex items-center gap-2">
-                  <span className="flex size-5 items-center justify-center rounded-full bg-sg-green-500/15">
-                    <Check aria-hidden className="size-3.5 text-sg-green-500" strokeWidth={3.5} />
-                  </span>
-                  {m}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="relative mx-auto flex w-full max-w-md justify-center lg:max-w-none">
-            <div aria-hidden className="absolute inset-x-6 bottom-6 top-10 rotate-[-4deg] rounded-[48px] bg-sg-yellow-400 sm:inset-x-14" />
-            <div aria-hidden className="absolute inset-x-10 bottom-2 top-16 rotate-[3deg] rounded-[48px] bg-sg-navy-900 sm:inset-x-20" />
-            <div className="relative">
-              <PhoneMockup />
-            </div>
-            <MiniRanking className="sg-float absolute top-16 -right-2 hidden sm:block lg:-right-6" />
-          </div>
+          </HeroRotator>
         </Container>
       </section>
 

@@ -5,46 +5,53 @@ type LogoVariant = "default" | "white" | "mono-white" | "mono-navy" | "symbol";
 const NAVY = "#0B1F33";
 const ORANGE = "#FF6A13";
 
-/** Chevron duplo (») — ideia de avanço diário. */
-function Chevrons({ x, y, scale = 1, color, faded }: { x: number; y: number; scale?: number; color: string; faded: string }) {
-  return (
-    <g transform={`translate(${x} ${y}) scale(${scale})`} fill="none" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M0 0 L10 10 L0 20" stroke={faded} strokeWidth={5} />
-      <path d="M12 0 L22 10 L12 20" stroke={color} strokeWidth={5} />
-    </g>
+/*
+ * Logo SipatGo — gerada a partir da Outfit ExtraBold (800), convertida em vetor
+ * (não depende da fonte carregada, nunca estica). Espaçamento -35/1000.
+ * Símbolo: escudo (segurança) com play (jogo / avançar). O pingo do "i" é um
+ * ponto laranja que repete o acento do símbolo.
+ */
+const SHIELD = "M20 2.4C21 2.4 32.4 6.3 33.6 6.9C34.4 7.3 34.8 8 34.8 8.9V19.4C34.8 28.2 28.9 34.8 20.9 37.4C20.3 37.6 19.7 37.6 19.1 37.4C11.1 34.8 5.2 28.2 5.2 19.4V8.9C5.2 8 5.6 7.3 6.4 6.9C7.6 6.3 19 2.4 20 2.4Z";
+const PLAY = "M15.60 15.00Q15.60 12.40 17.81 13.76L25.39 18.44Q27.60 19.80 25.39 21.16L17.81 25.84Q15.60 27.20 15.60 24.60Z";
+const WORD_SIPAT = "M284.5 11.5Q195.5 11.5 130.4 -15.9Q65.2 -43.2 11 -101.2L124.2 -214.5Q160.8 -176.2 203 -155.8Q245.2 -135.2 297.5 -135.2Q342.8 -135.2 367.1 -150.6Q391.5 -166 391.5 -193Q391.5 -218.2 373.5 -234.6Q355.5 -251 326 -263.2Q296.5 -275.5 261 -287.4Q225.5 -299.2 190.4 -315.6Q155.2 -332 125.8 -355.9Q96.2 -379.8 78.2 -415.9Q60.2 -452 60.2 -505.2Q60.2 -572.5 92.6 -620.9Q125 -669.2 183 -694.9Q241 -720.5 317.8 -720.5Q395 -720.5 460 -694.6Q525 -668.8 567.2 -623L453.2 -509.8Q421 -542.2 388.1 -558Q355.2 -573.8 315.5 -573.8Q279.2 -573.8 258 -561Q236.8 -548.2 236.8 -523.8Q236.8 -500 254.8 -485Q272.8 -470 302.2 -458.4Q331.8 -446.8 367.2 -434.8Q402.8 -422.8 437.9 -406.6Q473 -390.5 502.5 -365.5Q532 -340.5 550 -302.8Q568 -265 568 -210.5Q568 -105.2 493.2 -46.9Q418.5 11.5 284.5 11.5ZM611 0V-489H785.5V0ZM1143 10Q1096.2 10 1056.2 -6.8Q1016.2 -23.5 989.9 -53.2Q963.5 -83 957.5 -121.5V-360Q963.5 -398.5 990 -430.1Q1016.5 -461.8 1056.4 -480.4Q1096.3 -499 1143 -499Q1214 -499 1268 -466.2Q1322 -433.5 1352.5 -375.9Q1383 -318.2 1383 -244.2Q1383 -170.5 1352.5 -113.2Q1322 -56 1268 -23Q1214 10 1143 10ZM851.5 207.5V-489H1026V-366.3L997.2 -247.5L1022.2 -128.5V207.5ZM1110.4 -145Q1139.0 -145 1160.8 -157.9Q1182.5 -170.8 1194.8 -193.3Q1207 -215.9 1207 -244.8Q1207 -274 1194.8 -296.1Q1182.5 -318.2 1160.9 -331.1Q1139.4 -344 1111.4 -344Q1083.5 -344 1061.9 -331.4Q1040.3 -318.7 1028.1 -296.4Q1016 -274.0 1016 -244.6Q1016 -215.8 1027.8 -193.2Q1039.5 -170.8 1061.1 -157.9Q1082.8 -145 1110.4 -145ZM1623.5 10Q1555.5 10 1502.6 -23Q1449.8 -56 1419.6 -113.2Q1389.5 -170.5 1389.5 -244.2Q1389.5 -318.2 1419.6 -375.9Q1449.8 -433.5 1502.6 -466.2Q1555.5 -499 1623.5 -499Q1669.5 -499 1707.5 -482.2Q1745.5 -465.5 1770.1 -435.8Q1794.8 -406 1800 -367.5V-121.5Q1794.8 -83 1770.2 -53.2Q1745.8 -23.5 1707.6 -6.8Q1669.5 10 1623.5 10ZM1661 -145Q1704 -145 1730.2 -172.9Q1756.5 -200.8 1756.5 -244.5Q1756.5 -274 1744.8 -296.1Q1733 -318.2 1711.5 -331.1Q1690 -344 1661.8 -344Q1633.8 -344 1612.2 -331.1Q1590.8 -318.2 1578.1 -295.8Q1565.5 -273.2 1565.5 -244.5Q1565.5 -215.8 1577.8 -193.2Q1590 -170.8 1611.9 -157.9Q1633.8 -145 1661 -145ZM1750.2 0V-131.2L1775.2 -250.5L1750.2 -368.8V-489H1921V0ZM2054.5 0V-690.5H2229V0ZM1947 -344V-489H2336.5V-344Z";
+const WORD_GO = "M2717.5 11.5Q2637.2 11.5 2568.4 -16.1Q2499.5 -43.8 2448.1 -93.6Q2396.8 -143.5 2368.1 -210.1Q2339.5 -276.8 2339.5 -354.8Q2339.5 -433.5 2369.2 -500Q2399 -566.5 2452 -616Q2505 -665.5 2575.4 -693Q2645.8 -720.5 2726.2 -720.5Q2821.2 -720.5 2897.9 -687Q2974.5 -653.5 3023.2 -595.2L2902.5 -474.5Q2867 -517.8 2824 -539.4Q2781 -561 2724 -561Q2666.2 -561 2620.4 -535.5Q2574.5 -510 2547.9 -463.8Q2521.2 -417.5 2521.2 -355.5Q2521.2 -293.5 2546.5 -246.8Q2571.8 -200 2616.2 -174Q2660.8 -148 2719.2 -148Q2777.2 -148 2817.6 -170.1Q2858 -192.2 2879.4 -234.1Q2900.8 -276 2900.8 -334.2L3021.5 -256L2698.5 -263.5V-409.8H3081.2V-383.2Q3081.2 -256 3035.2 -167.8Q2989.2 -79.5 2907.4 -34Q2825.5 11.5 2717.5 11.5ZM3359.5 11.5Q3281.2 11.5 3219.4 -22Q3157.5 -55.5 3121.8 -114Q3086 -172.5 3086 -245.5Q3086 -318.5 3121.4 -376Q3156.8 -433.5 3218.6 -467Q3280.5 -500.5 3358.8 -500.5Q3437.2 -500.5 3498.8 -467.1Q3560.2 -433.8 3596 -376.1Q3631.8 -318.5 3631.8 -245.5Q3631.8 -172.5 3596.4 -114Q3561 -55.5 3499.5 -22Q3438 11.5 3359.5 11.5ZM3358.8 -144Q3387.8 -144 3409.5 -156.5Q3431.2 -169 3443.1 -191.9Q3455 -214.8 3455 -244.8Q3455 -274.8 3442.6 -297.4Q3430.2 -320 3409 -332.5Q3387.8 -345 3358.8 -345Q3330.8 -345 3309 -332.1Q3287.2 -319.2 3275 -296.6Q3262.8 -274 3262.8 -244Q3262.8 -214.8 3275 -191.9Q3287.2 -169 3309 -156.5Q3330.8 -144 3358.8 -144Z";
+const DOT = { cx: 698.2, cy: -640.2, r: 98.6 };
+
+function Symbol({ shield, play, cut }: { shield: string; play: string; cut?: boolean }) {
+  return cut ? (
+    <path d={SHIELD + PLAY} fill={shield} fillRule="evenodd" />
+  ) : (
+    <>
+      <path d={SHIELD} fill={shield} />
+      <path d={PLAY} fill={play} />
+    </>
   );
 }
 
-/** Logo SipatGo em SVG: wordmark "Sipat" + "Go" (laranja) + chevron duplo; ou só o símbolo. */
 export function Logo({ variant = "default", className, title = "SipatGo" }: { variant?: LogoVariant; className?: string; title?: string }) {
   if (variant === "symbol") {
     return (
       <svg viewBox="0 0 40 40" role="img" aria-label={title} className={cn("h-8 w-8", className)}>
-        <rect width="40" height="40" rx="10" fill={NAVY} />
-        <Chevrons x={8} y={10} color={ORANGE} faded="#FFC628" />
+        <Symbol shield={NAVY} play={ORANGE} />
       </svg>
     );
   }
 
-  const sipat = variant === "white" || variant === "mono-white" ? "#FFFFFF" : NAVY;
-  const go = variant === "mono-white" ? "#FFFFFF" : variant === "mono-navy" ? NAVY : ORANGE;
-  const faded = variant === "mono-white" ? "rgba(255,255,255,.55)" : variant === "mono-navy" ? "rgba(11,31,51,.45)" : "#FFC628";
+  const mono = variant === "mono-white" || variant === "mono-navy";
+  const base = variant === "white" || variant === "mono-white" ? "#FFFFFF" : NAVY;
+  const accent = mono ? base : ORANGE;
+  const shield = variant === "white" ? "#FFFFFF" : base;
 
   return (
-    <svg viewBox="0 0 196 40" role="img" aria-label={title} className={cn("h-8 w-auto", className)}>
-      <text
-        x="0"
-        y="31"
-        fontSize="32"
-        fontWeight={800}
-        textLength="152"
-        lengthAdjust="spacingAndGlyphs"
-        style={{ fontFamily: "var(--font-sora), var(--font-inter), system-ui, sans-serif", letterSpacing: "-0.02em" }}
-      >
-        <tspan fill={sipat}>Sipat</tspan>
-        <tspan fill={go}>Go</tspan>
-      </text>
-      <Chevrons x={162} y={11} scale={0.9} color={go} faded={faded} />
+    <svg viewBox="0 -780 4820 1005" role="img" aria-label={title} className={cn("h-8 w-auto", className)}>
+      <g transform="translate(0 -750) scale(23.0)">
+        <Symbol shield={shield} play={variant === "white" ? NAVY : accent} cut={mono} />
+      </g>
+      <g transform="translate(1150 0)">
+        <path d={WORD_SIPAT} fill={base} />
+        <path d={WORD_GO} fill={accent} />
+        <circle cx={DOT.cx} cy={DOT.cy} r={DOT.r} fill={accent} />
+      </g>
     </svg>
   );
 }
