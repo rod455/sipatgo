@@ -90,7 +90,7 @@ function RhLogin({ next }: { next?: string }) {
       const r = await api<{ role: string }>("/api/auth/rh-login", { email, password });
       done(r.role);
     }); }}>
-      <p className="text-sm text-slate-600">Acesso ao painel da campanha para RH, SESMT e CIPA.</p>
+      <p className="text-sm text-slate-600">Acesso ao painel.</p>
       <div><Label htmlFor="rh-email">E-mail</Label><Input id="rh-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus className="h-12" /></div>
       <div><Label htmlFor="rh-pass">Senha</Label><Input id="rh-pass" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12" /></div>
       {err && <Alert>{err}</Alert>}
