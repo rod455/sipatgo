@@ -20,6 +20,9 @@ export default async function SuperPage() {
     select ca.id, ca.company_id, ca.name, ca.status, ca.start_date,
            (select count(*)::int from sipatgo.participants p where p.campaign_id = ca.id) as people
       from sipatgo.campaigns ca order by ca.start_date desc`;
+  const leads = await sql<{ id: string; nome: string; email: string; empresa: string; cargo: string | null; pessoas: number; mes: string | null; mensagem: string | null; origem: string; notified: boolean; created_at: Date }[]>`
+    select id, nome, email, empresa, cargo, pessoas, mes, mensagem, origem, notified, created_at
+      from sipatgo.leads order by created_at desc limit 50`;
   const notif = await sql<{ type: string; status: string; error: string | null; created_at: Date; company: string | null }[]>`
     select n.type, n.status, n.error, n.created_at, c.name as company from sipatgo.notification_log n left join sipatgo.companies c on c.id = n.company_id
      order by n.created_at desc limit 20`;
@@ -27,6 +30,26 @@ export default async function SuperPage() {
   return (
     <main className="mx-auto max-w-5xl space-y-6 p-4 lg:p-8">
       <PageTitle title="Super admin" subtitle="Empresas, administradores e campanhas da plataforma." />
+      <Card>
+        <h2 className="mb-1 font-display font-bold">Contatos do site ({leads.length})</h2>
+        <p className="mb-3 text-sm text-brand-muted">Formulário de /contato. Cada contato também chega por e-mail em appfactory.rlm@gmail.com.</p>
+        {leads.length === 0 ? (
+          <p className="text-sm text-brand-muted">Nenhum contato ainda.</p>
+        ) : (
+          <ul className="divide-y divide-brand-100">
+            {leads.map((l) => (
+              <li key={l.id} className="py-3 text-sm">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <p className="font-semibold">{l.nome} · {l.empresa} <span className="font-normal text-brand-muted">({l.pessoas} pessoas{l.mes ? ` · ${l.mes}` : ""})</span></p>
+                  <p className="text-xs text-brand-muted">{new Date(l.created_at).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo", dateStyle: "short", timeStyle: "short" })} · {l.origem}{l.notified ? "" : " · e-mail não enviado"}</p>
+                </div>
+                <p><a className="text-brand underline" href={`mailto:${l.email}`}>{l.email}</a>{l.cargo ? ` · ${l.cargo}` : ""}</p>
+                {l.mensagem ? <p className="mt-1 whitespace-pre-line text-brand-muted">{l.mensagem}</p> : null}
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
       <Card>
         <h2 className="mb-3 font-display font-bold">Nova empresa</h2>
         <ActionForm action={createCompany} submitLabel="Criar empresa" resetOnSuccess>
