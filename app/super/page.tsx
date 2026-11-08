@@ -77,7 +77,7 @@ export default async function SuperPage() {
             <ActionForm action={createAdmin} submitLabel="Criar admin" resetOnSuccess className="mt-3">
               <input type="hidden" name="company_id" value={c.id} />
               <div className="grid gap-3 sm:grid-cols-4">
-                <Input name="name" placeholder="Nome" required /><Input name="cpf" placeholder="CPF" required /><Input name="birth_date" type="date" required /><Input name="email" placeholder="E-mail" />
+                <Input name="name" placeholder="Nome" required /><Input name="cpf" placeholder="CPF" required /><Input name="birth_date" type="date" required /><Input name="email" type="email" placeholder="E-mail (login do RH)" required />
               </div>
             </ActionForm>
           </details>

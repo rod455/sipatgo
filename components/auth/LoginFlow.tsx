@@ -14,7 +14,11 @@ function maskCpfInput(v: string) {
   return d.replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3").replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
 }
 
-export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColors: string[]; next?: string }) {
+/**
+ * Fluxo do colaborador. Com `slug` (página da empresa) vai direto; sem `slug`
+ * (página /login geral) descobre a campanha pelo CPF.
+ */
+export function LoginFlow({ slug: fixedSlug, brandColors: fixedColors, next }: { slug?: string; brandColors?: string[]; next?: string }) {
   const router = useRouter();
   const [step, setStep] = useState<Step>("cpf");
   const [cpf, setCpf] = useState("");
@@ -26,6 +30,9 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
   const [info, setInfo] = useState<{ first_name: string; consent_text: string; needs_consent: boolean; needs_avatar: boolean; role: string; allow_photo: boolean } | null>(null);
   const [agree, setAgree] = useState(false);
   const pinRef = useRef<HTMLInputElement>(null);
+  const [found, setFound] = useState<{ slug: string; company: string; colors: string[] } | null>(null);
+  const slug = fixedSlug ?? found?.slug ?? "";
+  const brandColors = fixedColors ?? found?.colors ?? [];
 
   const go = (role?: string) => {
     const dest = next && next.startsWith("/") ? next : role === "admin" || role === "superadmin" ? "/admin" : "/app";
@@ -39,7 +46,13 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
   }
 
   const submitCpf = () => run(async () => {
-    const r = await api<{ firstAccess: boolean }>("/api/auth/lookup", { slug, cpf });
+    let s = fixedSlug;
+    if (!s) {
+      const f = await api<{ slug: string; company: string; colors: string[] }>("/api/auth/find-company", { cpf });
+      setFound(f);
+      s = f.slug;
+    }
+    const r = await api<{ firstAccess: boolean }>("/api/auth/lookup", { slug: s, cpf });
     setStep(r.firstAccess ? "birth" : "pin");
     setTimeout(() => pinRef.current?.focus(), 50);
   });
@@ -57,7 +70,7 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
     setStep(info?.needs_avatar ? "avatar" : "newpin");
   });
   const submitNewPin = () => run(async () => {
-    if (pin !== pin2) throw new Error("Os PINs não conferem.");
+    if (pin !== pin2) throw new Error("As senhas não conferem.");
     const r = await api<{ role: string }>("/api/auth/set-pin", { pin });
     go(r.role);
   });
@@ -84,21 +97,23 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
       {step === "pin" && (
         <form onSubmit={(e) => { e.preventDefault(); submitPin(); }} className="space-y-4">
           <button type="button" onClick={back} className="flex items-center gap-1 text-sm text-brand-muted"><ArrowLeft className="h-4 w-4" /> {cpf}</button>
+          {found && <p className="rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-ink">Campanha: <b>{found.company}</b></p>}
           <div>
-            <Label htmlFor="pin">Seu PIN</Label>
+            <Label htmlFor="pin">Sua senha</Label>
             <Input id="pin" ref={pinRef} type="password" inputMode="numeric" autoComplete="current-password" maxLength={6} value={pin}
               onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))} className="h-14 text-center text-2xl tracking-[.5em]" />
           </div>
           {err && <Alert>{err}</Alert>}
           <Button type="submit" size="lg" className="w-full" disabled={busy || pin.length < 4}>{busy ? "Entrando..." : "Entrar"}</Button>
-          <p className="text-center text-xs text-brand-muted">Esqueceu o PIN? Peça ao RH para resetar.</p>
+          <p className="text-center text-xs text-brand-muted">Esqueceu a senha? Peça ao RH para liberar um novo acesso.</p>
         </form>
       )}
 
       {step === "birth" && (
         <form onSubmit={(e) => { e.preventDefault(); submitBirth(); }} className="space-y-4">
           <button type="button" onClick={back} className="flex items-center gap-1 text-sm text-brand-muted"><ArrowLeft className="h-4 w-4" /> {cpf}</button>
-          <p className="text-sm text-brand-muted">Primeiro acesso! Confirme sua data de nascimento para criar seu PIN.</p>
+          {found && <p className="rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-ink">Campanha: <b>{found.company}</b></p>}
+          <p className="text-sm text-brand-muted">Primeiro acesso! Confirme sua data de nascimento para criar sua senha.</p>
           <div>
             <Label htmlFor="birth">Data de nascimento</Label>
             <Input id="birth" type="date" value={birth} onChange={(e) => setBirth(e.target.value)} className="h-14 text-lg" max="2015-12-31" />
@@ -134,11 +149,11 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
 
       {step === "newpin" && (
         <form onSubmit={(e) => { e.preventDefault(); submitNewPin(); }} className="space-y-4">
-          <div className="flex items-center gap-2"><Lock className="h-5 w-5 text-brand" /><h2 className="font-display text-xl font-bold">Crie seu PIN</h2></div>
-          <p className="text-sm text-brand-muted">Use {pinLen} números. Você vai entrar com CPF + PIN daqui pra frente.</p>
-          <Input type="password" inputMode="numeric" autoComplete="new-password" placeholder="PIN" maxLength={6} value={pin}
+          <div className="flex items-center gap-2"><Lock className="h-5 w-5 text-brand" /><h2 className="font-display text-xl font-bold">Crie sua senha</h2></div>
+          <p className="text-sm text-brand-muted">Use {pinLen} números. Você vai entrar com CPF + senha daqui pra frente.</p>
+          <Input type="password" inputMode="numeric" autoComplete="new-password" placeholder="Senha" maxLength={6} value={pin}
             onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))} className="h-14 text-center text-2xl tracking-[.5em]" autoFocus />
-          <Input type="password" inputMode="numeric" autoComplete="new-password" placeholder="Repita o PIN" maxLength={6} value={pin2}
+          <Input type="password" inputMode="numeric" autoComplete="new-password" placeholder="Repita a senha" maxLength={6} value={pin2}
             onChange={(e) => setPin2(e.target.value.replace(/\D/g, ""))} className="h-14 text-center text-2xl tracking-[.5em]" />
           {err && <Alert>{err}</Alert>}
           <Button type="submit" size="lg" className="w-full" disabled={busy || pin.length < 4}>{busy ? "Salvando..." : "Começar a jogar"}</Button>

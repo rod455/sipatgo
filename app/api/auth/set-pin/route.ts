@@ -12,7 +12,7 @@ export const POST = handle(async (req: Request) => {
   if (s.stage === "full") {
     // troca de PIN pelo perfil
     if (!v.participant.pin_hash || !(await bcrypt.compare(String(b.current_pin ?? ""), v.participant.pin_hash))) {
-      throw new HttpError(401, "PIN atual incorreto.");
+      throw new HttpError(401, "Senha atual incorreta.");
     }
   } else if (!v.participant.consent_at) {
     throw new HttpError(400, "Aceite o termo de consentimento primeiro.");

@@ -44,12 +44,14 @@ export async function createAdmin(_: ActionResult | null, fd: FormData) {
     if (name.length < 2) throw new HttpError(400, "Nome obrigatório.");
     if (!isValidCpf(cpf)) throw new HttpError(400, "CPF inválido.");
     if (!birth) throw new HttpError(400, "Data de nascimento inválida.");
+    const email = String(fd.get("email") ?? "").trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new HttpError(400, "Informe o e-mail do RH: é o login dele.");
     await sql`
       insert into sipatgo.participants (company_id, name, cpf, birth_date, sector, email, role)
-      values (${companyId}, ${name}, ${cpf}, ${birth}, 'RH', ${String(fd.get("email") ?? "") || null}, 'admin')
-      on conflict (company_id, cpf) do update set role = case when sipatgo.participants.role = 'superadmin' then 'superadmin' else 'admin' end, name = excluded.name`;
+      values (${companyId}, ${name}, ${cpf}, ${birth}, 'RH', ${email}, 'admin')
+      on conflict (company_id, cpf) do update set role = case when sipatgo.participants.role = 'superadmin' then 'superadmin' else 'admin' end, name = excluded.name, email = excluded.email`;
     revalidatePath("/super");
-    return "Admin criado. Ele faz o primeiro acesso com CPF + data de nascimento e cria um PIN de 6 dígitos.";
+    return "Admin criado. Em sipatgo.com.br/login → Sou RH → Primeiro acesso, ele confirma e-mail, CPF e nascimento e cria a senha.";
   });
 }
 

@@ -23,7 +23,8 @@ export async function getViewer(opts: { allowOnboarding?: boolean } = {}): Promi
      where p.id = ${s.pid} and p.company_id = ${s.cid}`;
   const row = rows[0];
   if (!row || row.session_version !== s.v) return null;
-  if (s.stage === "full" && (!row.pin_set || row.pin_reset_required)) return null;
+  const hasRhPassword = !!(row as Participant & { password_hash?: string | null }).password_hash && (row.role === "admin" || row.role === "superadmin");
+  if (s.stage === "full" && !hasRhPassword && (!row.pin_set || row.pin_reset_required)) return null;
   const { _company, ...participant } = row;
   return { participant: participant as Participant, company: _company };
 }
