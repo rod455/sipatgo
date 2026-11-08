@@ -158,7 +158,7 @@ export async function verifyRhPassword(email: string, password: string): Promise
   const generic = "E-mail ou senha incorretos.";
   if (!rows.length) throw new HttpError(401, generic);
   const withPw = rows.filter((r) => r.password_hash);
-  if (!withPw.length) throw new HttpError(409, "Primeiro acesso: crie sua senha em “Primeiro acesso ou esqueci a senha”.");
+  if (!withPw.length) throw new HttpError(409, "Você ainda não tem senha. Clique em “Primeiro acesso? Crie sua senha”.");
   for (const r of withPw) {
     assertNotLocked(r);
     if (await bcrypt.compare(String(password ?? ""), r.password_hash!)) {
