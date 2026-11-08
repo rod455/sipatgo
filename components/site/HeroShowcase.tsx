@@ -1,30 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Award, BadgeCheck, Building2, Check, FileText, Gift, Home, Lock, Play, Sparkles, Timer, Trophy, Users } from "lucide-react";
 import { HERO_DRIVERS, type HeroDriver } from "@/content/site/hero";
 import { DEMO_CLIENT } from "@/content/site/demo-client";
 import { cn } from "@/lib/utils";
 
-const INTERVAL = 4200;
 const P = DEMO_CLIENT.primary;
 const S = DEMO_CLIENT.secondary;
 
+/**
+ * O avanço é comandado pela própria barra do dia: quando ela termina de
+ * encher (animationend), troca para o próximo. Assim barra e tela nunca
+ * ficam fora de sincronia, e pausar (mouse em cima) pausa os dois juntos.
+ */
 function useRotation(count: number) {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
-  useEffect(() => {
-    if (paused || count < 2) return;
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-    const t = window.setInterval(() => setI((v) => (v + 1) % count), INTERVAL);
-    return () => window.clearInterval(t);
-  }, [paused, count]);
-  return { i, setI, setPaused };
+  const next = useCallback(() => setI((v) => (v + 1) % count), [count]);
+  return { i, setI, next, paused, setPaused };
 }
 
 /** Hero: verbo que troca + celular mostrando a semana avançar + cartão do RH. */
 export function HeroRotator({ children }: { children: React.ReactNode }) {
-  const { i, setI, setPaused } = useRotation(HERO_DRIVERS.length);
+  const { i, setI, next, paused, setPaused } = useRotation(HERO_DRIVERS.length);
   const d = HERO_DRIVERS[i];
   return (
     <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-8" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
@@ -43,7 +42,7 @@ export function HeroRotator({ children }: { children: React.ReactNode }) {
       </div>
 
       <div className="relative">
-        <Week index={i} />
+        <Week index={i} paused={paused} onDone={next} />
         <div className="relative mx-auto mt-5 flex max-w-[520px] justify-center">
           <div aria-hidden className="absolute inset-x-8 bottom-4 top-10 rotate-[-4deg] rounded-[48px] bg-sg-yellow-400 sm:inset-x-16" />
           <div aria-hidden className="absolute inset-x-12 bottom-0 top-16 rotate-[3deg] rounded-[48px] bg-sg-navy-900 sm:inset-x-20" />
@@ -69,13 +68,21 @@ export function HeroRotator({ children }: { children: React.ReactNode }) {
 }
 
 /** Seg→Sex: a semana avança junto com os slides. */
-function Week({ index }: { index: number }) {
+function Week({ index, paused, onDone }: { index: number; paused: boolean; onDone: () => void }) {
   return (
     <ol className="mx-auto flex max-w-[460px] items-center gap-1.5" aria-label="Semana da campanha">
       {HERO_DRIVERS.map((x, k) => (
         <li key={x.key} className="flex-1">
           <div className="h-1.5 overflow-hidden rounded-full bg-sg-navy-900/10">
-            <div className={cn("h-full rounded-full bg-sg-orange-500 transition-all duration-700", k < index ? "w-full" : k === index ? "sg-fill w-full" : "w-0")} key={k === index ? `f-${index}` : undefined} />
+            {k < index ? <div className="h-full w-full rounded-full bg-sg-orange-500" /> : null}
+            {k === index ? (
+              <div
+                key={`f-${index}`}
+                className="sg-fill h-full w-full rounded-full bg-sg-orange-500"
+                style={{ animationPlayState: paused ? "paused" : "running" }}
+                onAnimationEnd={onDone}
+              />
+            ) : null}
           </div>
           <p className={cn("mt-1.5 text-center text-[11px] font-bold uppercase tracking-wide", k <= index ? "text-sg-navy-900" : "text-sg-navy-900/35")}>{x.day}</p>
         </li>
