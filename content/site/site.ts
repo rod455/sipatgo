@@ -1,6 +1,6 @@
 /** Constantes do site público SipatGo (sipatgo.com.br). */
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://sipatgo.com.br").replace(/\/$/, "");
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.sipatgo.com.br").replace(/\/$/, "");
 export const SITE_NAME = "SipatGo";
 export const TAGLINE = "A SIPAT que todo mundo quer jogar.";
 export const DEFAULT_DESCRIPTION =

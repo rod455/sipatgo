@@ -6,7 +6,7 @@ export function MadeWith({ light, className }: { light?: boolean; className?: st
   return (
     <p className={cn("text-center text-xs", light ? "text-white/70" : "text-brand-muted", className)}>
       Feito com{" "}
-      <Link href="https://sipatgo.com.br" target="_blank" className="font-display font-extrabold">
+      <Link href="https://www.sipatgo.com.br" target="_blank" className="font-display font-extrabold">
         Sipat<span className="text-[#FF6A13]">Go</span>
       </Link>
     </p>
