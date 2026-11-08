@@ -20,7 +20,7 @@ export function LoginTabs({ next }: { next?: string }) {
   return (
     <div>
       <div role="tablist" aria-label="Tipo de acesso" className="mb-5 grid grid-cols-2 gap-1 rounded-2xl bg-slate-100 p-1">
-        {([["colaborador", "Sou colaborador", HardHat], ["rh", "Sou organizador", Briefcase]] as const).map(([k, label, Icon]) => (
+        {([["colaborador", "Sou colaborador", HardHat], ["rh", "Sou empresa", Briefcase]] as const).map(([k, label, Icon]) => (
           <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
             className={cn("flex h-11 items-center justify-center gap-2 rounded-xl text-sm font-bold transition",
               tab === k ? "bg-white text-[var(--sg-navy-900)] shadow-sm" : "text-slate-500 hover:text-slate-700")}>
