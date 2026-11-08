@@ -25,3 +25,24 @@
 @media print {
   .sg-print-plain { background: #fff !important; color: #000 !important; box-shadow: none !important; }
 }
+
+/* ---------------------------------------------------------------
+   Tipografia do site público: Outfit (títulos, geométrica pesada)
+   + Figtree (texto). A área da campanha mantém as fontes do app.
+   --------------------------------------------------------------- */
+.site-fonts {
+  --font-sora: "Outfit Variable";
+  --font-inter: "Figtree Variable";
+  --font-display: "Outfit Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Figtree Variable", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Figtree Variable", ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01";
+}
+.site-fonts .font-display {
+  font-family: "Outfit Variable", ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.025em;
+}
+.site-fonts h1.font-display,
+.site-fonts .display-xl {
+  letter-spacing: -0.035em;
+}

@@ -17,7 +17,7 @@ export function SectionHeading({ eyebrow, title, lead, align = "left", tone = "l
   const Tag = as;
   const dark = tone === "dark";
   return (
-    <div className={cn("max-w-3xl", align === "center" && "mx-auto text-center", className)}>
+    <div className={cn("max-w-3xl", align === "center" && "mx-auto max-w-4xl text-center", className)}>
       {eyebrow ? (
         <p
           className={cn(
@@ -33,14 +33,14 @@ export function SectionHeading({ eyebrow, title, lead, align = "left", tone = "l
         id={id}
         className={cn(
           "font-display font-extrabold tracking-tight text-balance",
-          as === "h1" ? "text-4xl leading-[44px] md:text-[56px] md:leading-[64px]" : "text-3xl leading-tight md:text-[40px] md:leading-[48px]",
+          as === "h1" ? "text-[40px] leading-[1.05] md:text-[64px]" : "text-[32px] leading-[1.08] md:text-[48px]",
           dark ? "text-white" : "text-sg-navy-900",
         )}
       >
         {title}
       </Tag>
       {lead ? (
-        <p className={cn("mt-4 text-lg leading-7 text-pretty", dark ? "text-white/80" : "text-sg-gray-600")}>{lead}</p>
+        <p className={cn("mt-5 text-lg leading-8 text-pretty md:text-xl", dark ? "text-white/80" : "text-sg-navy-700/80")}>{lead}</p>
       ) : null}
     </div>
   );

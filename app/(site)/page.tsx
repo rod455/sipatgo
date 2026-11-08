@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Check, Smartphone } from "lucide-react";
+import { CampaignTiles } from "@/components/site/CampaignTiles";
+import { IncludedPanel } from "@/components/site/IncludedPanel";
 import { AdminMockup } from "@/components/site/AdminMockup";
 import { BeforeAfter } from "@/components/site/BeforeAfter";
 import { CaseCard } from "@/components/site/CaseCard";
@@ -38,38 +40,52 @@ export default function HomePage() {
       <JsonLd data={[organizationJsonLd(), softwareApplicationJsonLd()]} />
 
       {/* 3.2 Hero */}
-      <section className="relative overflow-hidden bg-sg-navy-900 text-white">
-        <div aria-hidden className="pointer-events-none absolute -top-40 -right-40 size-[560px] rounded-full bg-sg-navy-500/30 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute bottom-0 left-1/3 h-40 w-[480px] rounded-full bg-sg-orange-500/10 blur-3xl" />
-        <Container className="relative grid items-center gap-12 py-14 md:py-20 lg:grid-cols-[1.1fr_1fr] lg:py-24">
+      <section className="relative overflow-hidden bg-white">
+        <div aria-hidden className="pointer-events-none absolute -top-48 right-[-10%] size-[640px] rounded-full bg-sg-yellow-400/25 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-32 size-[420px] rounded-full bg-sg-orange-500/10 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(11,31,51,.07)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_75%)]" />
+        <Container className="relative grid items-center gap-14 pb-16 pt-12 md:pb-24 md:pt-20 lg:grid-cols-[1.15fr_1fr]">
           <div>
-            <p className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-white ring-1 ring-white/15">
-              <span aria-hidden className="size-2 rounded-full bg-sg-orange-500" /> SIPAT 2026, 100% digital
+            <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-sg-sand-50 px-4 py-1.5 text-sm font-semibold text-sg-navy-700 ring-1 ring-sg-navy-900/10">
+              <span aria-hidden className="size-2 rounded-full bg-sg-orange-500" /> SIPAT 2026 · 100% digital
             </p>
-            <h1 className="font-display text-4xl leading-[44px] font-extrabold tracking-tight text-balance md:text-[56px] md:leading-[64px]">
-              A SIPAT que todo mundo quer <span className="text-sg-orange-500">jogar.</span>
+            <h1 className="display-xl font-display text-[44px] font-extrabold leading-[1.02] text-sg-navy-900 text-balance sm:text-[56px] lg:text-[72px]">
+              A SIPAT que todo mundo quer{" "}
+              <span className="relative inline-block text-sg-orange-500">
+                jogar.
+                <svg aria-hidden viewBox="0 0 200 18" preserveAspectRatio="none" className="absolute -bottom-2 left-0 h-3 w-full text-sg-yellow-400 md:-bottom-3 md:h-4">
+                  <path d="M3 12 C 50 3, 120 3, 197 9" fill="none" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
+                </svg>
+              </span>
             </h1>
-            <p className="mt-5 max-w-xl text-lg leading-7 text-white/80">
+            <p className="mt-7 max-w-xl text-lg leading-8 text-sg-navy-700/80 md:text-xl">
               Transforme a Semana de Prevenção em um jogo de 5 dias: vídeo, desafio e ranking ao vivo. Pronto em dias, com registro automático para a NR-5.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <CtaButton href="/contato" size="lg" arrow trackLabel="hero_monte_sua_sipat">
                 Monte sua SIPAT
               </CtaButton>
-              <CtaButton href="/demo" variant="ghost" size="lg" trackLabel="hero_ver_demo">
+              <CtaButton href="/demo" variant="outline" size="lg" trackLabel="hero_ver_demo">
                 Ver demo em 2 min
               </CtaButton>
             </div>
-            <ul className="mt-8 flex flex-col gap-2 text-sm text-white/80 sm:flex-row sm:flex-wrap sm:gap-x-5">
+            <ul className="mt-9 flex flex-col gap-2 text-[15px] font-semibold text-sg-navy-700 sm:flex-row sm:flex-wrap sm:gap-x-6">
               {["Sem instalar nada", "Funciona no celular", "Com a marca da sua empresa"].map((m) => (
                 <li key={m} className="flex items-center gap-2">
-                  <Check aria-hidden className="size-4 text-sg-green-500" strokeWidth={3} /> {m}
+                  <span className="flex size-5 items-center justify-center rounded-full bg-sg-green-500/15">
+                    <Check aria-hidden className="size-3.5 text-sg-green-500" strokeWidth={3.5} />
+                  </span>
+                  {m}
                 </li>
               ))}
             </ul>
           </div>
           <div className="relative mx-auto flex w-full max-w-md justify-center lg:max-w-none">
-            <PhoneMockup />
+            <div aria-hidden className="absolute inset-x-6 bottom-6 top-10 rotate-[-4deg] rounded-[48px] bg-sg-yellow-400 sm:inset-x-14" />
+            <div aria-hidden className="absolute inset-x-10 bottom-2 top-16 rotate-[3deg] rounded-[48px] bg-sg-navy-900 sm:inset-x-20" />
+            <div className="relative">
+              <PhoneMockup />
+            </div>
             <MiniRanking className="sg-float absolute top-16 -right-2 hidden sm:block lg:-right-6" />
           </div>
         </Container>
@@ -88,6 +104,30 @@ export default function HomePage() {
           </ul>
         </Container>
       </section>
+
+      {/* Campanhas */}
+      <Section tone="white" aria-labelledby="h-campanhas" className="pt-10 md:pt-16">
+        <SectionHeading
+          id="h-campanhas"
+          align="center"
+          title={<>Uma campanha para cada <span className="text-sg-orange-500">momento</span> da sua empresa</>}
+          lead="A mesma mecânica que engaja na SIPAT funciona em qualquer campanha de 5 dias: você escolhe o tema, a plataforma cuida do resto."
+        />
+        <div className="mt-12">
+          <CampaignTiles />
+        </div>
+      </Section>
+
+      {/* Tudo incluso */}
+      <Section tone="white" aria-labelledby="h-incluso" className="pt-0 md:pt-4">
+        <SectionHeading
+          id="h-incluso"
+          align="center"
+          title="Tudo que a campanha precisa, em um só lugar"
+          className="mb-10"
+        />
+        <IncludedPanel />
+      </Section>
 
       {/* 3.4 Como funciona */}
       <Section tone="sand" id="como-funciona" aria-labelledby="h-semana">
