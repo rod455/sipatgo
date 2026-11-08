@@ -83,7 +83,7 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
 
       {step === "pin" && (
         <form onSubmit={(e) => { e.preventDefault(); submitPin(); }} className="space-y-4">
-          <button type="button" onClick={back} className="flex items-center gap-1 text-sm text-slate-500"><ArrowLeft className="h-4 w-4" /> {cpf}</button>
+          <button type="button" onClick={back} className="flex items-center gap-1 text-sm text-brand-muted"><ArrowLeft className="h-4 w-4" /> {cpf}</button>
           <div>
             <Label htmlFor="pin">Seu PIN</Label>
             <Input id="pin" ref={pinRef} type="password" inputMode="numeric" autoComplete="current-password" maxLength={6} value={pin}
@@ -91,14 +91,14 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
           </div>
           {err && <Alert>{err}</Alert>}
           <Button type="submit" size="lg" className="w-full" disabled={busy || pin.length < 4}>{busy ? "Entrando..." : "Entrar"}</Button>
-          <p className="text-center text-xs text-slate-500">Esqueceu o PIN? Peça ao RH para resetar.</p>
+          <p className="text-center text-xs text-brand-muted">Esqueceu o PIN? Peça ao RH para resetar.</p>
         </form>
       )}
 
       {step === "birth" && (
         <form onSubmit={(e) => { e.preventDefault(); submitBirth(); }} className="space-y-4">
-          <button type="button" onClick={back} className="flex items-center gap-1 text-sm text-slate-500"><ArrowLeft className="h-4 w-4" /> {cpf}</button>
-          <p className="text-sm text-slate-600">Primeiro acesso! Confirme sua data de nascimento para criar seu PIN.</p>
+          <button type="button" onClick={back} className="flex items-center gap-1 text-sm text-brand-muted"><ArrowLeft className="h-4 w-4" /> {cpf}</button>
+          <p className="text-sm text-brand-muted">Primeiro acesso! Confirme sua data de nascimento para criar seu PIN.</p>
           <div>
             <Label htmlFor="birth">Data de nascimento</Label>
             <Input id="birth" type="date" value={birth} onChange={(e) => setBirth(e.target.value)} className="h-14 text-lg" max="2015-12-31" />
@@ -111,7 +111,7 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
       {step === "consent" && info && (
         <div className="space-y-4">
           <h2 className="font-display text-xl font-bold">Olá, {info.first_name}! 👋</h2>
-          <div className="flex gap-3 rounded-xl bg-slate-50 p-4 text-sm leading-relaxed text-slate-700">
+          <div className="flex gap-3 rounded-xl bg-brand-50 p-4 text-sm leading-relaxed text-brand-ink">
             <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
             <p className="whitespace-pre-line">{info.consent_text}</p>
           </div>
@@ -127,7 +127,7 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
       {step === "avatar" && (
         <div className="space-y-3">
           <h2 className="font-display text-xl font-bold">Crie seu avatar</h2>
-          <p className="text-sm text-slate-600">É ele que aparece no ranking. Escolha homem ou mulher para ver as montagens, ou crie a partir de uma selfie. Dá para mudar depois no perfil.</p>
+          <p className="text-sm text-brand-muted">É ele que aparece no ranking. Escolha homem ou mulher para ver as montagens, ou crie a partir de uma selfie. Dá para mudar depois no perfil.</p>
           <AvatarEditor initial={null} seed={cpf} brandColors={brandColors} saveLabel="Continuar" allowPhoto={info?.allow_photo} onSaved={() => setStep("newpin")} />
         </div>
       )}
@@ -135,7 +135,7 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
       {step === "newpin" && (
         <form onSubmit={(e) => { e.preventDefault(); submitNewPin(); }} className="space-y-4">
           <div className="flex items-center gap-2"><Lock className="h-5 w-5 text-brand" /><h2 className="font-display text-xl font-bold">Crie seu PIN</h2></div>
-          <p className="text-sm text-slate-600">Use {pinLen} números. Você vai entrar com CPF + PIN daqui pra frente.</p>
+          <p className="text-sm text-brand-muted">Use {pinLen} números. Você vai entrar com CPF + PIN daqui pra frente.</p>
           <Input type="password" inputMode="numeric" autoComplete="new-password" placeholder="PIN" maxLength={6} value={pin}
             onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))} className="h-14 text-center text-2xl tracking-[.5em]" autoFocus />
           <Input type="password" inputMode="numeric" autoComplete="new-password" placeholder="Repita o PIN" maxLength={6} value={pin2}

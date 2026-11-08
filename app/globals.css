@@ -31,6 +31,14 @@
   --color-brand-2-fg: var(--brand-secondary-fg, #FFFFFF);
   --color-brand-accent: var(--brand-accent, #F59E0B);
   --color-brand-accent-fg: var(--brand-accent-fg, #111827);
+  --color-brand-50: var(--brand-50, #F0F7F6);
+  --color-brand-100: var(--brand-100, #DDEEEC);
+  --color-brand-200: var(--brand-200, #BEDEDA);
+  --color-brand-ink: var(--brand-ink, #0B3B37);
+  --color-brand-muted: var(--brand-muted, #64748B);
+  --color-brand-accent-50: var(--brand-accent-50, #FEF6E7);
+  --color-brand-accent-200: var(--brand-accent-200, #FBD38D);
+  --color-brand-2-50: var(--brand-2-50, #E8EEED);
 }
 
 html { -webkit-tap-highlight-color: transparent; }

@@ -23,12 +23,12 @@ export default async function WheelPage({ params }: { params: Promise<{ i: strin
     <div className="space-y-6">
       <div className="text-center">
         <h1 className="font-display text-3xl font-extrabold">Roleta de brindes</h1>
-        <p className="text-sm text-slate-500">Todo giro ganha! 1 giro por dia de roleta.</p>
+        <p className="text-sm text-brand-muted">Todo giro ganha! 1 giro por dia de roleta.</p>
       </div>
       {spin ? (
-        <div className="rounded-2xl bg-white p-5 text-center shadow ring-1 ring-slate-200">
+        <div className="rounded-2xl bg-white p-5 text-center shadow ring-1 ring-brand-100">
           <p className="font-display text-xl font-bold">Você já girou hoje 🎁</p>
-          <p className="mt-2 text-sm text-slate-600">Retire seu brinde no RH com o código:</p>
+          <p className="mt-2 text-sm text-brand-muted">Retire seu brinde no RH com o código:</p>
           <p className="mt-1 font-display text-3xl font-extrabold tracking-widest tabular">{spin.code}</p>
         </div>
       ) : blocker ? <Alert tone="amber">{blocker}</Alert> : <Wheel day={day} />}

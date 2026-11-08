@@ -9,11 +9,11 @@ export function BonusBar({ left, total, makeup, label = "Bônus de velocidade" }
   const pct = Math.max(0, Math.min(100, (left / total) * 100));
   return (
     <div className="space-y-1">
-      <div className="flex justify-between text-xs font-medium text-slate-600">
+      <div className="flex justify-between text-xs font-medium text-brand-muted">
         <span className="flex items-center gap-1"><Zap className="h-3.5 w-3.5 text-brand-accent" /> {label}</span>
         <span className="tabular">{Math.ceil(left)}s</span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-slate-200">
+      <div className="h-2 overflow-hidden rounded-full bg-brand-100">
         <div className={cn("h-full rounded-full transition-[width] duration-100", pct > 40 ? "bg-brand-accent" : pct > 15 ? "bg-orange-500" : "bg-red-500")} style={{ width: `${pct}%` }} />
       </div>
     </div>
@@ -38,9 +38,9 @@ export function FeedbackPanel({ result, onNext, onRetry, nextLabel = "Próxima" 
         )}
       </div>
       {ok && (result.label || result.explanation) && (
-        <p className="mt-2 text-sm text-slate-700">{result.label && <strong>{result.label}. </strong>}{result.explanation}</p>
+        <p className="mt-2 text-sm text-brand-ink">{result.label && <strong>{result.label}. </strong>}{result.explanation}</p>
       )}
-      {!ok && <p className="mt-1 text-sm text-slate-700">Tente de novo: acertando agora você ganha 50 pontos.</p>}
+      {!ok && <p className="mt-1 text-sm text-brand-ink">Tente de novo: acertando agora você ganha 50 pontos.</p>}
       <div className="mt-3">
         {ok && onNext && <button onClick={onNext} className="h-11 w-full rounded-xl bg-brand font-semibold text-brand-fg">{nextLabel}</button>}
         {!ok && onRetry && <button onClick={onRetry} className="h-11 w-full rounded-xl bg-slate-900 font-semibold text-white">Tentar de novo</button>}
@@ -54,10 +54,10 @@ export function Progress({ done, total, points }: { done: number; total: number;
     <div className="flex items-center gap-3">
       <div className="flex flex-1 gap-1">
         {Array.from({ length: total }, (_, i) => (
-          <div key={i} className={cn("h-2 flex-1 rounded-full", i < done ? "bg-green-500" : "bg-slate-200")} />
+          <div key={i} className={cn("h-2 flex-1 rounded-full", i < done ? "bg-brand" : "bg-brand-100")} />
         ))}
       </div>
-      <span className="font-display text-sm font-extrabold tabular text-slate-800">{points} pts</span>
+      <span className="font-display text-sm font-extrabold tabular text-brand-ink">{points} pts</span>
     </div>
   );
 }

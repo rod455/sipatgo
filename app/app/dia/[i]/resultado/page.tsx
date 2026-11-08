@@ -22,14 +22,14 @@ export default async function ResultPage({ params, searchParams }: { params: Pro
       {fresh !== undefined && <Confetti />}
       <div className="text-center">
         <p className="text-sm font-semibold uppercase tracking-wide text-brand">Dia {r.day.index} concluído{r.is_makeup ? " (recuperação)" : ""}</p>
-        <p className="font-display text-6xl font-extrabold tabular text-slate-900">{r.total}</p>
-        <p className="text-slate-500">pontos no dia</p>
+        <p className="font-display text-6xl font-extrabold tabular text-brand-ink">{r.total}</p>
+        <p className="text-brand-muted">pontos no dia</p>
       </div>
-      <Card className="divide-y divide-slate-100 p-0">
+      <Card className="divide-y divide-brand-100 p-0">
         {rows.map(([k, v]) => (
-          <div key={k} className="flex items-center justify-between px-4 py-3 text-sm"><span className="text-slate-600">{k}</span><span className="font-display font-bold tabular">+{v}</span></div>
+          <div key={k} className="flex items-center justify-between px-4 py-3 text-sm"><span className="text-brand-muted">{k}</span><span className="font-display font-bold tabular">+{v}</span></div>
         ))}
-        {r.position && <div className="flex items-center justify-between px-4 py-3 text-sm"><span className="text-slate-600">Sua posição no ranking</span><span className="font-display font-bold">{r.position}º de {r.participants}</span></div>}
+        {r.position && <div className="flex items-center justify-between px-4 py-3 text-sm"><span className="text-brand-muted">Sua posição no ranking</span><span className="font-display font-bold">{r.position}º de {r.participants}</span></div>}
       </Card>
       {r.badges.length > 0 && (
         <div className="rounded-2xl bg-brand-accent/15 p-4">

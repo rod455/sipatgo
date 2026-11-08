@@ -68,12 +68,12 @@ export function PhotoCropper({ onConfirm, confirmLabel, busy, hint }: {
     return (
       <div className="space-y-3">
         {inputs}
-        {hint && <p className="text-sm text-slate-600">{hint}</p>}
+        {hint && <p className="text-sm text-brand-muted">{hint}</p>}
         <div className="grid grid-cols-2 gap-2">
           <Button type="button" variant="outline" onClick={() => camera.current?.click()}><Camera className="h-4 w-4" /> Tirar selfie</Button>
           <Button type="button" variant="outline" onClick={() => gallery.current?.click()}><ImagePlus className="h-4 w-4" /> Da galeria</Button>
         </div>
-        <p className="text-xs text-slate-500">Dica: rosto de frente, boa luz e sem óculos escuros.</p>
+        <p className="text-xs text-brand-muted">Dica: rosto de frente, boa luz e sem óculos escuros.</p>
       </div>
     );
   }
@@ -82,9 +82,9 @@ export function PhotoCropper({ onConfirm, confirmLabel, busy, hint }: {
   return (
     <div className="space-y-3">
       {inputs}
-      <p className="text-center text-sm text-slate-600">Arraste e use o zoom para encaixar o rosto no oval.</p>
+      <p className="text-center text-sm text-brand-muted">Arraste e use o zoom para encaixar o rosto no oval.</p>
       <div
-        className="relative mx-auto touch-none select-none overflow-hidden rounded-2xl bg-slate-200"
+        className="relative mx-auto touch-none select-none overflow-hidden rounded-2xl bg-brand-100"
         style={{ width: BOX, height: BOX }}
         onPointerDown={(e) => { drag.current = { x: e.clientX, y: e.clientY, ox: pos.x, oy: pos.y }; (e.target as HTMLElement).setPointerCapture(e.pointerId); }}
         onPointerMove={(e) => { if (drag.current) setOff(clamp({ x: drag.current.ox + e.clientX - drag.current.x, y: drag.current.oy + e.clientY - drag.current.y })); }}
@@ -104,7 +104,7 @@ export function PhotoCropper({ onConfirm, confirmLabel, busy, hint }: {
           <ellipse cx={cx * 100} cy={cy * 100} rx={rx * 100} ry={ry * 100} fill="none" stroke="white" strokeWidth="0.8" strokeDasharray="3 2" />
         </svg>
       </div>
-      <label className="flex items-center gap-3 text-sm text-slate-600">
+      <label className="flex items-center gap-3 text-sm text-brand-muted">
         <ZoomIn className="h-4 w-4 shrink-0" />
         <input type="range" min={1} max={4} step={0.01} value={zoom} onChange={(e) => setZoom(Number(e.target.value))} className="w-full accent-[var(--brand-primary)]" />
       </label>

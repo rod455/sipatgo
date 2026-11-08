@@ -27,7 +27,7 @@ export default async function ProfilePage() {
       <div className="flex flex-col items-center text-center">
         <Avatar config={p.avatar_config} seed={p.id} size={112} />
         <h1 className="mt-3 font-display text-2xl font-bold">{p.name}</h1>
-        <p className="text-sm text-slate-500">{p.sector}{p.role === "leader" ? " · Líder" : ""}</p>
+        <p className="text-sm text-brand-muted">{p.sector}{p.role === "leader" ? " · Líder" : ""}</p>
         <p className="mt-1 font-display text-xl font-extrabold tabular text-brand">{score?.total_points ?? 0} pts</p>
       </div>
 
@@ -42,17 +42,17 @@ export default async function ProfilePage() {
               <a href={`/api/certificate/${cert.code}`} target="_blank" className={buttonClass("primary", "sm")}>Baixar PDF</a>
             </div>
           ) : (
-            <p className="text-sm text-slate-600">{closed ? "Você não atingiu o mínimo de dias para o certificado nesta campanha." : "Liberado após o encerramento da campanha para quem concluir o mínimo de dias."}</p>
+            <p className="text-sm text-brand-muted">{closed ? "Você não atingiu o mínimo de dias para o certificado nesta campanha." : "Liberado após o encerramento da campanha para quem concluir o mínimo de dias."}</p>
           )}
         </Card>
       </section>
 
       <section>
         <h2 className="mb-2 font-display text-lg font-bold">Pontos por dia</h2>
-        <Card className="divide-y divide-slate-100 p-0">
+        <Card className="divide-y divide-brand-100 p-0">
           {today?.days.map((d) => (
             <div key={d.id} className="flex items-center justify-between px-4 py-2.5 text-sm">
-              <span>Dia {d.day_index} <span className="text-slate-400">· {d.title}</span></span>
+              <span>Dia {d.day_index} <span className="text-brand-muted">· {d.title}</span></span>
               <span className="font-display font-bold tabular">{d.state === "locked" ? "🔒" : `${d.points}${d.state === "done_makeup" ? " ↺" : ""}`}</span>
             </div>
           ))}
@@ -61,11 +61,11 @@ export default async function ProfilePage() {
 
       <section>
         <h2 className="mb-2 font-display text-lg font-bold">Meus brindes</h2>
-        {prizes.length === 0 ? <p className="text-sm text-slate-500">Nenhum brinde ainda. Gire a roleta nos dias marcados com 🎡.</p> : (
+        {prizes.length === 0 ? <p className="text-sm text-brand-muted">Nenhum brinde ainda. Gire a roleta nos dias marcados com 🎡.</p> : (
           <ul className="space-y-2">
             {prizes.map((pr) => (
-              <li key={pr.code} className="flex items-center justify-between rounded-xl bg-white p-3 shadow-sm ring-1 ring-slate-200">
-                <div><p className="font-display text-lg font-extrabold tracking-widest tabular">{pr.code}</p><p className="text-xs text-slate-500">Roleta do dia {pr.day_index}</p></div>
+              <li key={pr.code} className="flex items-center justify-between rounded-xl bg-white p-3 shadow-sm ring-1 ring-brand-100">
+                <div><p className="font-display text-lg font-extrabold tracking-widest tabular">{pr.code}</p><p className="text-xs text-brand-muted">Roleta do dia {pr.day_index}</p></div>
                 <Pill tone={pr.status === "delivered" ? "green" : pr.status === "cancelled" ? "red" : "amber"}>{pr.status === "delivered" ? "Retirado" : pr.status === "cancelled" ? "Cancelado" : "Retirar no RH"}</Pill>
               </li>
             ))}
@@ -77,10 +77,10 @@ export default async function ProfilePage() {
         <h2 className="mb-2 font-display text-lg font-bold">Selos</h2>
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
           {badges.map((b) => (
-            <div key={b.code} title={b.description} className={cn("rounded-xl bg-white p-3 text-center shadow-sm ring-1 ring-slate-200", !b.awarded_at && "opacity-40 grayscale")}>
+            <div key={b.code} title={b.description} className={cn("rounded-xl bg-white p-3 text-center shadow-sm ring-1 ring-brand-100", !b.awarded_at && "opacity-40 grayscale")}>
               <p className="text-3xl">{b.icon}</p>
               <p className="mt-1 text-xs font-semibold leading-tight">{b.name}</p>
-              <p className="mt-0.5 text-[10px] leading-tight text-slate-500">{b.description}</p>
+              <p className="mt-0.5 text-[10px] leading-tight text-brand-muted">{b.description}</p>
             </div>
           ))}
         </div>

@@ -33,13 +33,13 @@ export default async function Home() {
       <section className="flex items-center gap-3">
         <Avatar config={p.avatar_config} seed={p.id} size={56} />
         <div className="min-w-0">
-          <p className="text-sm text-slate-500">Olá,</p>
+          <p className="text-sm text-brand-muted">Olá,</p>
           <h1 className="truncate font-display text-2xl font-bold">{firstName(p.name)}!</h1>
         </div>
         {rank && (
-          <Link href="/app/ranking" className="ml-auto rounded-2xl bg-white px-3 py-2 text-center shadow-sm ring-1 ring-slate-200">
+          <Link href="/app/ranking" className="ml-auto rounded-2xl bg-white px-3 py-2 text-center shadow-sm ring-1 ring-brand-100">
             <p className="font-display text-xl font-extrabold tabular text-brand">{rank.position}º</p>
-            <p className="text-[11px] text-slate-500 tabular">{rank.points} pts</p>
+            <p className="text-[11px] text-brand-muted tabular">{rank.points} pts</p>
           </Link>
         )}
       </section>
@@ -71,7 +71,7 @@ export default async function Home() {
               <iframe className="h-full w-full" src={`https://www.youtube-nocookie.com/embed/${openingVideo}?rel=0&modestbranding=1`} title="Mensagem da liderança" allowFullScreen />
             </div>
           )}
-          {campaign.opening_message && <p className="whitespace-pre-line text-sm text-slate-700">{campaign.opening_message}</p>}
+          {campaign.opening_message && <p className="whitespace-pre-line text-sm text-brand-ink">{campaign.opening_message}</p>}
         </Card>
       )}
 
@@ -84,7 +84,7 @@ export default async function Home() {
         <section>
           <div className="mb-2 flex items-center justify-between"><h2 className="font-display text-lg font-bold">Seus selos</h2><Link href="/app/perfil" className="text-sm font-semibold text-brand">Ver todos</Link></div>
           <div className="flex flex-wrap gap-2">
-            {badges.map((b) => <span key={b.name} className="rounded-full bg-white px-3 py-1.5 text-sm shadow-sm ring-1 ring-slate-200">{b.icon} {b.name}</span>)}
+            {badges.map((b) => <span key={b.name} className="rounded-full bg-white px-3 py-1.5 text-sm shadow-sm ring-1 ring-brand-100">{b.icon} {b.name}</span>)}
           </div>
         </section>
       )}
@@ -103,7 +103,7 @@ export default async function Home() {
 
 function Shortcut({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   return (
-    <Link href={href} className="flex items-center gap-3 rounded-2xl bg-white p-4 font-semibold text-slate-800 shadow-sm ring-1 ring-slate-200 [&_svg]:h-5 [&_svg]:w-5 [&_svg]:text-brand">
+    <Link href={href} className="flex items-center gap-3 rounded-2xl bg-white p-4 font-semibold text-brand-ink shadow-sm ring-1 ring-brand-100 [&_svg]:h-5 [&_svg]:w-5 [&_svg]:text-brand">
       {icon}{label}
     </Link>
   );

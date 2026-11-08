@@ -25,21 +25,21 @@ export function DayCard({ d, tz }: { d: DaySummary; tz: string }) {
     <div className={cn(
       "flex items-center gap-3 rounded-2xl border p-3 transition",
       d.state === "available" && "border-brand bg-white shadow-md ring-2 ring-brand/20",
-      d.state === "makeup" && "border-amber-300 bg-amber-50",
-      done && "border-green-200 bg-green-50",
-      locked && "border-slate-200 bg-slate-100 opacity-70",
-      d.state === "missed" && "border-slate-200 bg-white opacity-60",
+      d.state === "makeup" && "border-brand-accent-200 bg-brand-accent-50",
+      done && "border-brand-200 bg-brand-2-50",
+      locked && "border-brand-100 bg-white/60 opacity-75",
+      d.state === "missed" && "border-brand-100 bg-white opacity-60",
     )}>
       <div className={cn("flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl text-xs font-bold",
-        d.state === "available" ? "bg-brand text-brand-fg" : done ? "bg-green-500 text-white" : d.state === "makeup" ? "bg-amber-400 text-amber-950" : "bg-slate-200 text-slate-500")}>
+        d.state === "available" ? "bg-brand text-brand-fg" : done ? "bg-brand-2 text-brand-2-fg" : d.state === "makeup" ? "bg-brand-accent text-brand-accent-fg" : "bg-brand-100 text-brand-muted")}>
         {icon}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{weekdayName(d.date)} · {formatDateBR(d.date).slice(0, 5)}</p>
-        <p className="truncate font-semibold text-slate-900">{locked ? "Bloqueado" : d.title || `Dia ${d.day_index}`}</p>
-        <p className="flex items-center gap-1 text-xs text-slate-600">
+        <p className="text-xs font-semibold uppercase tracking-wide text-brand-muted">{weekdayName(d.date)} · {formatDateBR(d.date).slice(0, 5)}</p>
+        <p className="truncate font-semibold text-brand-ink">{locked ? "Bloqueado" : d.title || `Dia ${d.day_index}`}</p>
+        <p className="flex items-center gap-1 text-xs text-brand-muted">
           {d.state === "locked" && <Clock className="h-3 w-3" />}{label}
-          {!locked && d.activity_type && <span className="text-slate-400"> · {ACTIVITY_LABELS[d.activity_type]}</span>}
+          {!locked && d.activity_type && <span className="text-brand-muted"> · {ACTIVITY_LABELS[d.activity_type]}</span>}
         </p>
       </div>
       {d.has_wheel && !locked && <span title="Dia de roleta" className="text-xl">🎡</span>}

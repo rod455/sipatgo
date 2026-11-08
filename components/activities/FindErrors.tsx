@@ -48,8 +48,8 @@ export function FindErrors({ day, view, onDayComplete }: { day: number; view: Ac
     <div className="space-y-4">
       <Progress done={correct.size} total={view.total} points={points} />
       {!done && <BonusBar left={bonus.left} total={view.bonus_window_s} makeup={view.is_makeup} label="Bônus do próximo erro" />}
-      <p className="text-sm text-slate-600">Encontre {view.total} situações de risco na imagem. Toque em cima de cada uma.</p>
-      <div ref={box} onClick={onTap} className="relative w-full cursor-crosshair select-none overflow-hidden rounded-2xl bg-slate-200 shadow ring-1 ring-slate-300">
+      <p className="text-sm text-brand-muted">Encontre {view.total} situações de risco na imagem. Toque em cima de cada uma.</p>
+      <div ref={box} onClick={onTap} className="relative w-full cursor-crosshair select-none overflow-hidden rounded-2xl bg-brand-100 shadow ring-1 ring-slate-300">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={pub.image_url} alt="Cena para encontrar os erros" className="pointer-events-none block w-full" draggable={false} />
         {found.map((c) => (
@@ -68,7 +68,7 @@ export function FindErrors({ day, view, onDayComplete }: { day: number; view: Ac
         ))}
       </div>
       {wrongStreak > 0 && wrongStreak < pub.max_wrong_clicks && !done && (
-        <p className="text-xs text-slate-500">Cliques errados: {wrongStreak}/{pub.max_wrong_clicks} — depois disso aparece uma dica.</p>
+        <p className="text-xs text-brand-muted">Cliques errados: {wrongStreak}/{pub.max_wrong_clicks} — depois disso aparece uma dica.</p>
       )}
       {last && (
         <div className={cn("animate-pop rounded-xl p-3 text-sm", last.status === "correct" ? "bg-green-50 text-green-800" : "bg-red-50 text-red-700")}>

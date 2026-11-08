@@ -67,19 +67,19 @@ export function SequentialActivity({ day, view, onDayComplete }: { day: number; 
   return (
     <div className="space-y-4">
       <Progress done={correct.size} total={total} points={points} />
-      <div className="flex items-center justify-between text-sm text-slate-500">
+      <div className="flex items-center justify-between text-sm text-brand-muted">
         <span>Item {idx + 1} de {total}</span>
         {timedLimit && running && (
-          <span className={cn("flex items-center gap-1 font-display text-lg font-extrabold tabular", cut.left < 5 ? "text-red-600" : "text-slate-800")}>
+          <span className={cn("flex items-center gap-1 font-display text-lg font-extrabold tabular", cut.left < 5 ? "text-red-600" : "text-brand-ink")}>
             <Timer className="h-4 w-4" />{Math.ceil(cut.left)}s
           </span>
         )}
       </div>
       {running && <BonusBar left={bonus.left} total={view.bonus_window_s} makeup={view.is_makeup} />}
 
-      <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+      <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-brand-100">
         {pub.type === "new_habits" && <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-brand">Situação</p>}
-        <p className="font-display text-xl font-bold leading-snug text-slate-900">{prompt}</p>
+        <p className="font-display text-xl font-bold leading-snug text-brand-ink">{prompt}</p>
       </div>
 
       <div className={cn("grid gap-3", pub.type === "true_false" ? "grid-cols-2" : "grid-cols-1")}>
@@ -88,11 +88,11 @@ export function SequentialActivity({ day, view, onDayComplete }: { day: number; 
           return (
             <button key={String(o.pick)} disabled={busy || !!feedback} onClick={() => answer(o.answer, o.pick)}
               className={cn(
-                "rounded-2xl border-2 bg-white p-4 text-left font-semibold text-slate-800 shadow-sm transition active:scale-[.98]",
+                "rounded-2xl border-2 bg-white p-4 text-left font-semibold text-brand-ink shadow-sm transition active:scale-[.98]",
                 pub.type === "true_false" && "py-6 text-center text-lg",
                 chosen && feedback?.status === "correct" && "border-green-500 bg-green-50",
                 chosen && feedback?.status === "wrong" && "animate-shake border-red-500 bg-red-50",
-                !chosen && "border-slate-200 hover:border-brand",
+                !chosen && "border-brand-100 hover:border-brand",
               )}>
               {o.label}
             </button>

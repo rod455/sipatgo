@@ -12,7 +12,7 @@ export default async function ActivityPage({ params }: { params: Promise<{ i: st
   const day = Number((await params).i);
   let view;
   try { view = await getActivityView(p, day); } catch (e) {
-    if (e instanceof HttpError) return <div className="space-y-3"><Link href="/app" className="text-sm text-slate-500">← Início</Link><Alert tone="amber">{e.message}</Alert></div>;
+    if (e instanceof HttpError) return <div className="space-y-3"><Link href="/app" className="text-sm text-brand-muted">← Início</Link><Alert tone="amber">{e.message}</Alert></div>;
     throw e;
   }
   if (!view) notFound();
@@ -22,7 +22,7 @@ export default async function ActivityPage({ params }: { params: Promise<{ i: st
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Link href={`/app/dia/${day}`} className="inline-flex items-center gap-1 text-sm text-slate-500"><ArrowLeft className="h-4 w-4" /> Dia {day}</Link>
+        <Link href={`/app/dia/${day}`} className="inline-flex items-center gap-1 text-sm text-brand-muted"><ArrowLeft className="h-4 w-4" /> Dia {day}</Link>
         <span className="rounded-full bg-brand px-3 py-1 text-xs font-bold text-brand-fg">{ACTIVITY_LABELS[view.type]}</span>
       </div>
       <ActivityRunner day={day} view={view} />

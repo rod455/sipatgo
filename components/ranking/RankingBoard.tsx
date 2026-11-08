@@ -31,30 +31,30 @@ export function RankingBoard({ campaignId, badgeIcons, days }: { campaignId: str
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 rounded-xl bg-slate-200 p-1">
+      <div className="grid grid-cols-3 rounded-xl bg-brand-100 p-1">
         {TABS.map((t) => (
-          <button key={t.key} onClick={() => setTab(t.key)} className={cn("rounded-lg py-2 text-sm font-semibold", tab === t.key ? "bg-white shadow" : "text-slate-600")}>{t.label}</button>
+          <button key={t.key} onClick={() => setTab(t.key)} className={cn("rounded-lg py-2 text-sm font-semibold", tab === t.key ? "bg-white shadow" : "text-brand-muted")}>{t.label}</button>
         ))}
       </div>
       {tab === "today" && (
         <div className="flex gap-2">
           {days.map((d) => (
-            <button key={d} onClick={() => setDay(d)} className={cn("h-9 flex-1 rounded-lg text-sm font-semibold", (dayShown ?? day) === d ? "bg-brand text-brand-fg" : "bg-white ring-1 ring-slate-200")}>Dia {d}</button>
+            <button key={d} onClick={() => setDay(d)} className={cn("h-9 flex-1 rounded-lg text-sm font-semibold", (dayShown ?? day) === d ? "bg-brand text-brand-fg" : "bg-white ring-1 ring-brand-100")}>Dia {d}</button>
           ))}
         </div>
       )}
-      <p className="flex items-center gap-1.5 text-xs text-slate-500"><span className="h-2 w-2 animate-pulse rounded-full bg-green-500" /> Ao vivo</p>
+      <p className="flex items-center gap-1.5 text-xs text-brand-muted"><span className="h-2 w-2 animate-pulse rounded-full bg-green-500" /> Ao vivo</p>
 
-      {!rows ? <div className="space-y-2">{Array.from({ length: 6 }, (_, i) => <div key={i} className="h-14 animate-pulse rounded-xl bg-slate-200" />)}</div> : tab === "sector" ? (
+      {!rows ? <div className="space-y-2">{Array.from({ length: 6 }, (_, i) => <div key={i} className="h-14 animate-pulse rounded-xl bg-brand-100" />)}</div> : tab === "sector" ? (
         <ol className="space-y-2">
           {(rows as SectorRow[]).map((s) => (
-            <li key={s.sector} className={cn("flex items-center gap-3 rounded-xl bg-white p-3 shadow-sm ring-1", s.mine ? "ring-2 ring-brand" : "ring-slate-200")}>
+            <li key={s.sector} className={cn("flex items-center gap-3 rounded-xl bg-white p-3 shadow-sm ring-1", s.mine ? "ring-2 ring-brand" : "ring-brand-100")}>
               <Pos n={s.position} />
               <div className="min-w-0 flex-1">
                 <p className="truncate font-semibold">{s.sector}</p>
-                <p className="text-xs text-slate-500">{s.members} pessoas · adesão {s.adhesion_pct}%</p>
+                <p className="text-xs text-brand-muted">{s.members} pessoas · adesão {s.adhesion_pct}%</p>
               </div>
-              <div className="text-right"><p className="font-display font-extrabold tabular">{s.avg_points}</p><p className="text-[10px] text-slate-500">média</p></div>
+              <div className="text-right"><p className="font-display font-extrabold tabular">{s.avg_points}</p><p className="text-[10px] text-brand-muted">média</p></div>
             </li>
           ))}
         </ol>
@@ -76,17 +76,17 @@ export function RankingBoard({ campaignId, badgeIcons, days }: { campaignId: str
 
 function Pos({ n }: { n: number }) {
   const medal = n === 1 ? "🥇" : n === 2 ? "🥈" : n === 3 ? "🥉" : null;
-  return <span className="w-8 shrink-0 text-center font-display text-lg font-extrabold tabular text-slate-700">{medal ?? `${n}º`}</span>;
+  return <span className="w-8 shrink-0 text-center font-display text-lg font-extrabold tabular text-brand-ink">{medal ?? `${n}º`}</span>;
 }
 
 function Row({ r, badgeIcons, highlight }: { r: RankRow; badgeIcons: Record<string, string>; highlight?: boolean }) {
   return (
-    <div className={cn("flex items-center gap-3 rounded-xl p-2.5 shadow-sm ring-1", highlight ? "bg-brand text-brand-fg ring-brand" : "bg-white ring-slate-200")}>
+    <div className={cn("flex items-center gap-3 rounded-xl p-2.5 shadow-sm ring-1", highlight ? "bg-brand text-brand-fg ring-brand" : "bg-white ring-brand-100")}>
       <Pos n={r.position} />
       <Avatar config={r.avatar_config} seed={r.participant_id} size={40} />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold">{r.name}{highlight ? " (você)" : ""}</p>
-        <p className={cn("truncate text-xs", highlight ? "opacity-80" : "text-slate-500")}>
+        <p className={cn("truncate text-xs", highlight ? "opacity-80" : "text-brand-muted")}>
           {r.sector} {r.badges?.length ? <span className="ml-1">{r.badges.slice(0, 5).map((b) => badgeIcons[b] ?? "").join("")}</span> : null}
         </p>
       </div>

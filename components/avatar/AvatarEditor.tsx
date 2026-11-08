@@ -102,13 +102,13 @@ export function AvatarEditor({ initial, seed, brandColors, onSaved, saveLabel = 
     <div className="space-y-4">
       <div className="flex justify-center">
         <div className="relative">
-          <div className="h-40 w-40 overflow-hidden rounded-full bg-slate-100 shadow-lg ring-4 ring-white [&>svg]:h-full [&>svg]:w-full"
+          <div className="h-40 w-40 overflow-hidden rounded-full bg-brand-50 shadow-lg ring-4 ring-white [&>svg]:h-full [&>svg]:w-full"
             dangerouslySetInnerHTML={{ __html: renderAvatarSvg(cfg, seed) }} />
           {!isPhoto && (
             <button type="button" aria-label="Sortear" title="Sortear outro"
               onClick={() => update({ ...character, seed: Math.random().toString(36).slice(2), options: { backgroundColor: character.options.backgroundColor, skinColor: character.options.skinColor, hairColor: character.options.hairColor } })}
-              className="absolute -right-1 bottom-2 rounded-full bg-white p-2 shadow ring-1 ring-slate-200">
-              <Shuffle className="h-5 w-5 text-slate-700" />
+              className="absolute -right-1 bottom-2 rounded-full bg-white p-2 shadow ring-1 ring-brand-100">
+              <Shuffle className="h-5 w-5 text-brand-ink" />
             </button>
           )}
         </div>
@@ -117,13 +117,13 @@ export function AvatarEditor({ initial, seed, brandColors, onSaved, saveLabel = 
       <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Montagens">
         {([["m", "Homem"], ["f", "Mulher"], [undefined, "Todas"]] as const).map(([g, label]) => (
           <button key={label} type="button" role="radio" aria-checked={gender === g} onClick={() => setGender(g)}
-            className={cn("h-10 rounded-xl text-sm font-semibold ring-1", gender === g ? "bg-brand text-brand-fg ring-brand" : "bg-white text-slate-700 ring-slate-200")}>
+            className={cn("h-10 rounded-xl text-sm font-semibold ring-1", gender === g ? "bg-brand text-brand-fg ring-brand" : "bg-white text-brand-ink ring-brand-100")}>
             {label}
           </button>
         ))}
       </div>
 
-      <div className={cn("grid gap-1 rounded-xl bg-slate-100 p-1", allowPhoto ? "grid-cols-3" : "grid-cols-2")}>
+      <div className={cn("grid gap-1 rounded-xl bg-brand-50 p-1", allowPhoto ? "grid-cols-3" : "grid-cols-2")}>
         <TabBtn active={tab === "character"} onClick={() => { setTab("character"); if (isPhoto) setCfg(character); }} icon={<Sparkles className="h-4 w-4" />}>Personagem</TabBtn>
         <TabBtn active={tab === "fromPhoto"} onClick={() => setTab("fromPhoto")} icon={<Wand2 className="h-4 w-4" />}>Criar pela foto</TabBtn>
         {allowPhoto && <TabBtn active={tab === "photo"} onClick={() => setTab("photo")} icon={<UserRound className="h-4 w-4" />}>Usar foto</TabBtn>}
@@ -137,7 +137,7 @@ export function AvatarEditor({ initial, seed, brandColors, onSaved, saveLabel = 
       {tab === "photo" && allowPhoto && (
         isPhoto && cfg.photo_url ? (
           <div className="space-y-2 text-center">
-            <p className="text-sm text-slate-600">Sua foto aparece no ranking e no mural para os colegas.</p>
+            <p className="text-sm text-brand-muted">Sua foto aparece no ranking e no mural para os colegas.</p>
             <Button type="button" variant="ghost" size="sm" onClick={() => setCfg({ ...cfg, photo_url: undefined })}>Escolher outra foto</Button>
           </div>
         ) : (
@@ -155,7 +155,7 @@ export function AvatarEditor({ initial, seed, brandColors, onSaved, saveLabel = 
                 update({ ...character, style: s, gender, options: s === "bottts" ? { backgroundColor: keep.backgroundColor } : withHints(s, keep, hints, gender) });
                 setCat(AVATAR_CATEGORIES[s][0].key);
               }}
-                className={cn("rounded-full px-3 py-1.5 text-sm font-semibold", style === s ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-700")}>
+                className={cn("rounded-full px-3 py-1.5 text-sm font-semibold", style === s ? "bg-slate-900 text-white" : "bg-brand-50 text-brand-ink")}>
                 {STYLE_LABEL[s]}
               </button>
             ))}
@@ -164,12 +164,12 @@ export function AvatarEditor({ initial, seed, brandColors, onSaved, saveLabel = 
           <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
             {categories.map((c) => (
               <button key={c.key} type="button" onClick={() => setCat(c.key)}
-                className={cn("shrink-0 rounded-lg border px-3 py-1.5 text-sm", current?.key === c.key && cat !== "backgroundColor" ? "border-brand bg-brand/10 font-semibold text-slate-900" : "border-slate-200 text-slate-600")}>
+                className={cn("shrink-0 rounded-lg border px-3 py-1.5 text-sm", current?.key === c.key && cat !== "backgroundColor" ? "border-brand bg-brand/10 font-semibold text-brand-ink" : "border-brand-100 text-brand-muted")}>
                 {c.label}
               </button>
             ))}
             <button type="button" onClick={() => setCat("backgroundColor")}
-              className={cn("shrink-0 rounded-lg border px-3 py-1.5 text-sm", cat === "backgroundColor" ? "border-brand bg-brand/10 font-semibold" : "border-slate-200 text-slate-600")}>
+              className={cn("shrink-0 rounded-lg border px-3 py-1.5 text-sm", cat === "backgroundColor" ? "border-brand bg-brand/10 font-semibold" : "border-brand-100 text-brand-muted")}>
               Fundo
             </button>
           </div>
@@ -194,13 +194,13 @@ export function AvatarEditor({ initial, seed, brandColors, onSaved, saveLabel = 
             <div className="grid max-h-64 grid-cols-4 gap-2 overflow-y-auto sm:grid-cols-6">
               {optional && (
                 <button type="button" onClick={() => setOpt(current!.key, "none")}
-                  className={cn("flex aspect-square items-center justify-center rounded-xl border text-xs text-slate-500", chosen === "none" ? "border-brand ring-2 ring-brand" : "border-slate-200")}>
+                  className={cn("flex aspect-square items-center justify-center rounded-xl border text-xs text-brand-muted", chosen === "none" ? "border-brand ring-2 ring-brand" : "border-brand-100")}>
                   Nenhum
                 </button>
               )}
               {values.map((v) => (
                 <button key={v} type="button" onClick={() => setOpt(current!.key, v)}
-                  className={cn("aspect-square overflow-hidden rounded-xl border bg-slate-50 [&>svg]:h-full [&>svg]:w-full", chosen === v ? "border-brand ring-2 ring-brand" : "border-slate-200")}
+                  className={cn("aspect-square overflow-hidden rounded-xl border bg-brand-50 [&>svg]:h-full [&>svg]:w-full", chosen === v ? "border-brand ring-2 ring-brand" : "border-brand-100")}
                   dangerouslySetInnerHTML={{ __html: renderAvatarSvg({ ...character, gender, options: { ...character.options, [current!.key]: v } }, seed) }} />
               ))}
             </div>
@@ -229,7 +229,7 @@ function withHints(st: AvatarStyle, options: AvatarConfig["options"], h: { beard
 function TabBtn({ active, onClick, icon, children }: { active: boolean; onClick: () => void; icon: React.ReactNode; children: React.ReactNode }) {
   return (
     <button type="button" onClick={onClick}
-      className={cn("flex items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-xs font-semibold sm:text-sm", active ? "bg-white shadow" : "text-slate-600")}>
+      className={cn("flex items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-xs font-semibold sm:text-sm", active ? "bg-white shadow" : "text-brand-muted")}>
       {icon}{children}
     </button>
   );

@@ -14,8 +14,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const { participant: p, company } = await requireViewer();
   if (p.campaign_id) await ensureClosedIfDue(p.campaign_id);
   return (
-    <div style={brandStyle(company)} className="min-h-dvh bg-slate-50">
-      <header className="sticky top-0 z-30 bg-brand text-brand-fg shadow-sm">
+    <div style={brandStyle(company)} className="min-h-dvh bg-brand-50 text-brand-ink">
+      <header className="sticky top-0 z-30 bg-gradient-to-r from-brand to-brand-2 text-brand-fg shadow-sm">
         <div className="mx-auto flex h-14 max-w-lg items-center justify-between px-4">
           <Link href="/app" className="flex min-w-0 items-center gap-2">
             {company.logo_url ? (
@@ -33,7 +33,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       </header>
       <main className="mx-auto max-w-lg px-4 pb-28 pt-4">
         {p.campaign_id ? children : (
-          <div className="rounded-2xl bg-white p-6 text-center text-slate-600 shadow-sm">
+          <div className="rounded-2xl bg-white p-6 text-center text-brand-muted shadow-sm">
             Você não está vinculado a uma campanha.{isAdmin(p) && <> Acesse o <Link className="font-semibold text-brand underline" href="/admin">painel</Link>.</>}
           </div>
         )}

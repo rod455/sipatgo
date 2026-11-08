@@ -53,12 +53,12 @@ function WordSearch({ game, onWin }: { game: Extract<FamilyGameView, { type: "wo
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-slate-600">Toque na primeira e na última letra de cada palavra.</p>
-      <div className="grid gap-1 rounded-2xl bg-white p-2 shadow ring-1 ring-slate-200" style={{ gridTemplateColumns: `repeat(${ws.size}, minmax(0, 1fr))` }}>
+      <p className="text-sm text-brand-muted">Toque na primeira e na última letra de cada palavra.</p>
+      <div className="grid gap-1 rounded-2xl bg-white p-2 shadow ring-1 ring-brand-100" style={{ gridTemplateColumns: `repeat(${ws.size}, minmax(0, 1fr))` }}>
         {ws.grid.map((row, r) => row.map((ch, c) => (
           <button key={`${r}-${c}`} onClick={() => tap(r, c)}
             className={cn("aspect-square rounded-md text-sm font-bold sm:text-base",
-              cells.has(`${r},${c}`) ? "bg-green-500 text-white" : "bg-slate-50 text-slate-800",
+              cells.has(`${r},${c}`) ? "bg-green-500 text-white" : "bg-brand-50 text-brand-ink",
               start?.[0] === r && start?.[1] === c && "bg-brand text-brand-fg",
               bad?.[0] === r && bad?.[1] === c && "animate-shake bg-red-200")}>
             {ch}
@@ -66,7 +66,7 @@ function WordSearch({ game, onWin }: { game: Extract<FamilyGameView, { type: "wo
         )))}
       </div>
       <div className="flex flex-wrap gap-2">
-        {ws.words.map((w) => <span key={w} className={cn("rounded-full px-3 py-1 text-xs font-bold", found.includes(w) ? "bg-green-100 text-green-800 line-through" : "bg-slate-100 text-slate-700")}>{w}</span>)}
+        {ws.words.map((w) => <span key={w} className={cn("rounded-full px-3 py-1 text-xs font-bold", found.includes(w) ? "bg-green-100 text-green-800 line-through" : "bg-brand-50 text-brand-ink")}>{w}</span>)}
       </div>
     </div>
   );
@@ -79,9 +79,9 @@ function LightQuiz({ game, onWin }: { game: Extract<FamilyGameView, { type: "lig
   const item = game.items[i];
   if (!item) {
     return (
-      <div className="rounded-2xl bg-white p-6 text-center shadow ring-1 ring-slate-200">
+      <div className="rounded-2xl bg-white p-6 text-center shadow ring-1 ring-brand-100">
         <p className="font-display text-3xl font-extrabold">{score}/{game.items.length}</p>
-        <p className="text-slate-600">acertos em família!</p>
+        <p className="text-brand-muted">acertos em família!</p>
         <Button className="mt-4" variant="outline" onClick={() => { setI(0); setScore(0); setPick(null); }}>Jogar de novo</Button>
       </div>
     );
@@ -89,14 +89,14 @@ function LightQuiz({ game, onWin }: { game: Extract<FamilyGameView, { type: "lig
   const answered = pick !== null;
   return (
     <div className="space-y-3">
-      <p className="text-sm text-slate-500">Pergunta {i + 1} de {game.items.length}</p>
-      <p className="rounded-2xl bg-white p-4 font-display text-lg font-bold shadow-sm ring-1 ring-slate-200">{item.question}</p>
+      <p className="text-sm text-brand-muted">Pergunta {i + 1} de {game.items.length}</p>
+      <p className="rounded-2xl bg-white p-4 font-display text-lg font-bold shadow-sm ring-1 ring-brand-100">{item.question}</p>
       {item.options.map((o, k) => (
         <button key={k} disabled={answered} onClick={() => { setPick(k); if (k === item.correct_index) setScore((s) => s + 1); }}
           className={cn("w-full rounded-xl border-2 bg-white p-3 text-left font-semibold",
             answered && k === item.correct_index && "border-green-500 bg-green-50",
             answered && pick === k && k !== item.correct_index && "border-red-500 bg-red-50",
-            !answered && "border-slate-200")}>
+            !answered && "border-brand-100")}>
           {o}
         </button>
       ))}

@@ -30,7 +30,7 @@ export default async function DayPage({ params }: { params: Promise<{ i: string 
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-brand">{weekdayName(ctx.day.date)} · Dia {idx}</p>
         <h1 className="font-display text-2xl font-bold">{ctx.day.title || `Dia ${idx}`}</h1>
-        {ctx.day.theme && <p className="text-sm text-slate-500">{ctx.day.theme}</p>}
+        {ctx.day.theme && <p className="text-sm text-brand-muted">{ctx.day.theme}</p>}
       </div>
       {ctx.state === "makeup" && <Alert tone="amber">Você está recuperando este dia: vale 50% dos pontos, sem bônus de velocidade.</Alert>}
       {ctx.state === "missed" && <Alert>O prazo para este dia terminou.</Alert>}
@@ -50,7 +50,7 @@ export default async function DayPage({ params }: { params: Promise<{ i: string 
           <ul className="space-y-2">
             {materials.map((m) => (
               <li key={m.id}>
-                <a href={m.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl bg-white p-3 text-sm font-medium shadow-sm ring-1 ring-slate-200">
+                <a href={m.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl bg-white p-3 text-sm font-medium shadow-sm ring-1 ring-brand-100">
                   {m.kind === "pdf" ? <FileText className="h-5 w-5 text-brand" /> : <Link2 className="h-5 w-5 text-brand" />}{m.title}
                 </a>
               </li>
@@ -63,5 +63,5 @@ export default async function DayPage({ params }: { params: Promise<{ i: string 
 }
 
 function Back() {
-  return <Link href="/app" className="inline-flex items-center gap-1 text-sm text-slate-500"><ArrowLeft className="h-4 w-4" /> Início</Link>;
+  return <Link href="/app" className="inline-flex items-center gap-1 text-sm text-brand-muted"><ArrowLeft className="h-4 w-4" /> Início</Link>;
 }

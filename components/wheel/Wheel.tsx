@@ -68,9 +68,9 @@ export function Wheel({ day, onDone, demo }: { day: number; onDone?: (code: stri
       ) : (
         <div className="animate-pop w-full rounded-2xl bg-white p-5 text-center shadow-lg ring-2 ring-brand-accent">
           <p className="font-display text-2xl font-extrabold">Você ganhou um brinde! 🎉</p>
-          <p className="mt-2 text-sm text-slate-600">Retire no RH apresentando este código:</p>
-          <p className="mt-2 font-display text-3xl font-extrabold tracking-widest tabular text-slate-900">{code}</p>
-          <p className="mt-2 text-xs text-slate-500">O código também fica salvo no seu perfil.</p>
+          <p className="mt-2 text-sm text-brand-muted">Retire no RH apresentando este código:</p>
+          <p className="mt-2 font-display text-3xl font-extrabold tracking-widest tabular text-brand-ink">{code}</p>
+          <p className="mt-2 text-xs text-brand-muted">O código também fica salvo no seu perfil.</p>
         </div>
       )}
       {err && <p className="text-sm text-red-600">{err}</p>}

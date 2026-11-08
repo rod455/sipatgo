@@ -23,7 +23,7 @@ export default async function FamilyPage({ searchParams }: { searchParams: Promi
           return (
             <Link key={h.day_index} href={open ? `/app/familia?dia=${h.day_index}` : "#"} aria-disabled={!open}
               className={cn("flex h-10 flex-1 items-center justify-center rounded-lg text-sm font-semibold",
-                h.day_index === day ? "bg-brand text-brand-fg" : open ? "bg-white ring-1 ring-slate-200" : "pointer-events-none bg-slate-100 text-slate-400")}>
+                h.day_index === day ? "bg-brand text-brand-fg" : open ? "bg-white ring-1 ring-brand-100" : "pointer-events-none bg-brand-50 text-brand-muted")}>
               {h.completed_at ? "✓" : `Dia ${h.day_index}`}
             </Link>
           );

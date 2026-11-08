@@ -23,7 +23,7 @@ export function DayVideo({ day, videoId, alreadyDone, dayDone, activityLabel, ca
           className={buttonClass("primary", "lg", `w-full ${done ? "" : "pointer-events-none opacity-50"}`)}>
           {done ? `Ir para a dinâmica: ${activityLabel}` : "Assista o vídeo para liberar a dinâmica"}
         </Link>
-      ) : !activityLabel ? <p className="text-center text-sm text-slate-500">A dinâmica deste dia ainda não foi configurada.</p> : null}
+      ) : !activityLabel ? <p className="text-center text-sm text-brand-muted">A dinâmica deste dia ainda não foi configurada.</p> : null}
     </div>
   );
 }

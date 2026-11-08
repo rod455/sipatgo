@@ -33,7 +33,7 @@ export default async function PodiumPage() {
           <div key={t.participant_id} className="flex w-28 flex-col items-center text-center">
             <Avatar config={t.avatar_config} seed={t.participant_id} size={t.position === 1 ? 84 : 64} ring={t.participant_id === p.id} />
             <p className="mt-1 line-clamp-2 text-sm font-semibold leading-tight">{t.name}</p>
-            <p className="text-[11px] text-slate-500">{t.sector}</p>
+            <p className="text-[11px] text-brand-muted">{t.sector}</p>
             <div className={cn("mt-2 flex w-full items-start justify-center rounded-t-xl pt-2 font-display text-2xl font-extrabold text-brand-fg",
               t.position === 1 ? "h-28 bg-brand" : t.position === 2 ? "h-20 bg-brand-2" : "h-14 bg-brand-2/80")}>{t.position}º</div>
             <p className="mt-1 font-display text-sm font-bold tabular">{t.total_points} pts</p>
@@ -42,14 +42,14 @@ export default async function PodiumPage() {
       </div>
       {sector && (
         <Card className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Setor campeão</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-brand-muted">Setor campeão</p>
           <p className="font-display text-2xl font-extrabold">🤝 {sector.sector}</p>
-          <p className="text-sm text-slate-500">média de {sector.avg_points} pts · adesão {sector.adhesion_pct}%</p>
+          <p className="text-sm text-brand-muted">média de {sector.avg_points} pts · adesão {sector.adhesion_pct}%</p>
         </Card>
       )}
       <div className="grid grid-cols-3 gap-2 text-center">
         {[["participaram", stats.active], ["dias concluídos", stats.completions], ["brindes", stats.prizes], ["posts no mural", stats.posts], ["certificados", stats.certs], ["pessoas", stats.people]].map(([k, v]) => (
-          <Card key={k as string} className="p-3"><p className="font-display text-xl font-extrabold tabular">{v}</p><p className="text-[11px] text-slate-500">{k}</p></Card>
+          <Card key={k as string} className="p-3"><p className="font-display text-xl font-extrabold tabular">{v}</p><p className="text-[11px] text-brand-muted">{k}</p></Card>
         ))}
       </div>
       <Link href="/app/perfil#certificado" className={buttonClass("primary", "lg", "w-full")}>Meu certificado</Link>

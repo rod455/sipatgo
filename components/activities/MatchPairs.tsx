@@ -40,7 +40,7 @@ export function MatchPairs({ day, view, onDayComplete }: { day: number; view: Ac
     <div className="space-y-4">
       <Progress done={correct.size} total={view.total} points={points} />
       {!done && <BonusBar left={bonus.left} total={view.bonus_window_s} makeup={view.is_makeup} label="Bônus do próximo par" />}
-      <p className="text-sm text-slate-600">Toque em um item da esquerda e depois no par correspondente da direita.</p>
+      <p className="text-sm text-brand-muted">Toque em um item da esquerda e depois no par correspondente da direita.</p>
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
           {pub.left.map((t, i) => {
@@ -50,7 +50,7 @@ export function MatchPairs({ day, view, onDayComplete }: { day: number; view: Ac
                 className={cn("flex min-h-16 w-full items-center rounded-xl border-2 bg-white p-3 text-left text-sm font-semibold shadow-sm transition",
                   ok && "border-green-500 bg-green-50 text-green-800",
                   !ok && left === i && "border-brand bg-brand/10",
-                  !ok && left !== i && "border-slate-200",
+                  !ok && left !== i && "border-brand-100",
                   flash?.l === i && "animate-shake border-red-500 bg-red-50")}>
                 {ok && <CheckCircle2 className="mr-1 h-4 w-4 shrink-0 text-green-600" />}{t}
               </button>
@@ -64,8 +64,8 @@ export function MatchPairs({ day, view, onDayComplete }: { day: number; view: Ac
               <button key={pos} disabled={ok || busy || left === null} onClick={() => pickRight(pos)}
                 className={cn("flex min-h-16 w-full items-center rounded-xl border-2 bg-white p-3 text-left text-sm font-semibold shadow-sm transition",
                   ok && "border-green-500 bg-green-50 text-green-800",
-                  !ok && left !== null && "border-slate-300 hover:border-brand",
-                  !ok && left === null && "border-slate-200 opacity-80",
+                  !ok && left !== null && "border-brand-200 hover:border-brand",
+                  !ok && left === null && "border-brand-100 opacity-80",
                   flash?.r === pos && "animate-shake border-red-500 bg-red-50")}>
                 {t}
               </button>
