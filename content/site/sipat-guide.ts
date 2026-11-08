@@ -246,7 +246,7 @@ export const SIPAT_GUIDE: GuideSection[] = [
       },
       {
         type: "p",
-        text: "Para comparar opções, some tudo e divida pelo número de pessoas que **de fato participaram**. Uma SIPAT barata com 30% de adesão pode sair mais cara por participante do que uma com 80%. Veja como funcionam os [planos da SipatGo](/precos).",
+        text: "Para comparar opções, some tudo e divida pelo número de pessoas que **de fato participaram**. Uma SIPAT barata com 30% de adesão pode sair mais cara por participante do que uma com 80%. Na SipatGo, a campanha sai a partir de R$ 2.200 (até 150 pessoas), com tudo incluso: veja os [planos](/precos).",
       },
     ],
   },

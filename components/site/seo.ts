@@ -90,11 +90,14 @@ export function softwareApplicationJsonLd() {
     url: SITE_URL,
     inLanguage: "pt-BR",
     offers: {
-      "@type": "Offer",
+      "@type": "AggregateOffer",
       priceCurrency: "BRL",
+      lowPrice: "2200",
+      highPrice: "3000",
+      offerCount: 3,
       availability: "https://schema.org/InStock",
       url: absoluteUrl("/precos"),
-      description: "Planos por faixa de participantes. Sob consulta.",
+      description: "Por campanha: R$ 2.200 até 150 participantes, R$ 3.000 até 500, acima de 500 sob consulta.",
     },
     publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
   };

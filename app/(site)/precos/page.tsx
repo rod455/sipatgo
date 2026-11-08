@@ -12,7 +12,7 @@ import { ADDONS, INCLUDED, PLANS } from "@/content/site/pricing";
 
 export const metadata: Metadata = pageMetadata({
   title: "Preços — SipatGo",
-  description: "Planos da SipatGo por faixa de participantes: até 150, até 500 e acima de 500. Tudo incluso, cobrança por campanha, sem mensalidade.",
+  description: "Planos da SipatGo por campanha: R$ 2.200 até 150 participantes, R$ 3.000 até 500 e acima de 500 sob consulta. Tudo incluso e 100% personalizado.",
   path: "/precos",
   keywords: ["sipat preço", "quanto custa sipat online", "preço plataforma sipat", "orçamento sipat"],
 });
@@ -24,7 +24,7 @@ export default function PrecosPage() {
         crumbs={[{ name: "Preços", path: "/precos" }]}
         eyebrow="Preços"
         title="Planos por tamanho de empresa"
-        lead="Preço por campanha, de acordo com o número de participantes. Sem mensalidade, sem fidelidade. Tudo incluso em todos os planos."
+        lead="Preço por campanha, de acordo com o número de participantes. Sem mensalidade, sem fidelidade. Tudo incluso e 100% personalizado para a sua empresa."
       />
 
       <Section tone="sand" aria-label="Planos">

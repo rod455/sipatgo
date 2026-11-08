@@ -59,7 +59,7 @@ export default function HomePage() {
               </span>
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-sg-navy-700/80 md:text-xl">
-              Transforme a Semana de Prevenção em um jogo de 5 dias: vídeo, desafio e ranking ao vivo, junto com as palestras e ações presenciais da sua CIPA. Pronto em dias, com a documentação organizada para comprovar a SIPAT.
+              Transforme a Semana de Prevenção em um jogo de 5 dias: vídeo, desafio e ranking ao vivo, junto com as palestras e ações presenciais da sua CIPA. 100% personalizada para a sua empresa, pronta em dias e com a documentação organizada para comprovar a SIPAT.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <CtaButton href="/contato" size="lg" arrow trackLabel="hero_monte_sua_sipat">
@@ -70,7 +70,7 @@ export default function HomePage() {
               </CtaButton>
             </div>
             <ul className="mt-9 flex flex-col gap-2 text-[15px] font-semibold text-sg-navy-700 sm:flex-row sm:flex-wrap sm:gap-x-6">
-              {["Sem instalar nada", "Check-in nas ações presenciais", "Com a marca da sua empresa"].map((m) => (
+              {["Sem instalar nada", "Check-in nas ações presenciais", "100% personalizada para sua empresa"].map((m) => (
                 <li key={m} className="flex items-center gap-2">
                   <span className="flex size-5 items-center justify-center rounded-full bg-sg-green-500/15">
                     <Check aria-hidden className="size-3.5 text-sg-green-500" strokeWidth={3.5} />
@@ -246,7 +246,7 @@ export default function HomePage() {
           id="h-precos"
           eyebrow="Preços"
           title="Planos por tamanho de empresa"
-          lead="Preço por campanha, de acordo com o número de participantes. Tudo incluso em todos os planos."
+          lead="Preço por campanha, de acordo com o número de participantes. Tudo incluso e 100% personalizado para a sua empresa."
         />
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {PLANS.map((p) => (

@@ -8,24 +8,24 @@ export type Plan = {
   bullets: string[];
 };
 
-/** Preços ainda não definidos: exibir "A partir de R$ —" / "Sob consulta". */
+/** Preço por campanha, por faixa de participantes. */
 export const PLANS: Plan[] = [
   {
     name: "Essencial",
     range: "Até 150 participantes",
-    price: "A partir de R$ —",
+    price: "R$ 2.200",
     priceNote: "por campanha",
     description: "Para a primeira SIPAT digital de empresas pequenas e médias.",
-    bullets: ["Tudo incluso", "1 unidade", "Suporte por e-mail e WhatsApp", "Relatório final NR-5"],
+    bullets: ["100% personalizada para sua empresa", "Tudo incluso", "1 unidade", "Suporte por e-mail e WhatsApp", "Relatório final NR-5"],
   },
   {
     name: "Profissional",
     range: "Até 500 participantes",
-    price: "A partir de R$ —",
+    price: "R$ 3.000",
     priceNote: "por campanha",
     highlight: true,
     description: "Para quem tem vários setores, turnos e quer ranking disputado.",
-    bullets: ["Tudo incluso", "Até 3 unidades", "Onboarding guiado", "Relatório final NR-5"],
+    bullets: ["100% personalizada para sua empresa", "Tudo incluso", "Até 3 unidades", "Onboarding guiado", "Relatório final NR-5"],
   },
   {
     name: "Corporativo",
@@ -33,7 +33,7 @@ export const PLANS: Plan[] = [
     price: "Sob consulta",
     priceNote: "proposta personalizada",
     description: "Para operações grandes, multiunidade e com exigências de TI e compras.",
-    bullets: ["Tudo incluso", "Unidades ilimitadas", "Gerente de sucesso dedicado", "Revisão de segurança e LGPD"],
+    bullets: ["100% personalizada para sua empresa", "Tudo incluso", "Unidades ilimitadas", "Gerente de sucesso dedicado", "Revisão de segurança e LGPD"],
   },
 ];
 
@@ -51,7 +51,7 @@ export const INCLUDED: string[] = [
   "Dashboard em tempo real",
   "Lista de presença e relatório final (PDF e CSV)",
   "Kit de divulgação com QR",
-  "Logo e cores da sua empresa",
+  "100% personalizada: logo, cores, temas, perguntas e brindes da sua empresa",
   "Importação de participantes por CSV",
 ];
 
