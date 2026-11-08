@@ -198,7 +198,7 @@ function ScreenFamily() {
           <span key={w} className={cn("rounded-full px-2 py-0.5 text-[9px] font-bold", w.includes("✓") ? "bg-green-100 text-green-800" : "bg-slate-200 text-slate-600")}>{w}</span>
         ))}
       </div>
-      <p className="mt-3 flex items-center justify-center gap-1 text-[10px] font-semibold text-slate-600"><Users className="size-3.5" /> Jogado com a Lara, 9 anos</p>
+      <p className="mt-3 flex items-center justify-center gap-1 text-[10px] font-semibold text-slate-600"><Users className="size-3.5" /> Para jogar com a família, no seu celular</p>
     </div>
   );
 }

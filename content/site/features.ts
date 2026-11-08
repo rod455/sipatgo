@@ -45,7 +45,7 @@ export const ENGAGEMENT_FEATURES: Feature[] = [
 
 export const ENGAGEMENT_EXTRAS: Feature[] = [
   { icon: ImageIcon, title: "Mural social com votação", description: "Fotos do desafio da semana, moderadas pelo RH." },
-  { icon: Heart, title: "Games para a família", description: "Caça-palavras e quiz leve para jogar em casa." },
+  { icon: Heart, title: "Games para a família", description: "Caça-palavras e quiz para jogar com quem você ama: a prevenção vai além do trabalho e chega em casa." },
   { icon: QrCode, title: "Check-in presencial por QR", description: "Palestra, simulado ou blitz valendo pontos." },
 ];
 
