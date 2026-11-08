@@ -109,3 +109,12 @@ export async function deleteParticipant(_: ActionResult | null, fd: FormData) {
     return "Participante excluído.";
   });
 }
+
+export async function resetAvatar(_: ActionResult | null, fd: FormData) {
+  return safe(async () => {
+    const { p } = await own(String(fd.get("id")));
+    await sql`update sipatgo.participants set avatar_config = null where id = ${p.id}`;
+    revalidatePath("/admin/participantes");
+    return "Avatar removido. A pessoa pode criar outro no perfil.";
+  });
+}

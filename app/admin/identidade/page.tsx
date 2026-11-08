@@ -30,6 +30,10 @@ export default async function IdentityPage() {
               <Field key={k} label={l}><input type="color" name={k} defaultValue={v} className="h-11 w-full cursor-pointer rounded-xl border border-slate-300" /></Field>
             ))}
           </div>
+          <label className="flex items-start gap-3 rounded-xl bg-slate-50 p-3 text-sm">
+            <input type="checkbox" name="allow_photo_avatar" defaultChecked={c.allow_photo_avatar} className="mt-0.5 h-4 w-4" />
+            <span><strong>Permitir foto como avatar.</strong> A foto aparece no ranking e no mural para todos os colegas. Desligado, só personagens (o “Criar pela foto” continua disponível, pois a foto não sai do celular). O RH pode remover fotos em Participantes.</span>
+          </label>
           <Field label="Fuso horário"><Select name="timezone" defaultValue={c.timezone}>{TZ.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</Select></Field>
           <Field label="Texto de consentimento LGPD" hint={`Versão atual: ${c.consent_version}. Alterar o texto gera nova versão (participantes que já aceitaram não precisam aceitar de novo).`}>
             <Textarea name="consent_text" rows={6} defaultValue={c.consent_text} />

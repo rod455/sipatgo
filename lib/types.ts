@@ -6,7 +6,7 @@ export type Company = {
   id: string; slug: string; name: string; logo_url: string | null;
   primary_color: string; secondary_color: string; accent_color: string;
   timezone: string; consent_text: string; consent_version: string;
-  notifications_webhook_url: string | null; created_at: Date;
+  notifications_webhook_url: string | null; allow_photo_avatar: boolean; created_at: Date;
 };
 
 export type Campaign = {
@@ -38,8 +38,14 @@ export type Participant = {
   consent_at: Date | null; first_login_at: Date | null; created_at: Date;
 };
 
+export type AvatarGender = "m" | "f";
+
 export type AvatarConfig = {
-  style: "adventurer" | "avataaars" | "bottts";
+  style: "adventurer" | "avataaars" | "bottts" | "photo";
   seed: string;
   options: Record<string, string | number | boolean | string[] | undefined>;
+  /** Filtra cabelos/barba/acessórios; ausente = todas as opções. */
+  gender?: AvatarGender;
+  /** Só quando style = "photo" (URL do nosso Storage). */
+  photo_url?: string;
 };

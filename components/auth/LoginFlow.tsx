@@ -23,7 +23,7 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
   const [birth, setBirth] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
-  const [info, setInfo] = useState<{ first_name: string; consent_text: string; needs_consent: boolean; needs_avatar: boolean; role: string } | null>(null);
+  const [info, setInfo] = useState<{ first_name: string; consent_text: string; needs_consent: boolean; needs_avatar: boolean; role: string; allow_photo: boolean } | null>(null);
   const [agree, setAgree] = useState(false);
   const pinRef = useRef<HTMLInputElement>(null);
 
@@ -127,8 +127,8 @@ export function LoginFlow({ slug, brandColors, next }: { slug: string; brandColo
       {step === "avatar" && (
         <div className="space-y-3">
           <h2 className="font-display text-xl font-bold">Crie seu avatar</h2>
-          <p className="text-sm text-slate-600">É ele que aparece no ranking. Dá para mudar depois no perfil.</p>
-          <AvatarEditor initial={null} seed={cpf} brandColors={brandColors} saveLabel="Continuar" onSaved={() => setStep("newpin")} />
+          <p className="text-sm text-slate-600">É ele que aparece no ranking. Escolha homem ou mulher para ver as montagens, ou crie a partir de uma selfie. Dá para mudar depois no perfil.</p>
+          <AvatarEditor initial={null} seed={cpf} brandColors={brandColors} saveLabel="Continuar" allowPhoto={info?.allow_photo} onSaved={() => setStep("newpin")} />
         </div>
       )}
 

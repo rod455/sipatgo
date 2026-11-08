@@ -38,7 +38,7 @@ export async function saveIdentity(_: ActionResult | null, fd: FormData) {
     await sql`
       update sipatgo.companies set name = ${d.name}, primary_color = ${d.primary_color}, secondary_color = ${d.secondary_color}, accent_color = ${d.accent_color},
              timezone = ${d.timezone}, consent_text = ${d.consent_text}, consent_version = ${version},
-             notifications_webhook_url = ${d.notifications_webhook_url || null}, logo_url = coalesce(${logo ?? null}, logo_url)
+             notifications_webhook_url = ${d.notifications_webhook_url || null}, allow_photo_avatar = ${fd.get("allow_photo_avatar") === "on"}, logo_url = coalesce(${logo ?? null}, logo_url)
        where id = ${ctx.adminCompany.id}`;
     if (fd.get("remove_logo") === "on") await sql`update sipatgo.companies set logo_url = null where id = ${ctx.adminCompany.id}`;
     revalidatePath("/", "layout");

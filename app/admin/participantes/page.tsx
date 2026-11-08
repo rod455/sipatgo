@@ -4,7 +4,8 @@ import { formatCpf } from "@/lib/cpf";
 import { Card, Field, Input, PageTitle, Pill, Select } from "@/components/ui";
 import { ActionButton, ActionForm } from "@/components/admin/ActionForm";
 import { CsvImporter } from "@/components/admin/CsvImporter";
-import { addParticipant, deleteParticipant, resetPin, updateParticipant } from "./actions";
+import { addParticipant, deleteParticipant, resetAvatar, resetPin, updateParticipant } from "./actions";
+import { Avatar } from "@/components/avatar/Avatar";
 
 const ROLE: Record<string, string> = { participant: "Participante", leader: "Líder", admin: "Admin", superadmin: "Superadmin" };
 
@@ -13,8 +14,8 @@ export default async function ParticipantsPage({ searchParams }: { searchParams:
   const sp = await searchParams;
   const q = (sp.q ?? "").trim();
   const digits = q.replace(/\D/g, "");
-  const rows = await sql<{ id: string; name: string; cpf: string; sector: string; email: string | null; role: string; pin_set: boolean; pin_reset_required: boolean; first_login_at: Date | null; total_points: number; days_completed: number }[]>`
-    select p.id, p.name, p.cpf, p.sector, p.email, p.role, p.pin_set, p.pin_reset_required, p.first_login_at,
+  const rows = await sql<{ id: string; name: string; cpf: string; sector: string; email: string | null; role: string; pin_set: boolean; pin_reset_required: boolean; first_login_at: Date | null; total_points: number; days_completed: number; avatar_config: { style?: string } | null }[]>`
+    select p.id, p.name, p.cpf, p.sector, p.email, p.role, p.pin_set, p.pin_reset_required, p.first_login_at, p.avatar_config,
            coalesce(s.total_points, 0) as total_points, coalesce(s.days_completed, 0) as days_completed
       from sipatgo.participants p left join sipatgo.participant_scores s on s.participant_id = p.id
      where p.campaign_id = ${campaign.id}
@@ -57,7 +58,7 @@ export default async function ParticipantsPage({ searchParams }: { searchParams:
           <tbody className="divide-y divide-slate-100">
             {rows.map((r) => (
               <tr key={r.id} className="align-top">
-                <td className="p-3 font-medium">{r.name}<p className="text-xs text-slate-400">{r.days_completed}/5 dias</p></td>
+                <td className="p-3 font-medium"><div className="flex items-center gap-2"><Avatar config={r.avatar_config} seed={r.id} size={32} /><div>{r.name}<p className="text-xs text-slate-400">{r.days_completed}/5 dias{r.avatar_config?.style === "photo" ? " · foto" : ""}</p></div></div></td>
                 <td className="whitespace-nowrap py-3 tabular text-slate-600">{formatCpf(r.cpf)}</td>
                 <td className="py-2">
                   <ActionForm action={updateParticipant} submitLabel="Salvar" variant="outline" className="flex flex-wrap items-center gap-1 [&>div]:mt-0">
@@ -75,6 +76,7 @@ export default async function ParticipantsPage({ searchParams }: { searchParams:
                 <td className="p-3 text-right">
                   <div className="flex justify-end gap-1">
                     <ActionButton action={resetPin} label="Resetar PIN" fields={{ id: r.id }} confirm={`Resetar o PIN de ${r.name}?`} />
+                    {r.avatar_config?.style === "photo" && <ActionButton action={resetAvatar} label="Remover foto" variant="ghost" fields={{ id: r.id }} confirm={`Remover a foto de ${r.name}?`} />}
                     <ActionButton action={deleteParticipant} label="Excluir" variant="ghost" fields={{ id: r.id }} confirm={`Excluir ${r.name}? Os pontos serão perdidos.`} />
                   </div>
                 </td>

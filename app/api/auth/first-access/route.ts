@@ -2,6 +2,7 @@ import { body, handle } from "@/lib/api";
 import { companyBySlug, verifyBirthDate } from "@/lib/login";
 import { setSession } from "@/lib/session";
 import { firstName } from "@/lib/utils";
+import { photoAvatarAllowed } from "@/lib/avatar-server";
 
 export const POST = handle(async (req: Request) => {
   const b = await body<{ slug: string; cpf: string; birth_date: string }>(req);
@@ -15,5 +16,6 @@ export const POST = handle(async (req: Request) => {
     consent_text: company.consent_text,
     needs_avatar: !p.avatar_config,
     role: p.role,
+    allow_photo: photoAvatarAllowed(company),
   };
 });

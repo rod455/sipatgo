@@ -7,7 +7,7 @@ import { Alert, Button, Card, Input } from "@/components/ui";
 import { api } from "@/components/ui/fetcher";
 import type { AvatarConfig } from "@/lib/types";
 
-export function ProfileActions({ avatar, seed, brandColors }: { avatar: AvatarConfig | null; seed: string; brandColors: string[] }) {
+export function ProfileActions({ avatar, seed, brandColors, allowPhoto }: { avatar: AvatarConfig | null; seed: string; brandColors: string[]; allowPhoto: boolean }) {
   const router = useRouter();
   const [mode, setMode] = useState<"none" | "avatar" | "pin">("none");
   const [cur, setCur] = useState(""); const [pin, setPin] = useState(""); const [pin2, setPin2] = useState("");
@@ -33,7 +33,7 @@ export function ProfileActions({ avatar, seed, brandColors }: { avatar: AvatarCo
         <Button variant="outline" size="sm" onClick={() => setMode(mode === "pin" ? "none" : "pin")}>Alterar PIN</Button>
         <Button variant="ghost" size="sm" onClick={logout}>Sair</Button>
       </div>
-      {mode === "avatar" && <Card><AvatarEditor initial={avatar} seed={seed} brandColors={brandColors} onSaved={() => { setMode("none"); router.refresh(); }} /></Card>}
+      {mode === "avatar" && <Card><AvatarEditor initial={avatar} seed={seed} brandColors={brandColors} allowPhoto={allowPhoto} onSaved={() => { setMode("none"); router.refresh(); }} /></Card>}
       {mode === "pin" && (
         <Card className="space-y-2">
           <Input type="password" inputMode="numeric" placeholder="PIN atual" maxLength={6} value={cur} onChange={(e) => setCur(e.target.value.replace(/\D/g, ""))} />

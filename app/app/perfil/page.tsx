@@ -4,6 +4,7 @@ import { getToday } from "@/lib/game";
 import { Avatar } from "@/components/avatar/Avatar";
 import { Card, Pill, buttonClass } from "@/components/ui";
 import { ProfileActions } from "./ProfileActions";
+import { photoAvatarAllowed } from "@/lib/avatar-server";
 import { cn } from "@/lib/utils";
 
 export default async function ProfilePage() {
@@ -30,7 +31,7 @@ export default async function ProfilePage() {
         <p className="mt-1 font-display text-xl font-extrabold tabular text-brand">{score?.total_points ?? 0} pts</p>
       </div>
 
-      <ProfileActions avatar={p.avatar_config} seed={p.id} brandColors={[company.primary_color, company.secondary_color, company.accent_color]} />
+      <ProfileActions avatar={p.avatar_config} seed={p.id} brandColors={[company.primary_color, company.secondary_color, company.accent_color]} allowPhoto={photoAvatarAllowed(company)} />
 
       <section id="certificado">
         <h2 className="mb-2 font-display text-lg font-bold">Certificado</h2>
