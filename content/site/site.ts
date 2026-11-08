@@ -4,7 +4,7 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://sipatgo.co
 export const SITE_NAME = "SipatGo";
 export const TAGLINE = "A SIPAT que todo mundo quer jogar.";
 export const DEFAULT_DESCRIPTION =
-  "Transforme a Semana de Prevenção em um jogo de 5 dias: vídeo, desafio e ranking ao vivo. Pronto em dias, com registro automático para a NR-5.";
+  "Transforme a Semana de Prevenção em um jogo de 5 dias: vídeo, desafio e ranking ao vivo, somados às ações presenciais da CIPA. Pronto em dias, com a documentação organizada para comprovar a SIPAT.";
 export const CONTACT_EMAIL = "contato@sipatgo.com.br";
 export const PRIVACY_EMAIL = "privacidade@sipatgo.com.br";
 /** Placeholder: substituir pelo CNPJ real assim que a empresa estiver registrada. */

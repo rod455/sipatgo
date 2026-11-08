@@ -8,8 +8,8 @@ import { CtaButton } from "./CtaButton";
 const TILES = [
   {
     key: "sipat", icon: HardHat, title: "SIPAT", tag: "Semana Interna de Prevenção",
-    text: "A semana obrigatória da NR-5 vira um jogo de 5 dias: vídeo, desafio, roleta e ranking ao vivo. Lista de presença e relatório saem prontos para o registro.",
-    points: ["Grade pronta de segunda a sexta", "Relatório e presença para a NR-5", "Certificado automático"],
+    text: "A semana que a CIPA promove todo ano (NR-5, item 5.3.1 “i”) ganha um jogo de 5 dias que soma às ações presenciais: vídeo, desafio, roleta e ranking ao vivo. Lista de presença e relatório saem prontos para a documentação da CIPA.",
+    points: ["Programação definida pela CIPA, pronta para editar", "Check-in por QR nas palestras presenciais", "Presença e relatório para guardar por 5 anos"],
   },
   {
     key: "abril", icon: Sprout, title: "Abril Verde", tag: "Saúde e segurança no trabalho",

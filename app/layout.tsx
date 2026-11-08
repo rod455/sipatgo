@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.APP_BASE_URL || "https://sipatgo.com.br"),
   title: { default: "SipatGo — SIPAT online gamificada em 5 dias", template: "%s" },
-  description: "A SIPAT que todo mundo quer jogar. Vídeo, desafio e ranking ao vivo em 5 dias, com registro automático para a NR-5.",
+  description: "A SIPAT que todo mundo quer jogar. Vídeo, desafio e ranking ao vivo em 5 dias, somados às ações presenciais da CIPA.",
   applicationName: "SipatGo",
 };
 

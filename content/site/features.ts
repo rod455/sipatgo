@@ -206,8 +206,8 @@ export const COMPARISON: { row: string; sipatgo: string; presencial: string; tra
 ];
 
 export const TRUST_ITEMS: { icon: LucideIcon; label: string }[] = [
-  { icon: FileCheck2, label: "Registro para a NR-5" },
+  { icon: FileCheck2, label: "Documentação para a CIPA" },
   { icon: ShieldCheck, label: "Pensado para a LGPD" },
-  { icon: Zap, label: "100% web" },
+  { icon: Zap, label: "Online + presencial" },
   { icon: Users, label: "Multiunidade" },
 ];

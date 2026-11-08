@@ -1,6 +1,9 @@
 import type { GuideSection } from "./blocks";
 
-/** Conteúdo de /sipat/nr-5. Linguagem cautelosa: não citar itens/alíneas sem certeza. */
+/**
+ * Conteúdo de /sipat/nr-5. Citações conferidas no texto oficial da NR-5 (gov.br, versão com
+ * alterações da Portaria MTP nº 4.219/2022) em 08/11/2026.
+ */
 export const NR5_SECTIONS: GuideSection[] = [
   {
     id: "o-que-e-a-nr-5",
@@ -22,7 +25,7 @@ export const NR5_SECTIONS: GuideSection[] = [
     blocks: [
       {
         type: "p",
-        text: "Para as organizações que precisam constituir CIPA, sim: entre as atribuições da comissão listadas na NR-5 está **promover, anualmente, em conjunto com o SESMT, onde houver, a Semana Interna de Prevenção de Acidentes do Trabalho (SIPAT)**, conforme programação definida pela CIPA. Cabe à organização proporcionar os meios necessários para que a comissão desempenhe as suas atribuições.",
+        text: "Para as organizações que precisam constituir CIPA, sim. O item 5.3.1 da NR-5 lista as atribuições da comissão, e a alínea “i” diz: **“promover, anualmente, em conjunto com o SESMT, onde houver, a Semana Interna de Prevenção de Acidentes do Trabalho - SIPAT, conforme programação definida pela CIPA”**. Pelo item 5.3.2, cabe à organização proporcionar aos membros da CIPA os meios necessários, garantindo tempo suficiente para as tarefas do plano de trabalho.",
       },
       {
         type: "p",
@@ -31,8 +34,8 @@ export const NR5_SECTIONS: GuideSection[] = [
       {
         type: "callout",
         tone: "warning",
-        title: "Confira a redação vigente",
-        text: "Não reproduzimos números de itens e alíneas porque eles mudam entre revisões. Consulte a NR-5 atualizada no portal do Ministério do Trabalho e Emprego (gov.br) e valide a aplicação na sua empresa com o SESMT, a assessoria de SST ou o jurídico.",
+        title: "Fonte e data da conferência",
+        text: "Trechos conferidos em 08/11/2026 no texto oficial da NR-5 publicado no portal do Ministério do Trabalho e Emprego (gov.br), com as alterações da Portaria MTP nº 4.219/2022. As normas mudam: confira a redação vigente e valide a aplicação na sua empresa com o SESMT, a assessoria de SST ou o jurídico.",
       },
     ],
   },
@@ -44,10 +47,12 @@ export const NR5_SECTIONS: GuideSection[] = [
       {
         type: "ul",
         items: [
-          "Que a SIPAT é uma atribuição da CIPA, a ser promovida anualmente.",
-          "Que a promoção é feita em conjunto com o SESMT, onde houver.",
-          "Que a programação é definida pela CIPA.",
-          "Que a organização deve proporcionar os meios para a CIPA atuar.",
+          "Que a SIPAT é uma atribuição da CIPA, a ser promovida anualmente (item 5.3.1, alínea “i”).",
+          "Que a promoção é feita em conjunto com o SESMT, onde houver (item 5.3.1, alínea “i”).",
+          "Que a programação é definida pela CIPA (item 5.3.1, alínea “i”).",
+          "Que a CIPA deve incluir temas de prevenção e combate ao assédio sexual e a outras formas de violência no trabalho nas suas atividades e práticas (item 5.3.1, alínea “j”).",
+          "Que a organização deve proporcionar os meios para a CIPA atuar (item 5.3.2).",
+          "Que toda a documentação referente à CIPA deve ficar no estabelecimento, à disposição da inspeção do trabalho, por no mínimo 5 anos (item 5.9.2).",
         ],
       },
       { type: "h3", text: "O que fica a critério da CIPA" },
@@ -56,13 +61,19 @@ export const NR5_SECTIONS: GuideSection[] = [
         items: [
           "O tema e os subtemas da semana.",
           "O formato das atividades: palestras, dinâmicas, jogos, simulados, campanhas de saúde.",
-          "Se as atividades serão presenciais, online ou híbridas.",
+          "O formato das ações: a NR-5 não traz regra de formato para a SIPAT. Ela fala em formato presencial só em outros pontos, como as reuniões ordinárias da CIPA, realizadas “preferencialmente de forma presencial, podendo a participação ocorrer de forma remota” (item 5.6.2).",
           "A escolha da semana no calendário, respeitando a realidade da operação.",
         ],
       },
       {
         type: "p",
-        text: "Com a inclusão da prevenção ao assédio no escopo da CIPA, vale considerar o tema na programação. A Lei nº 14.457/2022 também trouxe obrigações de capacitação e sensibilização periódicas sobre violência, assédio, igualdade e diversidade para empresas com CIPA; muitas organizações aproveitam a SIPAT para isso. Confirme com o seu jurídico como atender a essas exigências.",
+        text: "Como a alínea “j” manda incluir a prevenção ao assédio nas atividades da CIPA, a programação da SIPAT deve tratar do tema. A Lei nº 14.457/2022 também exige, para empresas com CIPA, ações de capacitação, orientação e sensibilização sobre violência, assédio, igualdade e diversidade no mínimo a cada 12 meses, em formatos acessíveis e apropriados; muitas organizações aproveitam a SIPAT para isso. Confirme com o seu jurídico como atender a essas exigências.",
+      },
+      {
+        type: "callout",
+        tone: "info",
+        title: "Nossa recomendação: SIPAT híbrida",
+        text: "Mesmo sem regra de formato na norma, recomendamos não fazer a SIPAT 100% online: use a plataforma como eixo dos 5 dias e mantenha ações presenciais (abertura, palestra, simulado, blitz) com check-in por QR, além de uma alternativa presencial para quem não tem acesso ao celular. A participação fica mais inclusiva e a comprovação, mais robusta.",
       },
     ],
   },
@@ -77,13 +88,14 @@ export const NR5_SECTIONS: GuideSection[] = [
       {
         type: "ul",
         items: [
-          "**Ata da reunião da CIPA** com o planejamento da SIPAT (tema, programação, responsáveis).",
+          "**Ata da reunião da CIPA** com o planejamento da SIPAT (tema, programação, responsáveis): é a prova de que a programação foi definida pela CIPA, como pede a alínea “i”.",
           "**Programação oficial** divulgada aos trabalhadores.",
           "**Listas de presença por atividade e por dia.**",
           "**Materiais utilizados:** vídeos, apresentações, perguntas, cartazes.",
           "**Registros fotográficos** das atividades presenciais, com autorização de imagem.",
           "**Relatório final** com participação e resultados.",
           "**Ata da reunião de avaliação** com pontos de melhoria.",
+          "Guarde tudo no estabelecimento por **no mínimo 5 anos** (item 5.9.2).",
         ],
       },
     ],

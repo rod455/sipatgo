@@ -37,7 +37,7 @@ export const DEFAULT_WEEK: DefaultDay[] = [
   },
   {
     day_index: 2,
-    title: "Saúde mental e bem-estar",
+    title: "Saúde mental, respeito e prevenção ao assédio",
     theme: "Complementar 1",
     has_wheel: false,
     activity: {
@@ -48,8 +48,8 @@ export const DEFAULT_WEEK: DefaultDay[] = [
           { question: "Qual atitude ajuda a reduzir o estresse no trabalho?", options: ["Pular o almoço para adiantar", "Fazer pausas curtas e planejadas", "Levar trabalho para casa todo dia", "Evitar conversar com a equipe"], correct_index: 1, explanation: "Pausas planejadas recuperam a atenção e reduzem erros." },
           { question: "Cansaço extremo no trabalho aumenta principalmente:", options: ["A produtividade", "O risco de acidentes", "A criatividade", "O salário"], correct_index: 1, explanation: "Fadiga reduz atenção e tempo de reação — e acidentes aumentam." },
           { question: "Percebeu um colega muito abatido há dias. O melhor é:", options: ["Ignorar, não é problema seu", "Fazer piada para animar", "Conversar e oferecer apoio", "Contar para todo mundo"], correct_index: 2, explanation: "Escuta e acolhimento fazem diferença. Indique os canais de apoio da empresa." },
-          { question: "Quantas horas de sono um adulto precisa, em média?", options: ["4 a 5", "7 a 9", "10 a 12", "Tanto faz"], correct_index: 1, explanation: "Dormir de 7 a 9 horas melhora a atenção, o humor e a imunidade." },
-          { question: "Ginástica laboral serve para:", options: ["Substituir a academia", "Preparar o corpo e prevenir lesões", "Ocupar o tempo", "Avaliar desempenho"], correct_index: 1, explanation: "Alongamentos e aquecimento previnem lesões por esforço repetitivo." },
+          { question: "Um colega faz piadas de cunho sexual sobre uma colega, que fica constrangida. Isso é:", options: ["Brincadeira normal de equipe", "Pode ser assédio e deve ser interrompido e comunicado", "Problema só dela", "Aceitável fora do expediente"], correct_index: 1, explanation: "Comentários, piadas e insinuações indesejadas de cunho sexual podem configurar assédio. Interrompa, apoie quem foi atingido e comunique pelos canais da empresa." },
+          { question: "Você sofreu ou presenciou assédio no trabalho. O melhor caminho é:", options: ["Guardar para si", "Usar o canal de denúncias ou procurar a CIPA/RH", "Expor nas redes sociais", "Esperar acontecer de novo"], correct_index: 1, explanation: "A empresa deve manter canal de denúncias com sigilo, e a CIPA atua na prevenção e no combate ao assédio e a outras formas de violência no trabalho." },
         ],
       },
     },
@@ -154,7 +154,7 @@ export const TRANSPORT_WEEK: DefaultDay[] = [
   },
   {
     day_index: 2,
-    title: "Fadiga e saúde ao volante",
+    title: "Fadiga, saúde e respeito a bordo",
     theme: "Complementar 1",
     has_wheel: false,
     activity: {
@@ -165,8 +165,8 @@ export const TRANSPORT_WEEK: DefaultDay[] = [
           { question: "Qual destes é um sinal de fadiga ao dirigir?", options: ["Bocejar e piscar com frequência", "Cantar junto com o rádio", "Conferir os retrovisores", "Reduzir a velocidade na curva"], correct_index: 0, explanation: "Bocejos, piscadas longas e não lembrar dos últimos quilômetros são alertas. Pare em local seguro." },
           { question: "Sentiu sono no meio da viagem. O que resolve de verdade?", options: ["Abrir a janela", "Tomar mais café e seguir", "Parar em local seguro e descansar", "Aumentar o volume do som"], correct_index: 2, explanation: "Café e vento só disfarçam. O único remédio para o sono é descanso." },
           { question: "Antes de uma jornada longa, o ideal é:", options: ["Dormir bem na noite anterior", "Fazer uma refeição bem pesada", "Virar a noite para adiantar", "Tomar energético no lugar do sono"], correct_index: 0, explanation: "Sono de qualidade antes da viagem é a principal prevenção contra a fadiga." },
-          { question: "Por que o motorista deve fazer pausas durante a jornada?", options: ["Só para cumprir horário", "Para recuperar a atenção e o corpo", "Não há motivo", "Para atrasar a viagem"], correct_index: 1, explanation: "Pausas recuperam atenção e reduzem dores. Respeite os intervalos de descanso previstos na legislação e na escala." },
-          { question: "Ficar muitas horas sentado pode causar:", options: ["Melhora da postura", "Dores nas costas e má circulação", "Mais disposição", "Nada"], correct_index: 1, explanation: "Ajuste o banco, alongue-se nas paradas e beba água para cuidar do corpo." },
+          { question: "Um passageiro faz comentários de cunho sexual a uma passageira, que fica constrangida. O que fazer?", options: ["Ignorar, não é com você", "Intervir com respeito e comunicar conforme o procedimento da empresa", "Rir junto para não criar clima", "Só pedir para ela trocar de lugar"], correct_index: 1, explanation: "Assédio não é brincadeira. Proteja quem foi atingido, siga o procedimento da empresa e, se preciso, acione as autoridades." },
+          { question: "Sofreu ou presenciou assédio entre colegas de trabalho. O melhor caminho é:", options: ["Guardar para si", "Usar o canal de denúncias ou procurar a CIPA/RH", "Expor no grupo da garagem", "Resolver na discussão"], correct_index: 1, explanation: "A empresa deve manter canal de denúncias com sigilo, e a CIPA atua na prevenção e no combate ao assédio e a outras formas de violência no trabalho." },
         ],
       },
     },

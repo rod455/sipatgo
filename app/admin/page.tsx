@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireAdminCampaign } from "@/lib/auth";
 import { campaignStats } from "@/lib/stats";
+import { campaignCompliance } from "@/lib/compliance";
 import { pct } from "@/lib/utils";
 import { ACTIVITY_LABELS, type ActivityType } from "@/lib/activities";
 import { sql } from "@/lib/db";
@@ -14,6 +15,8 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   const s = await campaignStats(campaign.id, dia);
   const [act] = s.day ? await sql<{ type: ActivityType }[]>`select type from sipatgo.activities where campaign_day_id = ${s.day.id}` : [];
   const t = s.totals;
+  const compliance = await campaignCompliance(campaign.id);
+  const pendingCompliance = compliance.filter((i) => !i.ok && i.level === "obrigatorio");
   const funnel = [
     { k: "Acessaram o dia", v: s.funnel.accessed },
     { k: "Assistiram o vídeo", v: s.funnel.video },
@@ -23,6 +26,12 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   return (
     <div className="space-y-6">
       <PageTitle title="Dashboard" subtitle={`${campaign.name} · ${campaign.theme}`} action={<AutoRefresh campaignId={campaign.id} />} />
+
+      {pendingCompliance.length > 0 && (
+        <Link href="/admin/campanha" className="block rounded-2xl bg-amber-50 p-4 text-sm text-amber-900 ring-1 ring-amber-200">
+          <strong>Conformidade NR-5:</strong> {pendingCompliance.map((i) => i.label).join(" · ")}. Resolver na página da campanha →
+        </Link>
+      )}
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Stat label="Participantes" value={t.people} />

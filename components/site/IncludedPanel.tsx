@@ -2,12 +2,12 @@ import { BarChart3, FileCheck2, Gamepad2, Headset, Megaphone, ShieldCheck, Troph
 import { Logo } from "./Logo";
 
 const ITEMS = [
-  { icon: null, text: "Método SipatGo de 5 dias: vídeo, desafio e ranking todo dia" },
+  { icon: null, text: "Método SipatGo de 5 dias, integrado às ações presenciais da CIPA" },
   { icon: Gamepad2, text: "5 dinâmicas e games da família prontos para editar" },
   { icon: BarChart3, text: "Painel para o RH conduzir a campanha e app para os trabalhadores" },
   { icon: Megaphone, text: "Kit de divulgação completo: cartaz, banner e post com QR" },
   { icon: Trophy, text: "Ranking ao vivo individual e por setor, roleta de brindes" },
-  { icon: FileCheck2, text: "Lista de presença e relatório final para registro da NR-5" },
+  { icon: FileCheck2, text: "Lista de presença e relatório final para a documentação da CIPA" },
   { icon: Headset, text: "Suporte técnico e operacional durante a semana" },
   { icon: ShieldCheck, text: "Dados protegidos e consentimento conforme a LGPD" },
 ];

@@ -27,7 +27,7 @@ export const CASES: CaseStudy[] = [
     sector: "Indústria metalúrgica",
     people: 120,
     city: "Interior de SP",
-    summary: "Como seria a SIPAT de uma fábrica com 3 turnos, rodando 100% no celular em 5 dias.",
+    summary: "Como seria a SIPAT de uma fábrica com 3 turnos: jogo de 5 dias no celular somado às ações presenciais da CIPA.",
     brand: { primary: "#15803D", secondary: "#1D4ED8" },
     challenge: [
       "Três turnos e uma palestra única no refeitório: metade da fábrica nunca participava.",

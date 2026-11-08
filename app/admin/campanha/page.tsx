@@ -7,6 +7,8 @@ import { Card, Field, Input, PageTitle, Select, Textarea, Alert } from "@/compon
 import { ActionButton, ActionForm } from "@/components/admin/ActionForm";
 import { closeNow, createCampaign, reissueCertificates, saveCampaign } from "./actions";
 import { selectCompany } from "../context-actions";
+import { campaignCompliance } from "@/lib/compliance";
+import { ComplianceCard } from "@/components/admin/ComplianceCard";
 import { sql } from "@/lib/db";
 
 function toLocalInput(d: Date, tz: string) {
@@ -21,6 +23,7 @@ export default async function CampaignPage({ searchParams }: { searchParams: Pro
   const c = ctx.campaign;
   const tz = ctx.adminCompany.timezone;
   const days = c ? await loadDays(c.id) : [];
+  const compliance = c ? await campaignCompliance(c.id) : [];
   const others = !c && ctx.participant.role === "superadmin"
     ? await sql<{ id: string; name: string }[]>`
         select co.id, co.name from sipatgo.companies co
@@ -57,11 +60,16 @@ export default async function CampaignPage({ searchParams }: { searchParams: Pro
               <Field label="Mensagem da liderança (exibida na segunda antes do conteúdo)"><Textarea name="opening_message" rows={3} defaultValue={c.opening_message ?? ""} /></Field>
               <Field label="Vídeo da liderança (YouTube, opcional)"><Input name="opening_video_url" defaultValue={c.opening_video_url ?? ""} placeholder="https://youtu.be/..." /></Field>
               <Field label="Desafio do mural"><Input name="wall_challenge" defaultValue={c.wall_challenge ?? ""} /></Field>
+              <Field label="Aprovação da programação pela CIPA" hint="NR-5, item 5.3.1 “i”: a programação da SIPAT é definida pela CIPA, em conjunto com o SESMT onde houver. Ex.: “Ata nº 7 da reunião ordinária de 12/11/2026”. Sai no relatório final.">
+                <Input name="cipa_approval" defaultValue={c.cipa_approval ?? ""} placeholder="Ata nº __ da reunião de __/__/____" />
+              </Field>
             </ActionForm>
             <p className="mt-3 text-xs text-slate-500">Mural: votação até {new Intl.DateTimeFormat("pt-BR", { timeZone: tz, dateStyle: "short", timeStyle: "short" }).format(votingDeadline(clock, days))}.</p>
           </Card>
         );
       })()}
+
+      {c && !nova && <ComplianceCard items={compliance} />}
 
       {c && !nova && (
         <Card className="space-y-3">

@@ -13,7 +13,7 @@ export function SiteFooter() {
             <Logo variant="white" className="h-8" />
             <p className="mt-4 font-display text-lg font-bold">{TAGLINE}</p>
             <p className="mt-2 text-sm leading-6 text-white/70">
-              Sua SIPAT em 5 dias, 100% digital. Vídeo, desafio e ranking ao vivo, com registro automático para a NR-5.
+              Sua SIPAT em 5 dias, no celular e no presencial. Vídeo, desafio e ranking ao vivo, com a documentação organizada para a CIPA.
             </p>
             <a href={`mailto:${CONTACT_EMAIL}`} className="mt-4 inline-block text-sm font-medium text-sg-orange-500 hover:underline">
               {CONTACT_EMAIL}

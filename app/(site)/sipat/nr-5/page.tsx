@@ -89,7 +89,7 @@ export default function Nr5Page() {
 
       <FinalCta
         origem="sipat-nr5"
-        title="Registro para a NR-5 sem digitar uma linha."
+        title="A documentação da SIPAT organizada para a CIPA."
         lead="Presença por dia, relatório final e certificados com verificação: tudo sai pronto da plataforma."
       />
     </>

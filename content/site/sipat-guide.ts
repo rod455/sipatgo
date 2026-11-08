@@ -66,15 +66,15 @@ export const SIPAT_GUIDE: GuideSection[] = [
     blocks: [
       {
         type: "p",
-        text: "A NR-5 trata da CIPA: como ela é constituída, dimensionada, eleita, treinada e quais são as suas atribuições. Entre essas atribuições está **promover, anualmente, em conjunto com o SESMT, onde houver, a Semana Interna de Prevenção de Acidentes do Trabalho**, conforme a programação definida pela própria CIPA.",
+        text: "A NR-5 trata da CIPA: como ela é constituída, dimensionada, eleita, treinada e quais são as suas atribuições. Entre essas atribuições está **promover, anualmente, em conjunto com o SESMT, onde houver, a Semana Interna de Prevenção de Acidentes do Trabalho**, conforme a programação definida pela própria CIPA (item 5.3.1, alínea “i”).",
       },
       {
         type: "p",
-        text: "A norma passou por uma revisão ampla publicada em 2021 e, em 2022, a Lei nº 14.457 alterou o nome da comissão para **Comissão Interna de Prevenção de Acidentes e de Assédio**, incorporando a prevenção ao assédio sexual e a outras formas de violência no trabalho às suas atribuições. Por isso, muitas empresas passaram a incluir esse tema na programação da SIPAT.",
+        text: "A norma passou por uma revisão ampla publicada em 2021 e, em 2022, a Lei nº 14.457 alterou o nome da comissão para **Comissão Interna de Prevenção de Acidentes e de Assédio**, incorporando a prevenção ao assédio sexual e a outras formas de violência no trabalho às suas atribuições: a alínea “j” do item 5.3.1 manda a CIPA incluir esses temas nas suas atividades e práticas. Por isso, a programação da SIPAT deve tratar do assunto.",
       },
       {
         type: "p",
-        text: "O que a norma **não** faz é detalhar um formato obrigatório para as atividades da semana. Duração exata de cada ação, se é palestra ou jogo, presencial ou online: isso fica a critério da CIPA, de acordo com a realidade da empresa.",
+        text: "O que a norma **não** faz é detalhar um formato para as atividades da semana: duração de cada ação, palestra ou jogo, presencial ou online ficam na programação definida pela CIPA. Nossa recomendação é a SIPAT **híbrida**, com a plataforma digital como eixo e ações presenciais com check-in, para que ninguém fique de fora. E guarde a documentação no estabelecimento por no mínimo 5 anos (item 5.9.2).",
       },
       {
         type: "callout",

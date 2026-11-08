@@ -2,6 +2,7 @@ import { Document, Page, StyleSheet, Text, View, renderToBuffer } from "@react-p
 import { formatDateBR } from "../dates";
 import { formatCpf } from "../cpf";
 import type { reportSummary, attendance } from "../reports";
+import type { ComplianceItem } from "../compliance";
 
 const s = StyleSheet.create({
   page: { padding: 32, fontSize: 9, fontFamily: "Helvetica", color: "#0f172a" },
@@ -16,7 +17,7 @@ const s = StyleSheet.create({
   footer: { position: "absolute", bottom: 16, left: 32, right: 32, fontSize: 7, color: "#94a3b8", flexDirection: "row", justifyContent: "space-between" },
 });
 
-type Header = { company: string; campaign: string; theme: string; start: string; end: string; color: string; generated: string };
+type Header = { company: string; campaign: string; theme: string; start: string; end: string; color: string; generated: string; formatDate: (d: Date) => string };
 
 function Footer({ h }: { h: Header }) {
   return (
@@ -40,7 +41,13 @@ function Table({ cols, rows }: { cols: { label: string; w: string; align?: "righ
 
 const pct = (n: number, d: number) => (d ? `${Math.round((100 * n) / d)}%` : "0%");
 
-export async function renderFinalReport(h: Header, r: Awaited<ReturnType<typeof reportSummary>>, att: Awaited<ReturnType<typeof attendance>>) {
+export type ReportExtra = {
+  cipaApproval: string | null;
+  compliance: ComplianceItem[];
+  events: { name: string; starts_at: Date; checkins: number }[];
+};
+
+export async function renderFinalReport(h: Header, r: Awaited<ReturnType<typeof reportSummary>>, att: Awaited<ReturnType<typeof attendance>>, x: ReportExtra) {
   const { s: t } = r;
   const STATUS: Record<string, string> = { done: "Sim", makeup: "Rec.", none: "—" };
   const doc = (
@@ -49,6 +56,19 @@ export async function renderFinalReport(h: Header, r: Awaited<ReturnType<typeof 
         <Text style={[s.h1, { color: h.color }]}>Relatório final da SIPAT</Text>
         <Text style={{ fontSize: 12, marginTop: 2 }}>{h.company} — {h.campaign}{h.theme ? ` · ${h.theme}` : ""}</Text>
         <Text style={s.muted}>Período: {formatDateBR(h.start)} a {formatDateBR(h.end)}</Text>
+        <Text style={{ marginTop: 4 }}>Programação definida pela CIPA (NR-5, item 5.3.1, alínea “i”): {x.cipaApproval?.trim() || "não informada"}</Text>
+
+        <Text style={s.h2}>Conformidade com a NR-5</Text>
+        <Table cols={[{ label: "Item", w: "40%" }, { label: "Referência", w: "28%" }, { label: "Situação", w: "32%" }]}
+          rows={x.compliance.map((c) => [c.label, c.reference, c.level === "lembrete" ? "Lembrete" : c.ok ? "Atendido" : c.level === "obrigatorio" ? "PENDENTE" : "Não realizado (recomendado)"])} />
+
+        {x.events.length > 0 && (
+          <>
+            <Text style={s.h2}>Ações presenciais (check-in)</Text>
+            <Table cols={[{ label: "Ação", w: "60%" }, { label: "Data", w: "22%" }, { label: "Check-ins", w: "18%", align: "right" }]}
+              rows={x.events.map((e) => [e.name, h.formatDate(e.starts_at), e.checkins])} />
+          </>
+        )}
 
         <Text style={s.h2}>Adesão e engajamento</Text>
         <View style={s.grid}>
@@ -77,6 +97,7 @@ export async function renderFinalReport(h: Header, r: Awaited<ReturnType<typeof 
         <Text style={s.h2}>Aprendizado — acerto na 1ª tentativa por item</Text>
         <Table cols={[{ label: "Dia", w: "7%" }, { label: "Dinâmica", w: "16%" }, { label: "Item", w: "55%" }, { label: "Resp.", w: "10%", align: "right" }, { label: "% 1ª", w: "12%", align: "right" }]}
           rows={r.learning.map((x) => [x.day_index, x.type, `${x.item}. ${x.label}`, x.answered, x.rate === null ? "—" : `${x.rate}%`])} />
+        <Text style={[s.muted, { marginTop: 12 }]}>Guarde este relatório, a lista de presença e as atas da CIPA no estabelecimento por no mínimo 5 anos (NR-5, item 5.9.2).</Text>
         <Footer h={h} />
       </Page>
 

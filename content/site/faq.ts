@@ -11,8 +11,8 @@ export const HOME_FAQ: FaqItem[] = [
     a: "Sim. O acesso é por CPF e data de nascimento no primeiro login, depois CPF e PIN. Perfeito para chão de fábrica, campo e equipes que não têm e-mail da empresa.",
   },
   {
-    q: "Como fica o registro da NR-5?",
-    a: "A plataforma registra automaticamente quem participou de cada dia, a pontuação e o aprendizado pergunta a pergunta. No fim, você exporta a lista de presença por dia e um relatório final em PDF e CSV para guardar junto com a documentação da CIPA.",
+    q: "Como fica a comprovação da SIPAT?",
+    a: "A NR-5 coloca a SIPAT entre as atribuições da CIPA, com programação definida pela própria comissão (item 5.3.1 “i”). A plataforma registra quem participou de cada dia, o check-in nas ações presenciais e o aprendizado pergunta a pergunta, e gera a lista de presença e o relatório final em PDF e CSV. Esses arquivos se somam às atas da CIPA, que continuam sendo da comissão, e devem ficar guardados no estabelecimento por no mínimo 5 anos (item 5.9.2).",
   },
   {
     q: "Posso usar meus próprios vídeos?",
@@ -59,8 +59,8 @@ export const SIPAT_FAQ: FaqItem[] = [
     a: "A CIPA define a programação e conduz a semana, com apoio do SESMT (quando a empresa tem) e da organização, que fornece os meios. Na prática, o RH costuma cuidar da logística, da comunicação e dos fornecedores.",
   },
   {
-    q: "A SIPAT pode ser online?",
-    a: "A norma não fixa um formato específico para as ações da SIPAT. Muitas empresas fazem versões online ou híbridas, principalmente quando há turnos e várias unidades. O importante é ter programação definida pela CIPA e registros que comprovem a realização e a participação.",
+    q: "A SIPAT pode ser só online?",
+    a: "A NR-5 não define o formato das ações: ela determina que a CIPA promova a SIPAT anualmente, em conjunto com o SESMT onde houver, conforme a programação que a própria CIPA definir. Nossa recomendação é uma SIPAT híbrida: a plataforma digital como eixo da semana, somada a ações presenciais (abertura, palestras, simulados) com check-in por QR, e alternativa presencial para quem não tem celular. Assim ninguém fica de fora e a comprovação fica mais robusta.",
   },
   {
     q: "Quanto tempo dura a SIPAT?",

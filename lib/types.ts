@@ -16,6 +16,7 @@ export type Campaign = {
   opening_message: string | null; opening_video_url: string | null;
   wall_challenge: string | null; wall_voting_deadline: Date | null;
   status: "draft" | "scheduled" | "active" | "closed"; closed_at: Date | null; created_at: Date;
+  cipa_approval: string | null;
 };
 
 export type CampaignDay = {

@@ -29,7 +29,7 @@ import { SEGMENT_NOTE } from "@/content/site/segments";
 export const metadata: Metadata = pageMetadata({
   title: "SipatGo — SIPAT online gamificada em 5 dias",
   description:
-    "A SIPAT que todo mundo quer jogar. Vídeo, desafio e ranking ao vivo em 5 dias, no celular, com a marca da sua empresa e registro automático para a NR-5.",
+    "A SIPAT que todo mundo quer jogar. Vídeo, desafio e ranking ao vivo em 5 dias, no celular e nas ações presenciais, com a marca da sua empresa e a documentação organizada para a CIPA.",
   path: "/",
   keywords: ["sipat online", "sipat gamificada", "plataforma sipat", "sipat digital", "sipat 2026"],
 });
@@ -47,7 +47,7 @@ export default function HomePage() {
         <Container className="relative grid items-center gap-14 pb-16 pt-12 md:pb-24 md:pt-20 lg:grid-cols-[1.15fr_1fr]">
           <div>
             <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-sg-sand-50 px-4 py-1.5 text-sm font-semibold text-sg-navy-700 ring-1 ring-sg-navy-900/10">
-              <span aria-hidden className="size-2 rounded-full bg-sg-orange-500" /> SIPAT 2026 · 100% digital
+              <span aria-hidden className="size-2 rounded-full bg-sg-orange-500" /> SIPAT 2026 · digital + presencial
             </p>
             <h1 className="display-xl font-display text-[44px] font-extrabold leading-[1.02] text-sg-navy-900 text-balance sm:text-[56px] lg:text-[72px]">
               A SIPAT que todo mundo quer{" "}
@@ -59,7 +59,7 @@ export default function HomePage() {
               </span>
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-sg-navy-700/80 md:text-xl">
-              Transforme a Semana de Prevenção em um jogo de 5 dias: vídeo, desafio e ranking ao vivo. Pronto em dias, com registro automático para a NR-5.
+              Transforme a Semana de Prevenção em um jogo de 5 dias: vídeo, desafio e ranking ao vivo, junto com as palestras e ações presenciais da sua CIPA. Pronto em dias, com a documentação organizada para comprovar a SIPAT.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <CtaButton href="/contato" size="lg" arrow trackLabel="hero_monte_sua_sipat">
@@ -70,7 +70,7 @@ export default function HomePage() {
               </CtaButton>
             </div>
             <ul className="mt-9 flex flex-col gap-2 text-[15px] font-semibold text-sg-navy-700 sm:flex-row sm:flex-wrap sm:gap-x-6">
-              {["Sem instalar nada", "Funciona no celular", "Com a marca da sua empresa"].map((m) => (
+              {["Sem instalar nada", "Check-in nas ações presenciais", "Com a marca da sua empresa"].map((m) => (
                 <li key={m} className="flex items-center gap-2">
                   <span className="flex size-5 items-center justify-center rounded-full bg-sg-green-500/15">
                     <Check aria-hidden className="size-3.5 text-sg-green-500" strokeWidth={3.5} />

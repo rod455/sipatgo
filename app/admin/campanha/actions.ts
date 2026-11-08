@@ -25,6 +25,7 @@ const campaignSchema = z.object({
   opening_message: z.string().max(2000).default(""),
   opening_video_url: z.string().max(300).default(""),
   wall_challenge: z.string().max(300).default(""),
+  cipa_approval: z.string().trim().max(300).default(""),
   status: z.enum(["draft", "scheduled", "active", "closed"]),
 });
 
@@ -48,7 +49,7 @@ export async function saveCampaign(_: ActionResult | null, fd: FormData) {
                wall_voting_deadline = ${localToInstant(d.wall_voting_deadline, tz)},
                makeup_factor = ${d.makeup_factor}, min_days_for_certificate = ${d.min_days_for_certificate},
                opening_message = ${d.opening_message || null}, opening_video_url = ${d.opening_video_url || null},
-               wall_challenge = ${d.wall_challenge || null}, status = ${d.status}
+               wall_challenge = ${d.wall_challenge || null}, cipa_approval = ${d.cipa_approval || null}, status = ${d.status}
          where id = ${ctx.campaign.id} and company_id = ${ctx.adminCompany.id}`;
       for (let i = 1; i <= 5; i++) {
         await tx`update sipatgo.campaign_days set date = ${addDays(d.start_date, i - 1)} where campaign_id = ${ctx.campaign.id} and day_index = ${i}`;
