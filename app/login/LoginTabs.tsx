@@ -30,7 +30,7 @@ export function LoginTabs({ next }: { next?: string }) {
       </div>
       {tab === "colaborador" ? (
         <div>
-          <p className="mb-4 text-sm text-slate-600">Entre com seu CPF e sua senha. No primeiro acesso, você confirma a data de nascimento e cria a senha.</p>
+          <p className="mb-4 text-sm text-slate-600">Entre com seu CPF e sua senha.</p>
           <LoginFlow next={next} />
         </div>
       ) : (

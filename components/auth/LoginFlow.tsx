@@ -30,6 +30,8 @@ export function LoginFlow({ slug: fixedSlug, brandColors: fixedColors, next }: {
   const [info, setInfo] = useState<{ first_name: string; consent_text: string; needs_consent: boolean; needs_avatar: boolean; role: string; allow_photo: boolean } | null>(null);
   const [agree, setAgree] = useState(false);
   const pinRef = useRef<HTMLInputElement>(null);
+  const [firstHint, setFirstHint] = useState(false);
+  const cpfRef = useRef<HTMLInputElement>(null);
   const [found, setFound] = useState<{ slug: string; company: string; colors: string[] } | null>(null);
   const slug = fixedSlug ?? found?.slug ?? "";
   const brandColors = fixedColors ?? found?.colors ?? [];
@@ -84,13 +86,23 @@ export function LoginFlow({ slug: fixedSlug, brandColors: fixedColors, next }: {
         <form onSubmit={(e) => { e.preventDefault(); submitCpf(); }} className="space-y-4">
           <div>
             <Label htmlFor="cpf">Seu CPF</Label>
-            <Input id="cpf" inputMode="numeric" autoComplete="username" placeholder="000.000.000-00" value={cpf}
+            <Input id="cpf" ref={cpfRef} inputMode="numeric" autoComplete="username" placeholder="000.000.000-00" value={cpf}
               onChange={(e) => setCpf(maskCpfInput(e.target.value))} autoFocus className="h-14 text-lg tracking-wide" />
           </div>
           {err && <Alert>{err}</Alert>}
           <Button type="submit" size="lg" className="w-full" disabled={busy || cpf.replace(/\D/g, "").length !== 11}>
             {busy ? "Verificando..." : "Continuar"}
           </Button>
+          {firstHint ? (
+            <p className="rounded-xl bg-brand-50 p-3 text-sm leading-relaxed text-brand-ink">
+              <b>Primeiro acesso:</b> digite seu CPF e toque em Continuar. Vamos pedir sua data de nascimento, você aceita o termo de privacidade, monta seu avatar e cria sua senha.
+            </p>
+          ) : (
+            <button type="button" onClick={() => { setFirstHint(true); cpfRef.current?.focus(); }}
+              className="w-full text-center text-sm font-semibold text-brand hover:underline">
+              Primeiro acesso? Crie sua senha
+            </button>
+          )}
         </form>
       )}
 
