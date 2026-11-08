@@ -1,0 +1,27 @@
+/* Marca SipatGo — usada SOMENTE no site público e em assinaturas discretas.
+   A área da campanha usa os tokens --brand-* da company. Nunca misturar. */
+:root {
+  --sg-navy-900: #0B1F33;
+  --sg-navy-700: #13385C;
+  --sg-navy-500: #1F5A8C;
+  --sg-orange-500: #FF6A13;
+  --sg-orange-600: #E5570A;
+  --sg-yellow-400: #FFC628;
+  --sg-green-500: #22C55E;
+  --sg-red-500: #EF4444;
+  --sg-sand-50: #FAF7F2;
+  --sg-sand-100: #F1EBE1;
+  --sg-gray-600: #5B6B7B;
+  --sg-white: #FFFFFF;
+}
+
+/* ---- Site público: animações auxiliares ---- */
+@keyframes sg-countdown { from { transform: scaleX(1) } to { transform: scaleX(0) } }
+@keyframes sg-float { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
+.sg-float { animation: sg-float 5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .sg-float { animation: none; }
+}
+@media print {
+  .sg-print-plain { background: #fff !important; color: #000 !important; box-shadow: none !important; }
+}
