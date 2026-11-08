@@ -20,7 +20,7 @@ export function LoginTabs({ next }: { next?: string }) {
   return (
     <div>
       <div role="tablist" aria-label="Tipo de acesso" className="mb-5 grid grid-cols-2 gap-1 rounded-2xl bg-slate-100 p-1">
-        {([["colaborador", "Sou colaborador", HardHat], ["rh", "Sou RH", Briefcase]] as const).map(([k, label, Icon]) => (
+        {([["colaborador", "Sou colaborador", HardHat], ["rh", "Sou organizador", Briefcase]] as const).map(([k, label, Icon]) => (
           <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
             className={cn("flex h-11 items-center justify-center gap-2 rounded-xl text-sm font-bold transition",
               tab === k ? "bg-white text-[var(--sg-navy-900)] shadow-sm" : "text-slate-500 hover:text-slate-700")}>
@@ -68,7 +68,7 @@ function RhLogin({ next }: { next?: string }) {
         done(r.role);
       }); }}>
         <button type="button" onClick={() => { setMode("login"); setErr(""); }} className="flex items-center gap-1 text-sm text-slate-500"><ArrowLeft className="h-4 w-4" /> Voltar</button>
-        <p className="text-sm text-slate-600">Primeiro acesso do RH: confirme seus dados e crie uma senha.</p>
+        <p className="text-sm text-slate-600">Primeiro acesso: confirme seus dados e crie uma senha.</p>
         <div><Label htmlFor="rh-email">E-mail</Label><Input id="rh-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} className="h-12" /></div>
         <div className="grid grid-cols-2 gap-3">
           <div><Label htmlFor="rh-cpf">CPF</Label><Input id="rh-cpf" inputMode="numeric" placeholder="000.000.000-00" value={cpf} onChange={(e) => setCpf(maskCpf(e.target.value))} className="h-12" /></div>
@@ -90,7 +90,7 @@ function RhLogin({ next }: { next?: string }) {
       const r = await api<{ role: string }>("/api/auth/rh-login", { email, password });
       done(r.role);
     }); }}>
-      <p className="text-sm text-slate-600">Acesso ao painel.</p>
+      <p className="text-sm text-slate-600">Acesso ao painel da campanha.</p>
       <div><Label htmlFor="rh-email">E-mail</Label><Input id="rh-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus className="h-12" /></div>
       <div><Label htmlFor="rh-pass">Senha</Label><Input id="rh-pass" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12" /></div>
       {err && <Alert>{err}</Alert>}
