@@ -2,7 +2,7 @@
   "name": "sipatgo",
   "version": "0.1.0",
   "private": true,
-  "description": "SipatGo — plataforma de SIPAT digital gamificada",
+  "description": "SipatGo \u2014 plataforma de SIPAT digital gamificada",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -16,12 +16,14 @@
     "test:integration": "vitest run tests/integration.test.ts"
   },
   "engines": {
-    "node": ">=20"
+    "node": "22.x"
   },
   "dependencies": {
     "@date-fns/tz": "^1.4.1",
     "@dicebear/collection": "^9.2.4",
     "@dicebear/core": "^9.2.4",
+    "@fontsource-variable/inter": "^5.2.8",
+    "@fontsource-variable/sora": "^5.2.8",
     "@react-pdf/renderer": "^4.3.0",
     "@supabase/supabase-js": "^2.57.4",
     "bcryptjs": "^3.0.2",
