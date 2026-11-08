@@ -14,7 +14,7 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (pathname === "/" || pathname === "/login") {
     const url = req.nextUrl.clone();
-    url.pathname = `/c/${sub}`;
+    url.pathname = `/${sub}`;
     return NextResponse.rewrite(url);
   }
   return NextResponse.next();

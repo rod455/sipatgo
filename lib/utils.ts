@@ -23,9 +23,7 @@ export function appBaseUrl(): string {
   return (process.env.APP_BASE_URL || (vercel ? `https://${vercel}` : "http://localhost:3000")).replace(/\/$/, "");
 }
 
+/** Endereço da campanha de cada empresa: sipatgo.com.br/{slug}. */
 export function campaignUrl(slug: string): string {
-  const root = process.env.ROOT_DOMAIN;
-  const base = appBaseUrl();
-  if (root && base.includes(root)) return `https://${slug}.${root}`;
-  return `${base}/c/${slug}`;
+  return `${appBaseUrl()}/${slug}`;
 }

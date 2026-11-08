@@ -16,9 +16,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const root = process.env.ROOT_DOMAIN;
   if (root && host.endsWith(`.${root}`)) {
     const slug = host.slice(0, -root.length - 1).split(".").pop();
-    if (slug && slug !== "www") redirect(`/c/${slug}${next ? `?next=${encodeURIComponent(next)}` : ""}`);
+    if (slug && slug !== "www") redirect(`/${slug}${next ? `?next=${encodeURIComponent(next)}` : ""}`);
   }
-  if (last && /^[a-z0-9-]+$/.test(last)) redirect(`/c/${last}${next ? `?next=${encodeURIComponent(next)}` : ""}`);
+  if (last && /^[a-z0-9-]+$/.test(last)) redirect(`/${last}${next ? `?next=${encodeURIComponent(next)}` : ""}`);
   return (
     <main className="flex min-h-dvh items-center justify-center bg-[var(--sg-navy-900)] px-4">
       <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-xl">

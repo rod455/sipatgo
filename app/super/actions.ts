@@ -1,4 +1,5 @@
 "use server";
+import { RESERVED_SLUGS } from "@/lib/slugs";
 
 import { z } from "zod";
 import { cookies } from "next/headers";
@@ -21,7 +22,7 @@ export async function createCompany(_: ActionResult | null, fd: FormData) {
     await superOnly();
     const d = z.object({
       name: z.string().trim().min(2, "Nome obrigatório"),
-      slug: z.string().trim().toLowerCase().regex(/^[a-z0-9][a-z0-9-]{1,40}$/, "Slug: letras minúsculas, números e hífen"),
+      slug: z.string().trim().toLowerCase().regex(/^[a-z0-9][a-z0-9-]{1,40}$/, "Slug: letras minúsculas, números e hífen").refine((v) => !RESERVED_SLUGS.has(v), "Esse endereço é reservado pelo site. Escolha outro."),
       primary_color: z.string().default("#0F766E"), secondary_color: z.string().default("#134E4A"), accent_color: z.string().default("#F59E0B"),
     }).parse(Object.fromEntries(fd));
     if (["www", "app", "admin", "api", "super", "login", "sipatgo"].includes(d.slug)) throw new HttpError(400, "Slug reservado.");

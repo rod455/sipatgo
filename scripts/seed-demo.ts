@@ -52,7 +52,7 @@ try {
     insert into sipatgo.participants (company_id, campaign_id, name, cpf, birth_date, sector, role)
     values (${c.id}, ${campaignId}, 'RH Demonstração', '52998224725', '1985-05-20', 'RH', 'admin')
     on conflict (company_id, cpf) do update set role = 'admin', campaign_id = excluded.campaign_id`;
-  console.log(`Demo criada: /c/industria-horizonte · campanha começa em ${start}.`);
+  console.log(`Demo criada: /industria-horizonte · campanha começa em ${start}.`);
   console.log(`Participante exemplo: CPF ${cpfFrom(7)} (nascimento ${`19${70 + 6}-0${1 + 6}-1${6}`}).`);
   console.log("Admin: CPF 529.982.247-25, nascimento 1985-05-20.");
 } finally {
