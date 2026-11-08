@@ -128,6 +128,110 @@ export const DEFAULT_WEEK: DefaultDay[] = [
   },
 ];
 
+/**
+ * Modelo para empresas de transporte de passageiros (fretamento, turismo,
+ * transporte coletivo). Conteúdo educativo geral — revise com o SESMT.
+ */
+export const TRANSPORT_WEEK: DefaultDay[] = [
+  {
+    day_index: 1,
+    title: "Abertura: segurança em todo o trajeto",
+    theme: "Tema do ano — abertura",
+    has_wheel: false,
+    activity: {
+      type: "true_false",
+      config: {
+        items: [
+          { statement: "Em trecho curto e conhecido, dá para dispensar a checagem do veículo antes de sair.", answer: false, explanation: "A inspeção antes da viagem (pneus, freios, luzes, portas, documentos) vale para qualquer trajeto. Falhas não escolhem distância." },
+          { statement: "Atender o celular segurando o aparelho enquanto dirige é infração gravíssima.", answer: true, explanation: "Segurar ou manusear o celular ao volante é infração gravíssima. Com passageiros a bordo, o risco é ainda maior." },
+          { statement: "Um quase-acidente na estrada deve ser relatado mesmo que ninguém tenha se machucado.", answer: true, explanation: "Relatar quase-acidentes ajuda a corrigir rotas, horários e procedimentos antes que algo grave aconteça." },
+          { statement: "Ônibus pesado precisa da mesma distância de frenagem que um carro de passeio.", answer: false, explanation: "Veículos pesados precisam de mais espaço para parar. Mantenha distância maior do veículo da frente, principalmente na chuva." },
+          { statement: "Segurança é só responsabilidade do motorista; quem trabalha na garagem ou no escritório não precisa se preocupar.", answer: false, explanation: "Manutenção, escala, tráfego, limpeza e atendimento: todo mundo influencia a segurança de cada viagem." },
+        ],
+      },
+    },
+    family: { type: "word_search", config: { title: "Caça-palavras da estrada", words: ["CINTO", "FREIO", "PNEU", "FAROL", "PAUSA", "ATENCAO", "SINAL", "VIAGEM"] } },
+  },
+  {
+    day_index: 2,
+    title: "Fadiga e saúde ao volante",
+    theme: "Complementar 1",
+    has_wheel: false,
+    activity: {
+      type: "timed_quiz",
+      config: {
+        time_limit_s: 15,
+        items: [
+          { question: "Qual destes é um sinal de fadiga ao dirigir?", options: ["Bocejar e piscar com frequência", "Cantar junto com o rádio", "Conferir os retrovisores", "Reduzir a velocidade na curva"], correct_index: 0, explanation: "Bocejos, piscadas longas e não lembrar dos últimos quilômetros são alertas. Pare em local seguro." },
+          { question: "Sentiu sono no meio da viagem. O que resolve de verdade?", options: ["Abrir a janela", "Tomar mais café e seguir", "Parar em local seguro e descansar", "Aumentar o volume do som"], correct_index: 2, explanation: "Café e vento só disfarçam. O único remédio para o sono é descanso." },
+          { question: "Antes de uma jornada longa, o ideal é:", options: ["Dormir bem na noite anterior", "Fazer uma refeição bem pesada", "Virar a noite para adiantar", "Tomar energético no lugar do sono"], correct_index: 0, explanation: "Sono de qualidade antes da viagem é a principal prevenção contra a fadiga." },
+          { question: "Por que o motorista deve fazer pausas durante a jornada?", options: ["Só para cumprir horário", "Para recuperar a atenção e o corpo", "Não há motivo", "Para atrasar a viagem"], correct_index: 1, explanation: "Pausas recuperam atenção e reduzem dores. Respeite os intervalos de descanso previstos na legislação e na escala." },
+          { question: "Ficar muitas horas sentado pode causar:", options: ["Melhora da postura", "Dores nas costas e má circulação", "Mais disposição", "Nada"], correct_index: 1, explanation: "Ajuste o banco, alongue-se nas paradas e beba água para cuidar do corpo." },
+        ],
+      },
+    },
+    family: { type: "light_quiz", config: { title: "Quiz em família: viagem segura", items: [
+      { question: "Na viagem de ônibus, o cinto de segurança:", options: ["Deve ser usado", "É só enfeite", "Só para crianças"], correct_index: 0 },
+      { question: "Ao descer do ônibus, a criança deve:", options: ["Atravessar correndo pela frente", "Esperar o ônibus sair e atravessar com um adulto", "Sair sozinha"], correct_index: 1 },
+      { question: "Bagagem no corredor do ônibus:", options: ["Pode atrapalhar uma saída rápida", "Não tem problema", "Ajuda a viagem"], correct_index: 0 },
+      { question: "Dormir bem antes de viajar:", options: ["Deixa a viagem mais segura", "Não faz diferença", "Atrapalha"], correct_index: 0 },
+      { question: "Colocar a cabeça ou o braço para fora da janela:", options: ["É perigoso", "É divertido e seguro", "Pode se for rápido"], correct_index: 0 },
+    ] } },
+  },
+  {
+    day_index: 3,
+    title: "Olho na garagem",
+    theme: "Tema do ano — aprofundamento",
+    has_wheel: true,
+    activity: DEFAULT_WEEK[2].activity,
+    family: { type: "word_search", config: { title: "Caça-palavras: oficina segura", words: ["OLEO", "MACACO", "CALCO", "LUVA", "OCULOS", "EXTINTOR", "LIMPEZA"] } },
+  },
+  {
+    day_index: 4,
+    title: "Checklist do veículo",
+    theme: "Complementar 2",
+    has_wheel: false,
+    activity: {
+      type: "match_pairs",
+      config: {
+        pairs: [
+          { left: "Pneus", right: "Calibragem e sulcos", explanation: "Pneu careca ou mal calibrado aumenta a distância de frenagem e o risco de aquaplanagem." },
+          { left: "Freios", right: "Resposta firme do pedal", explanation: "Qualquer ruído ou pedal “mole”: o veículo não sai até a manutenção liberar." },
+          { left: "Luzes", right: "Faróis, setas e luz de freio", explanation: "Ver e ser visto: confira todas as luzes antes de sair." },
+          { left: "Saídas de emergência", right: "Desobstruídas e sinalizadas", explanation: "Em uma emergência, cada segundo conta para tirar os passageiros." },
+          { left: "Extintor", right: "Carregado e dentro da validade", explanation: "Confira o lacre, o manômetro e a validade do extintor." },
+        ],
+      },
+    },
+    family: DEFAULT_WEEK[3].family,
+  },
+  {
+    day_index: 5,
+    title: "Cuidando de quem levamos",
+    theme: "Tema do ano — encerramento",
+    has_wheel: true,
+    activity: {
+      type: "new_habits",
+      config: {
+        items: [
+          { situation: "Um passageiro está em pé no corredor com o ônibus em movimento.", options: ["Segue a viagem normalmente", "Orienta com educação a sentar e usar o cinto", "Acelera para chegar logo"], correct_index: 1, explanation: "Passageiro sentado e com cinto é passageiro protegido. Oriente com respeito." },
+          { situation: "Começa uma chuva forte na rodovia.", options: ["Mantém a velocidade", "Reduz a velocidade e aumenta a distância", "Liga o pisca-alerta e segue rápido"], correct_index: 1, explanation: "Na chuva, a aderência cai. Reduza a velocidade e aumente a distância do veículo da frente." },
+          { situation: "No checklist, você percebe uma luz de freio queimada.", options: ["Sai assim mesmo", "Comunica a manutenção e só sai após o reparo", "Deixa para ver na volta"], correct_index: 1, explanation: "Veículo com item de segurança com defeito não deve sair. Comunique e aguarde a liberação." },
+          { situation: "Um colega da garagem trabalha embaixo do ônibus sem calço nas rodas.", options: ["Avisa e ajuda a calçar o veículo", "Não é problema seu", "Liga o motor para testar"], correct_index: 0, explanation: "Calço nas rodas e veículo travado evitam esmagamentos. Cuidar do colega é cuidar de todos." },
+          { situation: "Você percebe que está com muito sono antes de assumir a escala.", options: ["Toma energético e vai", "Avisa o tráfego/liderança antes de assumir", "Não fala para não atrapalhar a escala"], correct_index: 1, explanation: "Avisar é atitude de segurança. Uma troca de escala é muito melhor que um acidente." },
+        ],
+      },
+    },
+    family: { type: "word_search", config: { title: "Caça-palavras: bons hábitos", words: ["CUIDADO", "RESPEITO", "SONO", "AGUA", "PAUSA", "CINTO", "PREVENIR"] } },
+  },
+];
+
+export const CAMPAIGN_TEMPLATES = {
+  industria: { label: "Indústria / geral", week: DEFAULT_WEEK },
+  transporte: { label: "Transporte de passageiros", week: TRANSPORT_WEEK },
+} as const;
+export type CampaignTemplate = keyof typeof CAMPAIGN_TEMPLATES;
+
 export const DEFAULT_PRIZES = [
   { internal_name: "Garrafa térmica", stock_total: 10, weight: 2 },
   { internal_name: "Kit chocolate", stock_total: 20, weight: 4 },
@@ -140,7 +244,7 @@ export const DEFAULT_PRIZES = [
 export async function createCampaignWithDefaults(
   sql: Sql,
   companyId: string,
-  input: { name: string; theme: string; start_date: string; status?: string; withPrizes?: boolean },
+  input: { name: string; theme: string; start_date: string; status?: string; withPrizes?: boolean; template?: CampaignTemplate },
 ): Promise<string> {
   return sql.begin(async (tx) => {
     const [c] = await tx<{ id: string }[]>`
@@ -150,7 +254,8 @@ export async function createCampaignWithDefaults(
               ${"Poste uma foto da sua equipe mostrando o tema da SIPAT no dia a dia!"},
               ${"Bem-vindos à nossa SIPAT! Durante 5 dias, cada um de nós vai aprender, jogar e mostrar que segurança se faz junto."})
       returning id`;
-    for (const d of DEFAULT_WEEK) {
+    const week = CAMPAIGN_TEMPLATES[input.template ?? "industria"].week;
+    for (const d of week) {
       const [day] = await tx<{ id: string }[]>`
         insert into sipatgo.campaign_days (campaign_id, day_index, date, title, theme, has_wheel)
         values (${c.id}, ${d.day_index}, ${addDays(input.start_date, d.day_index - 1)}, ${d.title}, ${d.theme}, ${d.has_wheel})

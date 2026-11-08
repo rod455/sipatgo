@@ -64,7 +64,8 @@ export async function createCampaign(_: ActionResult | null, fd: FormData) {
     const ctx = await adminOnly();
     const d = z.object({ name: z.string().trim().min(2, "Nome obrigatório"), theme: z.string().trim().default(""), start_date: z.string().regex(dateRe, "Data inválida") }).parse(Object.fromEntries(fd));
     if (weekdayName(d.start_date) !== "Segunda") throw new HttpError(400, "Escolha uma segunda-feira como início.");
-    id = await createCampaignWithDefaults(db(), ctx.adminCompany.id, { ...d, withPrizes: fd.get("with_prizes") === "on" });
+    const template = fd.get("template") === "transporte" ? "transporte" : "industria";
+    id = await createCampaignWithDefaults(db(), ctx.adminCompany.id, { ...d, template, withPrizes: fd.get("with_prizes") === "on" });
     (await cookies()).set(ADMIN_CAMPAIGN_COOKIE, id, { path: "/", httpOnly: true, sameSite: "lax" });
   });
   if (res.ok && id) redirect("/admin/campanha");

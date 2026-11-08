@@ -45,3 +45,17 @@ describe("dinâmicas", () => {
     expect(checkAnswer("timed_quiz", q, 0, { kind: "choice", index: 2 }, "s").status).toBe("correct");
   });
 });
+
+describe("modelos de campanha", () => {
+  it("todas as dinâmicas dos modelos passam na validação (5 itens, campos obrigatórios)", async () => {
+    const { CAMPAIGN_TEMPLATES } = await import("@/lib/defaults");
+    for (const [name, t] of Object.entries(CAMPAIGN_TEMPLATES)) {
+      expect(t.week.map((d) => d.day_index)).toEqual([1, 2, 3, 4, 5]);
+      for (const d of t.week) {
+        const r = validateConfig(d.activity.type, d.activity.config);
+        expect(r.success, `${name} dia ${d.day_index}: ${!r.success && JSON.stringify(r.error.issues[0])}`).toBe(true);
+      }
+      expect(t.week.filter((d) => d.has_wheel).map((d) => d.day_index)).toEqual([3, 5]);
+    }
+  });
+});

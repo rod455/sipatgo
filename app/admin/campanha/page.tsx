@@ -75,6 +75,12 @@ export default async function CampaignPage({ searchParams }: { searchParams: Pro
             <Field label="Nome"><Input name="name" placeholder="SIPAT 2026" required /></Field>
             <Field label="Tema"><Input name="theme" placeholder="Prevenção começa em mim" /></Field>
             <Field label="Segunda-feira de início"><Input type="date" name="start_date" required /></Field>
+            <Field label="Conteúdo inicial" className="sm:col-span-3">
+              <Select name="template" defaultValue="industria">
+                <option value="industria">Indústria / geral (EPI, CIPA, saúde mental)</option>
+                <option value="transporte">Transporte de passageiros (direção defensiva, fadiga, checklist)</option>
+              </Select>
+            </Field>
           </div>
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="with_prizes" defaultChecked /> Incluir brindes de exemplo</label>
         </ActionForm>
