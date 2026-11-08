@@ -14,7 +14,8 @@ export default async function AttendancePage() {
     <div className="space-y-4">
       <PageTitle title="Presença" subtitle="Matriz participante × dia. ✔ no dia · ↺ recuperação · — não realizou."
         action={<div className="flex gap-2">
-          <a href="/api/admin/export?tipo=presenca" className={buttonClass("outline", "sm")}>Exportar CSV</a>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- download de arquivo da API, não é página */}
+          <a href="/api/admin/export?tipo=presenca" download className={buttonClass("outline", "sm")}>Exportar CSV</a>
           <a href="/api/admin/report" target="_blank" className={buttonClass("primary", "sm")}>PDF (registro SIPAT)</a>
         </div>} />
       <div className="overflow-x-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
