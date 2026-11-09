@@ -10,11 +10,6 @@ import { cn } from "@/lib/utils";
 
 type Tab = "colaborador" | "rh";
 
-function maskCpf(v: string) {
-  const d = v.replace(/\D/g, "").slice(0, 11);
-  return d.replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3").replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
-}
-
 export function LoginTabs({ next }: { next?: string }) {
   const [tab, setTab] = useState<Tab>("colaborador");
   return (
@@ -42,45 +37,40 @@ export function LoginTabs({ next }: { next?: string }) {
 
 function RhLogin({ next }: { next?: string }) {
   const router = useRouter();
-  const [mode, setMode] = useState<"login" | "first">("login");
+  const [mode, setMode] = useState<"login" | "link" | "sent">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [birth, setBirth] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
-  const done = (role: string) => {
-    router.replace(next && next.startsWith("/") ? next : role === "admin" || role === "superadmin" ? "/admin" : "/app");
-    router.refresh();
-  };
   async function run(fn: () => Promise<void>) {
     setBusy(true); setErr("");
     try { await fn(); } catch (e) { setErr((e as Error).message); } finally { setBusy(false); }
   }
 
-  if (mode === "first") {
+  if (mode === "sent") {
+    return (
+      <div className="space-y-4">
+        <div className="rounded-xl bg-[var(--brand-50)] p-4 text-sm leading-relaxed text-[var(--sg-navy-900)]">
+          <p className="font-bold">Confira seu e-mail</p>
+          <p className="mt-1">Se <b>{email}</b> tiver acesso ao painel, enviamos um link para você criar sua senha. Ele vale por 1 hora. Não chegou? Veja a caixa de spam.</p>
+        </div>
+        <Button type="button" variant="outline" className="w-full" onClick={() => { setMode("login"); setErr(""); }}>Voltar para o login</Button>
+      </div>
+    );
+  }
+
+  if (mode === "link") {
     return (
       <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); run(async () => {
-        if (password !== password2) throw new Error("As senhas não conferem.");
-        const r = await api<{ role: string }>("/api/auth/rh-password", { email, cpf, birth_date: birth, password });
-        done(r.role);
+        await api("/api/auth/rh-reset-request", { email });
+        setMode("sent");
       }); }}>
         <button type="button" onClick={() => { setMode("login"); setErr(""); }} className="flex items-center gap-1 text-sm text-slate-500"><ArrowLeft className="h-4 w-4" /> Voltar</button>
-        <p className="text-sm text-slate-600">Primeiro acesso: confirme seus dados e crie uma senha.</p>
-        <div><Label htmlFor="rh-email">E-mail</Label><Input id="rh-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} className="h-12" /></div>
-        <div className="grid grid-cols-2 gap-3">
-          <div><Label htmlFor="rh-cpf">CPF</Label><Input id="rh-cpf" inputMode="numeric" placeholder="000.000.000-00" value={cpf} onChange={(e) => setCpf(maskCpf(e.target.value))} className="h-12" /></div>
-          <div><Label htmlFor="rh-birth">Nascimento</Label><Input id="rh-birth" type="date" value={birth} onChange={(e) => setBirth(e.target.value)} className="h-12" /></div>
-        </div>
-        <div><Label htmlFor="rh-new">Nova senha</Label><Input id="rh-new" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12" /></div>
-        <div><Label htmlFor="rh-new2">Repita a senha</Label><Input id="rh-new2" type="password" autoComplete="new-password" value={password2} onChange={(e) => setPassword2(e.target.value)} className="h-12" /></div>
-        <p className="text-xs text-slate-500">Mínimo de 8 caracteres, com letras e números.</p>
+        <p className="text-sm text-slate-600">Primeiro acesso ou esqueceu a senha? Informe seu e-mail e enviaremos um link para criar uma nova senha.</p>
+        <div><Label htmlFor="rh-email">E-mail</Label><Input id="rh-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus className="h-12" /></div>
         {err && <Alert>{err}</Alert>}
-        <Button type="submit" size="lg" className="w-full" disabled={busy || !email || cpf.replace(/\D/g, "").length !== 11 || !birth || password.length < 8}>
-          {busy ? "Salvando..." : "Criar senha e entrar"}
-        </Button>
+        <Button type="submit" size="lg" className="w-full" disabled={busy || !email}>{busy ? "Enviando..." : "Enviar link"}</Button>
       </form>
     );
   }
@@ -88,15 +78,16 @@ function RhLogin({ next }: { next?: string }) {
   return (
     <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); run(async () => {
       const r = await api<{ role: string }>("/api/auth/rh-login", { email, password });
-      done(r.role);
+      router.replace(next && next.startsWith("/") ? next : r.role === "admin" || r.role === "superadmin" ? "/admin" : "/app");
+      router.refresh();
     }); }}>
       <p className="text-sm text-slate-600">Acesso ao painel da campanha.</p>
       <div><Label htmlFor="rh-email">E-mail</Label><Input id="rh-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus className="h-12" /></div>
       <div><Label htmlFor="rh-pass">Senha</Label><Input id="rh-pass" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-12" /></div>
       {err && <Alert>{err}</Alert>}
       <Button type="submit" size="lg" className="w-full" disabled={busy || !email || !password}>{busy ? "Entrando..." : "Entrar no painel"}</Button>
-      <button type="button" onClick={() => { setMode("first"); setErr(""); }} className="w-full text-center text-sm font-semibold text-[var(--sg-orange-600)] hover:underline">
-        Primeiro acesso? Crie sua senha
+      <button type="button" onClick={() => { setMode("link"); setErr(""); }} className="w-full text-center text-sm font-semibold text-[var(--sg-orange-600)] hover:underline">
+        Primeiro acesso ou esqueci a senha
       </button>
     </form>
   );

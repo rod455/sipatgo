@@ -51,7 +51,7 @@ export async function createAdmin(_: ActionResult | null, fd: FormData) {
       values (${companyId}, ${name}, ${cpf}, ${birth}, 'RH', ${email}, 'admin')
       on conflict (company_id, cpf) do update set role = case when sipatgo.participants.role = 'superadmin' then 'superadmin' else 'admin' end, name = excluded.name, email = excluded.email`;
     revalidatePath("/super");
-    return "Admin criado. Em sipatgo.com.br/login → Sou empresa → Primeiro acesso, ele confirma e-mail, CPF e nascimento e cria a senha.";
+    return "Admin criado. Em sipatgo.com.br/login → Sou empresa → “Primeiro acesso ou esqueci a senha”, ele recebe por e-mail o link para criar a senha.";
   });
 }
 

@@ -1,4 +1,7 @@
 import bcrypt from "bcryptjs";
+import { createHash, randomBytes } from "node:crypto";
+import { sendMail } from "./mail";
+import { appBaseUrl } from "./utils";
 import { sql } from "./db";
 import { now } from "./clock";
 import { HttpError } from "./auth";
@@ -158,7 +161,7 @@ export async function verifyRhPassword(email: string, password: string): Promise
   const generic = "E-mail ou senha incorretos.";
   if (!rows.length) throw new HttpError(401, generic);
   const withPw = rows.filter((r) => r.password_hash);
-  if (!withPw.length) throw new HttpError(409, "Você ainda não tem senha. Clique em “Primeiro acesso? Crie sua senha”.");
+  if (!withPw.length) throw new HttpError(409, "Você ainda não tem senha. Clique em “Primeiro acesso ou esqueci a senha” para receber o link por e-mail.");
   for (const r of withPw) {
     assertNotLocked(r);
     if (await bcrypt.compare(String(password ?? ""), r.password_hash!)) {
@@ -170,24 +173,51 @@ export async function verifyRhPassword(email: string, password: string): Promise
   throw new HttpError(401, left > 0 ? generic : "Muitas tentativas. Acesso bloqueado por 15 minutos.");
 }
 
-/** Primeiro acesso do RH: e-mail + CPF + nascimento → define a senha. Só se ainda não houver senha. */
-export async function setRhPassword(email: string, cpfInput: string, birthDate: string, password: string): Promise<RhRow> {
-  validatePassword(String(password ?? ""));
-  const cpf = normalizeCpf(cpfInput);
-  const rows = (await rhByEmail(email)).filter((r) => r.cpf === cpf);
-  if (!rows.length) throw new HttpError(404, "Não encontramos um acesso de RH com este e-mail e CPF. Fale com o suporte SipatGo.");
+/** Pede o link de criar/redefinir senha do RH. Sempre "dá certo" para não revelar quais e-mails existem. */
+export async function requestRhPasswordLink(emailInput: string) {
+  const rows = await rhByEmail(emailInput);
   const r = rows[0];
-  assertNotLocked(r);
-  if (r.password_hash) throw new HttpError(409, "Você já tem senha. Se esqueceu, peça ao suporte SipatGo para liberar uma nova.");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate) || r.birth_date !== birthDate) {
-    const left = await registerFail(r);
-    throw new HttpError(401, left > 0 ? `Dados não conferem. ${left} tentativa(s) restante(s).` : "Dados não conferem. Acesso bloqueado por 15 minutos.");
-  }
-  await resetFails(r);
+  if (!r) return;
+  const [{ n }] = await sql<{ n: number }[]>`
+    select count(*)::int as n from sipatgo.password_tokens where participant_id = ${r.id} and created_at > now() - interval '15 minutes'`;
+  if (n >= 3) return; // limite: 3 links a cada 15 min
+  const token = randomBytes(32).toString("base64url");
+  await sql`insert into sipatgo.password_tokens (participant_id, token_hash, expires_at)
+            values (${r.id}, ${sha256(token)}, now() + interval '1 hour')`;
+  const link = `${appBaseUrl()}/redefinir-senha?token=${token}`;
+  const first = !r.password_hash;
+  await sendMail({
+    to: r.email!,
+    subject: first ? "Crie sua senha da SipatGo" : "Redefina sua senha da SipatGo",
+    html: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;color:#0B1F33">
+      <h2 style="margin:0 0 12px">${first ? "Crie sua senha" : "Redefina sua senha"}</h2>
+      <p>Olá, ${escapeHtml(r.name.split(" ")[0])}! Clique no botão para ${first ? "criar" : "redefinir"} a senha do painel da SipatGo.</p>
+      <p style="margin:24px 0"><a href="${link}" style="background:#FF6A13;color:#fff;padding:12px 20px;border-radius:10px;text-decoration:none;font-weight:bold">${first ? "Criar minha senha" : "Redefinir minha senha"}</a></p>
+      <p style="font-size:13px;color:#5B6B7B">O link vale por 1 hora e só pode ser usado uma vez. Se você não pediu, ignore este e-mail.</p>
+    </div>`,
+  });
+}
+
+/** Usa o link do e-mail: define a senha e invalida os outros links. */
+export async function consumeRhPasswordToken(token: string, password: string): Promise<RhRow> {
+  validatePassword(String(password ?? ""));
+  const [t] = await sql<{ id: string; participant_id: string }[]>`
+    select id, participant_id from sipatgo.password_tokens
+     where token_hash = ${sha256(String(token ?? ""))} and used_at is null and expires_at > now()`;
+  if (!t) throw new HttpError(400, "Link inválido ou expirado. Peça um novo na tela de login.");
   const hash = await bcrypt.hash(password, 10);
-  const [u] = await sql<{ session_version: number }[]>`
-    update sipatgo.participants set password_hash = ${hash}, first_login_at = coalesce(first_login_at, ${now()}),
-           session_version = session_version + 1
-     where id = ${r.id} returning session_version`;
-  return { ...r, session_version: u.session_version };
+  const [r] = await sql<RhRow[]>`
+    update sipatgo.participants set password_hash = ${hash}, failed_logins = 0, locked_until = null,
+           first_login_at = coalesce(first_login_at, ${now()}), session_version = session_version + 1
+     where id = ${t.participant_id} and role in ('admin', 'superadmin') returning *`;
+  if (!r) throw new HttpError(400, "Link inválido ou expirado. Peça um novo na tela de login.");
+  await sql`update sipatgo.password_tokens set used_at = now() where participant_id = ${r.id} and used_at is null`;
+  return r;
+}
+
+function sha256(v: string) {
+  return createHash("sha256").update(v).digest("hex");
+}
+function escapeHtml(v: string) {
+  return v.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 }
