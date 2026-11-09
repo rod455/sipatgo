@@ -22,12 +22,20 @@ export async function saveDay(_: ActionResult | null, fd: FormData) {
     const d = z.object({
       day_id: z.string().uuid(), title: z.string().trim().max(120), theme: z.string().trim().max(120),
       youtube: z.string().trim().max(300).default(""), video_duration_s: z.coerce.number().int().min(0).max(7200).default(0),
+      clip_start: z.string().trim().max(10).default(""), clip_end: z.string().trim().max(10).default(""),
     }).parse(Object.fromEntries(fd));
+    const start = parseClock(d.clip_start);
+    const end = parseClock(d.clip_end);
+    if (start === undefined || end === undefined) throw new HttpError(400, "Trecho inválido. Use minutos:segundos, ex.: 4:30.");
+    if (start !== null && end !== null && end <= start) throw new HttpError(400, "O fim do trecho precisa ser depois do início.");
+    // com trecho definido, a duração que vale (anti-pulo e carga horária) é a do trecho
+    const duration = start !== null && end !== null ? end - start : end !== null ? end : d.video_duration_s;
     await ownDay(d.day_id);
     const vid = d.youtube ? parseYoutubeId(d.youtube) : null;
     if (d.youtube && !vid) throw new HttpError(400, "Link do YouTube inválido.");
     await sql`update sipatgo.campaign_days set title = ${d.title}, theme = ${d.theme}, youtube_video_id = ${vid},
-              video_duration_s = ${d.video_duration_s || null}, has_wheel = ${fd.get("has_wheel") === "on"} where id = ${d.day_id}`;
+              video_duration_s = ${duration || null}, video_start_s = ${vid ? start : null}, video_end_s = ${vid ? end : null},
+              has_wheel = ${fd.get("has_wheel") === "on"} where id = ${d.day_id}`;
     revalidatePath("/admin/dias");
   });
 }
@@ -120,4 +128,13 @@ export async function uploadActivityImage(fd: FormData): Promise<{ url?: string;
   } catch (e) {
     return { error: e instanceof HttpError ? e.message : "Falha no upload." };
   }
+}
+
+/** "4:30", "1:02:05" ou "270" → segundos. Vazio → null. Inválido → undefined. */
+function parseClock(v: string): number | null | undefined {
+  if (!v) return null;
+  if (/^\d+$/.test(v)) return Number(v);
+  const m = /^(?:(\d+):)?(\d{1,2}):(\d{2})$/.exec(v);
+  if (!m) return undefined;
+  return Number(m[1] ?? 0) * 3600 + Number(m[2]) * 60 + Number(m[3]);
 }

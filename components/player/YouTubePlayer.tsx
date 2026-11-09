@@ -31,8 +31,10 @@ function loadApi(): Promise<void> {
  * Player 16:9 sem sugestões. Conta só o tempo assistido de forma contínua
  * (adiantar a barra não conta). Libera a dinâmica com ≥ 90%.
  */
-export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted }: {
+export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted, start, end }: {
   videoId: string; day: number; alreadyDone: boolean; onCompleted: (points: number) => void;
+  /** Trecho em segundos (opcional). Sem trecho, vale o vídeo inteiro. */
+  start?: number | null; end?: number | null;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const [pct, setPct] = useState(alreadyDone ? 1 : 0);
@@ -56,6 +58,14 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted }: {
       }
     };
 
+    const from = start && start > 0 ? start : 0;
+    // duração que conta: o trecho, se houver; senão o vídeo inteiro
+    const span = (p: YTPlayer) => {
+      const total = p.getDuration();
+      const to = end && end > from ? Math.min(end, total || end) : total;
+      return to - from;
+    };
+
     loadApi().then(() => {
       if (cancelled || !host.current || !window.YT) return;
       const el = document.createElement("div");
@@ -63,7 +73,7 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted }: {
       player = new window.YT.Player(el, {
         videoId,
         width: "100%", height: "100%",
-        playerVars: { rel: 0, modestbranding: 1, playsinline: 1, iv_load_policy: 3 },
+        playerVars: { rel: 0, modestbranding: 1, playsinline: 1, iv_load_policy: 3, ...(from ? { start: from } : {}), ...(end && end > from ? { end } : {}) },
         events: {
           onStateChange: (ev: { data: number }) => {
             const YT = window.YT!;
@@ -73,7 +83,7 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted }: {
               void api("/api/game/video-start", { day }).catch(() => {});
             }
             if (ev.data === YT.PlayerState.ENDED) {
-              const d = player!.getDuration();
+              const d = span(player!);
               const ratio = d > 0 ? state.current.watched / d : 0;
               setPct(ratio);
               if (ratio >= 0.9) void complete(ratio);
@@ -86,9 +96,10 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted }: {
         if (!player || !state.current.started) return;
         const t = player.getCurrentTime();
         const delta = t - state.current.last;
-        if (delta > 0 && delta < 2.5) state.current.watched += delta;
+        const inClip = t >= from - 1 && (!end || t <= end + 1);
+        if (delta > 0 && delta < 2.5 && inClip) state.current.watched += delta;
         state.current.last = t;
-        const d = player.getDuration();
+        const d = span(player);
         if (d > 0) {
           const ratio = Math.min(1, state.current.watched / d);
           setPct((p) => Math.max(p, ratio));
@@ -97,7 +108,7 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted }: {
       }, 1000);
     });
     return () => { cancelled = true; if (timer) clearInterval(timer); player?.destroy(); };
-  }, [videoId, day, onCompleted]);
+  }, [videoId, day, onCompleted, start, end]);
 
   return (
     <div className="space-y-2">

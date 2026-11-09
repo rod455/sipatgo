@@ -21,7 +21,7 @@ export type Campaign = {
 
 export type CampaignDay = {
   id: string; campaign_id: string; day_index: number; date: string;
-  title: string; theme: string; youtube_video_id: string | null; video_duration_s: number | null;
+  title: string; theme: string; youtube_video_id: string | null; video_duration_s: number | null; video_start_s: number | null; video_end_s: number | null;
   has_wheel: boolean;
 };
 

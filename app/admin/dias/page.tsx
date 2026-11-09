@@ -47,7 +47,7 @@ export default async function DaysPage({ searchParams }: { searchParams: Promise
             <Field label="Título"><Input name="title" defaultValue={sel.title} /></Field>
             <Field label="Tema"><Input name="theme" defaultValue={sel.theme} /></Field>
           </div>
-          <YoutubeField initialId={sel.youtube_video_id} initialDuration={sel.video_duration_s} />
+          <YoutubeField key={sel.id} initialId={sel.youtube_video_id} initialDuration={sel.video_duration_s} initialStart={sel.video_start_s} initialEnd={sel.video_end_s} />
           <label className="flex items-center gap-2 text-sm font-medium"><input type="checkbox" name="has_wheel" defaultChecked={sel.has_wheel} className="h-4 w-4" /> Roleta de brindes neste dia 🎡</label>
         </ActionForm>
       </Card>

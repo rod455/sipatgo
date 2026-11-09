@@ -38,6 +38,8 @@ export default async function DayPage({ params }: { params: Promise<{ i: string 
       <DayVideo
         day={idx}
         videoId={ctx.day.youtube_video_id}
+        start={ctx.day.video_start_s}
+        end={ctx.day.video_end_s}
         alreadyDone={!!view?.completed || !ctx.day.youtube_video_id}
         dayDone={done}
         activityLabel={ctx.activity ? ACTIVITY_LABELS[ctx.activity.type] : null}
