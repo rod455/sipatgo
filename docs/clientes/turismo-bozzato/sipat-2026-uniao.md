@@ -253,6 +253,31 @@
 
 ---
 
+## 2A. Vídeos do dia: palestras TEDx em português (trechos de 2 min)
+
+Os vídeos abaixo já estão cadastrados na plataforma e tocam dentro do app. Todas as palestras são brasileiras e permitem reprodução fora do YouTube.
+
+**Falta definir o trecho de 2 minutos de cada uma.** Não consegui ler as transcrições automaticamente, porque o YouTube bloqueia esse acesso para robôs. Então os minutos exatos precisam ser escolhidos por alguém assistindo. Até lá, a plataforma toca a palestra inteira (13 a 19 min).
+
+Para definir o trecho: **Painel → Dias e dinâmicas →** escolha o dia → **Trecho: início** e **Trecho: fim** (ex.: `6:10` e `8:10`) → Salvar. Ao salvar, a duração do anti-pulo e da carga horária passa a ser a do trecho.
+
+| Dia | Palestra | Duração | Por que essa | O que procurar para o trecho |
+|---|---|---|---|---|
+| 1 · Estigma e diversidade | [Invisibilidade pública · Fernando Braga · TEDxBeloHorizonte](https://www.youtube.com/watch?v=m1bL5I_TW_I) | 18:50 | O psicólogo varreu ruas de São Paulo por 8 anos, de uniforme de gari, e conta como passou a ser "invisível" para colegas e conhecidos. Mostra o estigma na prática, contra trabalhadores. | O relato de quando pessoas conhecidas passaram por ele de uniforme sem reconhecê-lo |
+| 2 · 10 mandamentos | **Vídeo próprio da Bozzato** (roteiro na seção 2) | 3–4 min | Não há TEDx em português sobre prevenção de acidentes no trabalho. Um vídeo gravado na garagem, com gente da casa, funciona melhor. | — |
+| 3 · Piada ofensiva | [A quebra do estereótipo de "humor negro" · Yuri Marçal · TEDxIbmec](https://www.youtube.com/watch?v=HWRWeMK-Yjg) | 16:17 | Humorista negro falando de piada, estereótipo e preconceito. É exatamente o limite entre rir junto e rir de alguém. | O trecho em que ele explica o que acontece com quem é alvo da piada |
+| 4 · Comportamento seguro e trânsito | [A forma como você encara um momento pode mudar tudo · Paola Antonini · TEDxNovaLima](https://www.youtube.com/watch?v=m0mI4bA7wYY) | 13:57 | Paola perdeu a perna em um acidente de trânsito. Dá rosto às consequências e faz a ponte com a prevenção. | O relato do acidente e do que mudou na vida dela (evite cortar só a parte de superação) |
+| 5 · Cuidado ativo | [Antes que você adoeça, EPIs da Saúde Mental · Izabella Camargo · TEDxSaoPaulo](https://www.youtube.com/watch?v=7SiWqsSvGwY) | 15:54 | Ela propõe tratar a saúde mental com o mesmo cuidado dos EPIs. Conversa direto com "cuide de si" e com a NR-1 (riscos psicossociais). | O momento em que ela apresenta os "EPIs da saúde mental" |
+
+**Alternativas, se preferir trocar:**
+- **Dia 1:** [A deficiência é uma característica humana · Deives Picáz · TEDxUnisinos](https://www.youtube.com/watch?v=lg5Ag0KBi7M) (8:52) ou [Qual a cara de nordestino? · Octávio Santiago · TEDxJoaoPessoaSalon](https://www.youtube.com/watch?v=-zbivWh8KTE) (13:18)
+- **Dia 3:** [Elogio? Não. É assédio mesmo! · Juliana de Faria · TEDxFloripa](https://www.youtube.com/watch?v=mOiid2tiVeY) (15:37), mais focada em assédio
+- **Dia 5:** [Se você não quiser se ajudar, ninguém vai conseguir te ajudar · Mariana Ferrão · TEDxSaoPauloSalon](https://www.youtube.com/watch?v=uKIr2U632aY) (11:57), para o "permita-se ser cuidado"
+
+**Dica:** depois do trecho, uma frase de 15 a 30 segundos de alguém da Bozzato ligando a palestra à realidade da empresa aumenta muito o impacto. Pode ser um segundo vídeo curto ou entrar na mensagem da liderança.
+
+---
+
 ## 3. Estrutura em volta do tema
 
 ### Textos já cadastrados na plataforma
@@ -281,7 +306,7 @@ A roleta (dias 1 e 2) usa os brindes cadastrados em **Painel → Brindes**. Hoje
 - [x] Tema de prevenção ao assédio na programação (dia 3; NR-5, item 5.3.1 "j", e Lei 14.457/2022)
 - [x] Ações presenciais com registro de presença (eventos dos dias 3, 4 e 5)
 - [ ] Confirmar convidados e horários dos eventos dos dias 3 e 4
-- [ ] Gravar os 5 vídeos e colar os links em Dias e dinâmicas
+- [ ] Definir o trecho de 2 min das palestras dos dias 1, 3, 4 e 5 e gravar o vídeo próprio do dia 2
 - [ ] Importar a lista de colaboradores (CSV) e mudar o status da campanha para "Agendada"
 - [ ] Guardar o relatório final (PDF) e as listas de presença por 5 anos (NR-5, item 5.9.2)
 
