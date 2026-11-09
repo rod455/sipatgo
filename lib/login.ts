@@ -119,7 +119,7 @@ export function throttle(key: string, max = 20, windowMs = 60_000) {
   if (++h.n > max) throw new HttpError(429, "Muitas tentativas. Aguarde um minuto.");
 }
 
-/** Campanha do colaborador pelo CPF: prioriza campanha ativa, depois a mais recente. */
+/** Campanha do colaborador pelo CPF: ativa > agendada > rascunho > encerrada; depois a mais recente. */
 export async function findCompanyByCpf(cpfInput: string) {
   const cpf = normalizeCpf(cpfInput);
   if (!isValidCpf(cpf)) throw new HttpError(400, "CPF inválido.");
@@ -128,8 +128,8 @@ export async function findCompanyByCpf(cpfInput: string) {
       from sipatgo.participants p
       join sipatgo.companies c on c.id = p.company_id
       join sipatgo.campaigns ca on ca.id = p.campaign_id
-     where p.cpf = ${cpf} and p.role in ('participant', 'leader') and ca.status <> 'draft'
-     order by (ca.status = 'active') desc, (ca.status = 'scheduled') desc, ca.start_date desc
+     where p.cpf = ${cpf} and p.role in ('participant', 'leader')
+     order by (ca.status = 'active') desc, (ca.status = 'scheduled') desc, (ca.status = 'draft') desc, ca.start_date desc
      limit 1`;
   if (!r) throw new HttpError(404, "Não encontramos uma campanha para este CPF. Confira o número ou fale com o RH da sua empresa.");
   return { slug: r.slug, company: r.name, colors: [r.primary_color, r.secondary_color, r.accent_color] };
