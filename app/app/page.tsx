@@ -47,7 +47,7 @@ export default async function Home() {
       <section className="rounded-2xl bg-gradient-to-br from-brand to-brand-2 p-4 text-brand-fg shadow">
         <p className="text-xs font-semibold uppercase tracking-wider opacity-80">{campaign.name}</p>
         <p className="font-display text-xl font-bold leading-tight">{campaign.theme || "Segurança é com a gente"}</p>
-        {campaign.phase === "upcoming" && <p className="mt-2 text-sm opacity-90">A campanha começa em breve. Volte no primeiro dia às 08h!</p>}
+        {(campaign.phase === "upcoming" || campaign.phase === "draft") && <p className="mt-2 text-sm opacity-90">A campanha começa em breve. Volte no primeiro dia às 08h!</p>}
         {hasMakeup && !closed && <p className="mt-2 text-sm opacity-90">Perdeu algum dia? Recupere até {formatDateTimeBR(campaign.makeup_deadline, company.timezone)} (vale 50%).</p>}
       </section>
 
