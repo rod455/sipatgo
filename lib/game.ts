@@ -74,7 +74,7 @@ export async function getToday(p: Participant, company: Company): Promise<TodayS
   const summaries: DaySummary[] = days.map((d) => {
     const r = byDay.get(d.id);
     const completion = r?.completion_makeup === null || r?.completion_makeup === undefined ? null : { is_makeup: r.completion_makeup };
-    const state = dayState(c, d, t, completion);
+    const state = dayState(c, d, t, completion, !!p.preview_all);
     return {
       id: d.id, day_index: d.day_index, date: d.date, title: d.title, theme: d.theme,
       state, release_at: releaseAt(c, d).toISOString(), has_wheel: d.has_wheel,
@@ -113,9 +113,9 @@ export async function dayContext(p: Participant, dayIndex: number) {
   const [completion] = await sql<{ is_makeup: boolean }[]>`
     select is_makeup from sipatgo.day_completions where participant_id = ${p.id} and campaign_day_id = ${day.id}`;
   const t = now();
-  const state = dayState(c, day, t, completion ?? null);
+  const state = dayState(c, day, t, completion ?? null, !!p.preview_all);
   const [activity] = await sql<Activity[]>`select * from sipatgo.activities where campaign_day_id = ${day.id}`;
-  return { campaign: c, day, state, activity: activity ?? null, now: t, makeup: isMakeupNow(c, day, t) };
+  return { campaign: c, day, state, activity: activity ?? null, now: t, makeup: !p.preview_all && isMakeupNow(c, day, t) };
 }
 
 function assertPlayable(state: DayState) {

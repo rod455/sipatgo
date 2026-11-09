@@ -53,8 +53,11 @@ export function dayState(
   d: DayClock,
   now: Date,
   completion?: { is_makeup: boolean } | null,
+  /** Participante de teste: todos os dias abertos (exceto campanha encerrada). */
+  preview = false,
 ): DayState {
   if (completion) return completion.is_makeup ? "done_makeup" : "done";
+  if (preview && c.status !== "closed") return "available";
   if (c.status === "draft") return "locked";
   if (now < releaseAt(c, d)) return "locked";
   if (isClosed(c, now)) return "missed";

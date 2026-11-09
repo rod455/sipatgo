@@ -36,7 +36,7 @@ export type Participant = {
   avatar_config: AvatarConfig | null; avatar_url: string | null;
   pin_hash: string | null; pin_set: boolean; pin_reset_required: boolean;
   failed_logins: number; locked_until: Date | null; session_version: number;
-  consent_at: Date | null; first_login_at: Date | null; created_at: Date;
+  consent_at: Date | null; first_login_at: Date | null; created_at: Date; preview_all?: boolean;
 };
 
 export type AvatarGender = "m" | "f";
