@@ -41,10 +41,22 @@ export async function attendanceCsv(campaignId: string) {
     select p.cpf, count(*)::int as n from sipatgo.checkins c join sipatgo.events e on e.id = c.event_id join sipatgo.participants p on p.id = c.participant_id
      where e.campaign_id = ${campaignId} group by p.cpf`;
   const ck = new Map(checkins.map((c) => [c.cpf, c.n]));
+  // vídeo assistido até o fim antes de concluir cada dia
+  const vids = await sql<{ cpf: string; day_index: number; video_watched: boolean | null }[]>`
+    select p.cpf, d.day_index, dc.video_watched from sipatgo.day_completions dc
+      join sipatgo.campaign_days d on d.id = dc.campaign_day_id join sipatgo.participants p on p.id = dc.participant_id
+     where d.campaign_id = ${campaignId}`;
+  const vmap = new Map(vids.map((v) => [`${v.cpf}:${v.day_index}`, v.video_watched]));
+  const vlabel = (cpf: string, d: number) => {
+    const v = vmap.get(`${cpf}:${d}`);
+    return v === true ? "Sim" : v === false ? "Não" : "";
+  };
   return toCsv(
-    ["Nome", "CPF", "Setor", ...days.map((d) => `Dia ${d}`), "Dias concluídos", "Check-ins presenciais"],
+    ["Nome", "CPF", "Setor", ...days.map((d) => `Dia ${d}`), ...days.map((d) => `Vídeo dia ${d}`), "Dias concluídos", "Vídeos assistidos", "Check-ins presenciais"],
     people.map((p) => [p.name, formatCpf(p.cpf), p.sector, ...days.map((d) => STATUS[p.days[d] ?? "none"]),
-      Object.values(p.days).filter((s) => s !== "none").length, ck.get(p.cpf) ?? 0]),
+      ...days.map((d) => vlabel(p.cpf, d)),
+      Object.values(p.days).filter((s) => s !== "none").length,
+      days.filter((d) => vmap.get(`${p.cpf}:${d}`) === true).length, ck.get(p.cpf) ?? 0]),
   );
 }
 
@@ -163,7 +175,8 @@ export async function activityLogCsv(campaignId: string) {
     union all
     select dc.completed_at, ps.name, ps.cpf, ps.sector,
            case when dc.is_makeup then 'Dia concluído (recuperação)' else 'Dia concluído' end,
-           'Dia ' || d.day_index || ' · ' || d.title || ' · ' || dc.correct_first_try || ' acertos de 1ª · ' || round(dc.total_time_ms / 1000.0) || 's',
+           'Dia ' || d.day_index || ' · ' || d.title || ' · ' || dc.correct_first_try || ' acertos de 1ª · ' || round(dc.total_time_ms / 1000.0) || 's'
+             || case dc.video_watched when true then ' · assistiu o vídeo' when false then ' · respondeu sem assistir o vídeo' else '' end,
            dc.total_points
       from sipatgo.day_completions dc join ps on ps.id = dc.participant_id join sipatgo.campaign_days d on d.id = dc.campaign_day_id
     union all

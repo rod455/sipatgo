@@ -120,9 +120,9 @@ describe.skipIf(!url)("semana simulada (integração)", () => {
     expect(today!.days.map((d) => d.state)).toEqual(["available", "locked", "locked", "locked", "locked"]);
   });
 
-  it("não aceita dinâmica sem vídeo e barra vídeo adiantado", async () => {
+  it("aceita dinâmica sem vídeo (vídeo opcional) e barra vídeo adiantado", async () => {
     setNow("2026-12-07T11:10:00Z");
-    await expect(game.submitItem(P.davi, 1, 0, { kind: "bool", value: true })).rejects.toThrow(/vídeo/);
+    await expect(game.submitItem(P.davi, 1, 0, { kind: "bool", value: true })).resolves.toBeTruthy();
     await game.startVideo(P.davi, 1);
     setNow("2026-12-07T11:10:10Z");
     await expect(game.completeVideo(P.davi, 1, 1)).rejects.toThrow(/adiantado/);
@@ -135,6 +135,8 @@ describe.skipIf(!url)("semana simulada (integração)", () => {
     const [s] = await sql`select total_points, days_completed from sipatgo.participant_scores where participant_id = ${P.ana.id}`;
     expect(s.total_points).toBe(50 + 500 + 5 * 18); // 2s → bônus 18
     expect(s.days_completed).toBe(1);
+    const [dc] = await sql`select video_watched from sipatgo.day_completions where participant_id = ${P.ana.id}`;
+    expect(dc.video_watched).toBe(true); // assistiu antes de concluir
   });
 
   it("refazer vale 50 sem bônus", async () => {

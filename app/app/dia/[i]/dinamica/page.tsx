@@ -17,7 +17,6 @@ export default async function ActivityPage({ params }: { params: Promise<{ i: st
   }
   if (!view) notFound();
   if (view.state === "done" || view.state === "done_makeup") redirect(`/app/dia/${day}/resultado`);
-  if (!view.video_done) redirect(`/app/dia/${day}`);
   if (view.state === "missed") return <Alert>O prazo para este dia terminou.</Alert>;
   return (
     <div className="space-y-4">

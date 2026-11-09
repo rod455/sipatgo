@@ -266,9 +266,7 @@ export async function submitItem(p: Participant, dayIndex: number, itemIndex: nu
   const a = ctx.activity;
   if (!a) throw new HttpError(404, "Dinâmica não configurada.");
 
-  const [video] = await sql<{ done: boolean }[]>`
-    select completed_at is not null as done from sipatgo.video_views where participant_id = ${p.id} and campaign_day_id = ${ctx.day.id}`;
-  if (ctx.day.youtube_video_id && !video?.done) throw new HttpError(400, "Assista o vídeo antes da dinâmica.");
+  // O vídeo é opcional: quem responde sem assistir só deixa de ganhar os pontos do vídeo.
 
   const seed = seedFor(p, a.id);
   const result = await sql.begin(async (tx: Tx) => {
@@ -377,11 +375,13 @@ async function completeDayTx(tx: Tx, p: Participant, day: CampaignDay, a: Activi
            count(*) filter (where is_correct and attempt_no = 1)::int as first,
            coalesce(sum(bonus_awarded), 0)::int as bonus
       from sipatgo.attempts where participant_id = ${p.id} and activity_id = ${a.id}`;
-  const [video] = await tx<{ points: number }[]>`
-    select points_awarded as points from sipatgo.video_views where participant_id = ${p.id} and campaign_day_id = ${day.id}`;
+  const [video] = await tx<{ points: number; done: boolean }[]>`
+    select points_awarded as points, completed_at is not null as done from sipatgo.video_views where participant_id = ${p.id} and campaign_day_id = ${day.id}`;
+  // assistiu o vídeo até o fim antes de concluir o dia? (null = dia sem vídeo)
+  const watched = day.youtube_video_id ? !!video?.done : null;
   const rows = await tx`
-    insert into sipatgo.day_completions (participant_id, campaign_day_id, completed_at, is_makeup, total_points, total_time_ms, correct_first_try, bonus_points)
-    values (${p.id}, ${day.id}, ${t}, ${makeup}, ${agg.points + (video?.points ?? 0)}, ${agg.time_ms}, ${agg.first}, ${agg.bonus})
+    insert into sipatgo.day_completions (participant_id, campaign_day_id, completed_at, is_makeup, total_points, total_time_ms, correct_first_try, bonus_points, video_watched)
+    values (${p.id}, ${day.id}, ${t}, ${makeup}, ${agg.points + (video?.points ?? 0)}, ${agg.time_ms}, ${agg.first}, ${agg.bonus}, ${watched})
     on conflict (participant_id, campaign_day_id) do nothing
     returning id`;
   return rows.length > 0;

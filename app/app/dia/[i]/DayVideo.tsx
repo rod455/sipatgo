@@ -20,10 +20,18 @@ export function DayVideo({ day, videoId, alreadyDone, dayDone, activityLabel, ca
       {dayDone ? (
         <Link href={`/app/dia/${day}/resultado`} className={buttonClass("secondary", "lg", "w-full")}>Ver resultado do dia</Link>
       ) : canPlay && activityLabel ? (
-        <Link href={done ? `/app/dia/${day}/dinamica` : "#"} aria-disabled={!done}
-          className={buttonClass("primary", "lg", `w-full ${done ? "" : "pointer-events-none opacity-50"}`)}>
-          {done ? `Ir para a dinâmica: ${activityLabel}` : "Assista o vídeo para liberar a dinâmica"}
-        </Link>
+        done || !videoId ? (
+          <Link href={`/app/dia/${day}/dinamica`} className={buttonClass("primary", "lg", "w-full")}>
+            Ir para a dinâmica: {activityLabel}
+          </Link>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-center text-sm text-brand-muted">Assista o vídeo até o fim para ganhar os pontos do vídeo.</p>
+            <Link href={`/app/dia/${day}/dinamica`} className={buttonClass("outline", "md", "w-full")}>
+              Responder sem assistir (sem os pontos do vídeo)
+            </Link>
+          </div>
+        )
       ) : !activityLabel ? <p className="text-center text-sm text-brand-muted">A dinâmica deste dia ainda não foi configurada.</p> : null}
     </div>
   );
