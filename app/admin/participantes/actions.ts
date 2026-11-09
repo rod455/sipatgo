@@ -50,6 +50,8 @@ export async function addParticipant(_: ActionResult | null, fd: FormData) {
     if (!isValidCpf(cpf)) throw new HttpError(400, "CPF inválido.");
     const birth = parseBirthDate(d.birth_date);
     if (!birth) throw new HttpError(400, "Data de nascimento inválida.");
+    d.email = d.email.toLowerCase();
+    if (d.role === "admin" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) throw new HttpError(400, "Admin/RH precisa de e-mail: é o login dele em “Sou empresa”.");
     await sql`
       insert into sipatgo.participants (company_id, campaign_id, name, cpf, birth_date, sector, email, role)
       values (${ctx.adminCompany.id}, ${ctx.campaign.id}, ${d.name}, ${cpf}, ${birth}, ${d.sector}, ${d.email || null}, ${d.role})
