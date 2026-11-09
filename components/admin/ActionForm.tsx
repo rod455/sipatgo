@@ -7,9 +7,9 @@ import type { ActionResult } from "@/lib/admin-guard";
 
 type Action = (prev: ActionResult | null, fd: FormData) => Promise<ActionResult>;
 
-export function ActionForm({ action, children, submitLabel = "Salvar", className, resetOnSuccess, confirm, variant }: {
+export function ActionForm({ action, children, submitLabel = "Salvar", className, resetOnSuccess, confirm, variant, submitSize }: {
   action: Action; children?: React.ReactNode; submitLabel?: string; className?: string; resetOnSuccess?: boolean; confirm?: string;
-  variant?: "primary" | "outline" | "danger" | "secondary" | "accent";
+  variant?: "primary" | "outline" | "danger" | "secondary" | "accent"; submitSize?: "sm" | "md";
 }) {
   const [state, formAction] = useActionState(action, null);
   const ref = useRef<HTMLFormElement>(null);
@@ -19,16 +19,16 @@ export function ActionForm({ action, children, submitLabel = "Salvar", className
       onSubmit={(e) => { if (confirm && !window.confirm(confirm)) e.preventDefault(); }}>
       {children}
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <Submit label={submitLabel} variant={variant} />
+        <Submit label={submitLabel} variant={variant} size={submitSize} />
         {state && (state.ok ? <span className="text-sm text-green-700">{state.message}</span> : <Alert>{state.error}</Alert>)}
       </div>
     </form>
   );
 }
 
-function Submit({ label, variant }: { label: string; variant?: "primary" | "outline" | "danger" | "secondary" | "accent" }) {
+function Submit({ label, variant, size }: { label: string; variant?: "primary" | "outline" | "danger" | "secondary" | "accent"; size?: "sm" | "md" }) {
   const { pending } = useFormStatus();
-  return <Button type="submit" variant={variant} disabled={pending}>{pending ? "Salvando..." : label}</Button>;
+  return <Button type="submit" variant={variant} size={size} disabled={pending}>{pending ? "Salvando..." : label}</Button>;
 }
 
 /** Botão de ação única (ex.: aprovar, excluir). */

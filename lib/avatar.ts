@@ -154,7 +154,7 @@ export function renderAvatarSvg(cfg: AvatarConfig | null | undefined, fallbackSe
   const bg = (c.options?.backgroundColor as string | undefined) ?? background;
   if (bg) opts.backgroundColor = [String(bg).replace(/^#/, "")];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return createAvatar(AVATAR_STYLES[style] as any, opts as any).toString();
+  return uniqueSvgIds(createAvatar(AVATAR_STYLES[style] as any, opts as any).toString());
 }
 
 /**
@@ -179,4 +179,28 @@ export function sanitizeAvatar(input: unknown, seed: string, photoPrefix?: strin
     if (typeof v === "string" && /^[#A-Za-z0-9_-]{1,40}$/.test(v)) options[k] = v;
   }
   return { style, seed: cleanSeed, options, gender };
+}
+
+/**
+ * O DiceBear usa ids fixos (máscaras, clipPaths). Com vários avatares na mesma
+ * página, um passa a usar a máscara do outro e aparece cortado. Aqui os ids
+ * ganham um sufixo derivado do próprio SVG: único por avatar e determinístico
+ * (igual no servidor e no navegador).
+ */
+export function uniqueSvgIds(svg: string): string {
+  let h = 2166136261;
+  for (let i = 0; i < svg.length; i++) h = Math.imul(h ^ svg.charCodeAt(i), 16777619);
+  const sfx = (h >>> 0).toString(36);
+  const ids = new Set<string>();
+  for (const m of svg.matchAll(/\sid="([^"]+)"/g)) ids.add(m[1]);
+  if (!ids.size) return svg;
+  let out = svg;
+  for (const id of ids) {
+    const esc = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    out = out
+      .replace(new RegExp(`(\\sid=")${esc}(")`, "g"), `$1${id}-${sfx}$2`)
+      .replace(new RegExp(`url\\(#${esc}\\)`, "g"), `url(#${id}-${sfx})`)
+      .replace(new RegExp(`(href=")#${esc}(")`, "g"), `$1#${id}-${sfx}$2`);
+  }
+  return out;
 }

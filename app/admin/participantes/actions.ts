@@ -76,7 +76,7 @@ export async function updateParticipant(_: ActionResult | null, fd: FormData) {
     if (!["participant", "leader", "admin"].includes(role)) throw new HttpError(400, "Papel inválido.");
     if (p.role === "superadmin") role = "superadmin";
     if (p.id === ctx.participant.id && role !== ctx.participant.role) throw new HttpError(400, "Você não pode mudar o próprio papel.");
-    const email = String(fd.get("email") ?? "").trim() || null;
+    const email = String(fd.get("email") ?? "").trim().toLowerCase() || null;
     await sql`update sipatgo.participants set sector = ${sector}, role = ${role}, email = ${email} where id = ${p.id}`;
     revalidatePath("/admin/participantes");
   });
@@ -85,9 +85,10 @@ export async function updateParticipant(_: ActionResult | null, fd: FormData) {
 export async function resetPin(_: ActionResult | null, fd: FormData) {
   return safe(async () => {
     const { p } = await own(String(fd.get("id")));
-    await sql`update sipatgo.participants set pin_reset_required = true, failed_logins = 0, locked_until = null, session_version = session_version + 1 where id = ${p.id}`;
+    // Também libera a senha do login "Sou empresa" (RH), que volta para o primeiro acesso.
+    await sql`update sipatgo.participants set pin_reset_required = true, password_hash = null, failed_logins = 0, locked_until = null, session_version = session_version + 1 where id = ${p.id}`;
     revalidatePath("/admin/participantes");
-    return "PIN resetado: no próximo acesso a pessoa confirma a data de nascimento e cria um novo PIN.";
+    return "Senha resetada: no próximo acesso a pessoa confirma a data de nascimento e cria uma nova senha.";
   });
 }
 

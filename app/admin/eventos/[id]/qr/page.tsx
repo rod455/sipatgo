@@ -5,6 +5,7 @@ import { checkinUrl, qrSvg } from "@/lib/qr";
 import { formatDateTimeBR } from "@/lib/dates";
 import { formatCpf } from "@/lib/cpf";
 import { PrintButton } from "@/components/admin/PrintButton";
+import { inkOf } from "@/lib/theme";
 
 export default async function EventQr({ params }: { params: Promise<{ id: string }> }) {
   const { campaign, adminCompany } = await requireAdminCampaign();
@@ -12,7 +13,8 @@ export default async function EventQr({ params }: { params: Promise<{ id: string
   const [e] = await sql<{ id: string; name: string; secret: string; code: string; starts_at: Date; ends_at: Date; points: number }[]>`
     select * from sipatgo.events where id = ${id} and campaign_id = ${campaign.id}`;
   if (!e) notFound();
-  const svg = await qrSvg(checkinUrl(e.id, e.secret), adminCompany.primary_color);
+  // Cor escura derivada da marca: QR claro (ex.: amarelo) falha na leitura.
+  const svg = await qrSvg(checkinUrl(e.id, e.secret), inkOf(adminCompany.primary_color));
   const list = await sql<{ name: string; cpf: string; sector: string; created_at: Date }[]>`
     select p.name, p.cpf, p.sector, c.created_at from sipatgo.checkins c join sipatgo.participants p on p.id = c.participant_id
      where c.event_id = ${e.id} order by c.created_at`;
