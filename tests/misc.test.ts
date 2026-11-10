@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { isValidCpf, maskCpf, normalizeCpf } from "@/lib/cpf";
-import { pickWeighted } from "@/lib/wheel";
+import { isWinSlot, pickWeighted, rollWin, slotFor, WHEEL_SLOTS } from "@/lib/wheel";
 import { badgesFromFacts } from "@/lib/badges";
 import { generateWordSearch, matchSelection } from "@/lib/wordsearch";
 import { checkinToken, parseCheckinToken, verifyCheckinMac } from "@/lib/checkin";
@@ -35,6 +35,24 @@ describe("roleta", () => {
     expect(counts.b / counts.a).toBeLessThan(3.9);
   });
   it("sem estoque = null", () => expect(pickWeighted([{ id: "x", weight: 1, stock_available: 0, active: true }])).toBeNull());
+  it("chance de ganhar respeita o % configurado", () => {
+    expect(rollWin(0)).toBe(false);
+    expect(rollWin(100)).toBe(true);
+    let wins = 0;
+    for (let i = 0; i < 20000; i++) if (rollWin(30)) wins++;
+    expect(wins / 20000).toBeGreaterThan(0.28);
+    expect(wins / 20000).toBeLessThan(0.32);
+  });
+  it("a casa sorteada combina com o resultado e cobre todas as casas", () => {
+    const seen = new Set<number>();
+    for (let i = 0; i < 4000; i++) {
+      const won = i % 2 === 0;
+      const s = slotFor(won);
+      expect(isWinSlot(s)).toBe(won);
+      seen.add(s);
+    }
+    expect(seen.size).toBe(WHEEL_SLOTS);
+  });
 });
 
 describe("badges", () => {

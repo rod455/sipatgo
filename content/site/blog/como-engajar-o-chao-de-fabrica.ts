@@ -39,7 +39,7 @@ export const comoEngajarChaoDeFabrica: BlogPost = {
     { type: "h2", text: "5. Prêmio que todo mundo pode ganhar" },
     {
       type: "p",
-      text: "Sorteio de um prêmio grande no fim da semana desanima quem acha que não vai ganhar. Muitos brindes pequenos, com chance real para todos, funcionam melhor. Na roleta da SipatGo, **todo giro ganha**: quem concluiu o dia gira e retira o brinde no RH com um código.",
+      text: "Sorteio de um prêmio grande no fim da semana desanima quem acha que não vai ganhar. Muitos brindes pequenos, com chance real para todos, funcionam melhor. Na roleta da SipatGo, quem concluiu o dia gira, e o RH ajusta a chance de ganhar ao estoque para os brindes durarem a semana toda; quem ganha retira no RH com um código.",
     },
     { type: "h2", text: "6. Use o ambiente real da empresa" },
     {

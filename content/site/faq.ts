@@ -28,7 +28,7 @@ export const HOME_FAQ: FaqItem[] = [
   },
   {
     q: "Como funciona a roleta?",
-    a: "Nos dias de roleta (quarta e sexta, por padrão), quem conclui a dinâmica gira e sempre ganha. O sorteio é feito no servidor, respeitando o estoque. A pessoa recebe um código para retirar o brinde no RH, e o RH é avisado na hora.",
+    a: "Nos dias de roleta (quarta e sexta, por padrão), quem conclui a dinâmica gira. O RH define a chance de ganhar; o sorteio é feito no servidor, com gerador aleatório seguro, respeitando o estoque. A pessoa recebe um código para retirar o brinde no RH, e o RH é avisado na hora.",
   },
   {
     q: "É seguro (LGPD)?",

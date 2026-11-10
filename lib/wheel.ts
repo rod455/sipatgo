@@ -15,7 +15,20 @@ export function pickWeighted<T extends WheelPrize>(prizes: T[], rand: () => numb
   return pool[pool.length - 1];
 }
 
-/** Casa genérica (0..7) onde a roda vai parar. Não revela nada sobre o brinde. */
-export function randomSlot(rand: () => number = Math.random): number {
-  return Math.floor(rand() * WHEEL_SLOTS);
+/** Casas pares têm brinde 🎁; casas ímpares são "não foi dessa vez". */
+export function isWinSlot(slot: number): boolean {
+  return slot % 2 === 0;
+}
+
+/** Casa onde a roda vai parar, coerente com o resultado. Não revela qual brinde. */
+export function slotFor(won: boolean, rand: () => number = Math.random): number {
+  const pool = Array.from({ length: WHEEL_SLOTS }, (_, i) => i).filter((i) => isWinSlot(i) === won);
+  return pool[Math.min(pool.length - 1, Math.floor(rand() * pool.length))];
+}
+
+/** Ganhou? `pct` de 0 a 100. */
+export function rollWin(pct: number, rand: () => number = Math.random): boolean {
+  if (pct <= 0) return false;
+  if (pct >= 100) return true;
+  return rand() * 100 < pct;
 }

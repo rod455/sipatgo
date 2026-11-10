@@ -92,7 +92,7 @@ Toda dinâmica tem **5 itens**; "item" = pergunta, par, erro a encontrar ou situ
 ### 4.4 Roleta
 - Ativa nos dias configurados com `has_wheel = true` (default: **quarta e sexta**).
 - Liberada após concluir a dinâmica do dia (não na recuperação).
-- **Todo giro ganha**. Sorteio server-side (Edge Function `spin-wheel`), ponderado por `weight` e restrito a brindes com `stock_available > 0`. Brinde esgotado sai da roleta.
+- **Nem todo giro ganha**: chance por giro definida pelo RH (`campaigns.wheel_win_pct`, padrão 30%), sorteada com `crypto.randomInt`. Depois, sorteio server-side (Edge Function `spin-wheel`), ponderado por `weight` e restrito a brindes com `stock_available > 0`. Brinde esgotado sai da roleta.
 - A roleta no cliente mostra apenas casas genéricas ("Brinde 1"..."Brinde 8" ou ícones); o resultado real vem do servidor e o cliente só anima até a casa correspondente.
 - Participante vê: "Você ganhou um brinde! Retire no RH apresentando este código: `XXXX-XXXX`". **Nunca o nome do brinde.**
 - Gera registro em `prize_awards` (status `pending`), decrementa estoque, dispara webhook n8n → e-mail ao RH com nome, setor, brinde, código.

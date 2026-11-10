@@ -158,8 +158,11 @@ describe.skipIf(!url)("semana simulada (integração)", () => {
     await playDay(P.ana, 3, { startIso: "2026-12-09T11:30:00Z" });
     setNow("2026-12-09T12:00:00Z");
     await expect(prizes.spinWheel(P.ana, 2)).rejects.toThrow(/não tem roleta/);
+    await sql`update sipatgo.campaigns set wheel_win_pct = 100 where id = ${campaignId}`;
     const before = await sql`select sum(stock_available)::int as s from sipatgo.prizes where campaign_id = ${campaignId}`;
     const spin = await prizes.spinWheel(P.ana, 3);
+    expect(spin.won).toBe(true);
+    expect(spin.slot % 2).toBe(0); // casa de brinde
     expect(spin.code).toMatch(/^[A-Z0-9]{4}-[A-Z0-9]{4}$/);
     expect(JSON.stringify(spin)).not.toMatch(/Garrafa|chocolate|Caneca|Vale|Fone/i);
     const again = await prizes.spinWheel(P.ana, 3);

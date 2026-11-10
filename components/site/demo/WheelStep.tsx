@@ -64,7 +64,7 @@ function Wheel({ rotation, spinning }: { rotation: number; spinning: boolean }) 
   );
 }
 
-/** Passo 3: roleta falsa. Todo giro ganha; mostra só o código, nunca o nome do brinde. */
+/** Passo 3: roleta falsa (na demo sempre ganha); mostra só o código, nunca o nome do brinde. */
 export function WheelStep({ onDone }: { onDone: (code: string) => void }) {
   const [rotation, setRotation] = useState(0);
   const [state, setState] = useState<"idle" | "spinning" | "won">("idle");
@@ -104,7 +104,7 @@ export function WheelStep({ onDone }: { onDone: (code: string) => void }) {
   return (
     <div>
       <h2 className="font-display text-2xl font-extrabold text-sg-navy-900">Roleta de brindes</h2>
-      <p className="mt-1 text-sg-gray-600">Concluiu a dinâmica nos dias de roleta? Gira e sempre ganha.</p>
+      <p className="mt-1 text-sg-gray-600">Concluiu a dinâmica nos dias de roleta? Gire e torça pelo 🎁.</p>
 
       <div className="mt-6" onTransitionEnd={onEnd}>
         <Wheel rotation={rotation} spinning={state !== "idle"} />

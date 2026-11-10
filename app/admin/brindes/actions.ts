@@ -87,3 +87,14 @@ export async function cancelAward(_: ActionResult | null, fd: FormData) {
     return "Cancelado e estoque devolvido.";
   });
 }
+
+/** Chance de ganhar por giro da roleta (0 a 100%). */
+export async function updateWinChance(_: ActionResult | null, fd: FormData) {
+  return safe(async () => {
+    const ctx = await adminAction();
+    const pct = z.coerce.number().int().min(0, "Mínimo 0%").max(100, "Máximo 100%").parse(fd.get("wheel_win_pct"));
+    await sql`update sipatgo.campaigns set wheel_win_pct = ${pct} where id = ${ctx.campaign.id}`;
+    revalidatePath("/admin/brindes");
+    return `Chance de ganhar: ${pct}% por giro.`;
+  });
+}

@@ -34,7 +34,7 @@ export const ENGAGEMENT_FEATURES: Feature[] = [
   {
     icon: FerrisWheel,
     title: "Roleta de brindes",
-    description: "Na quarta e na sexta, quem conclui o dia gira e sempre ganha. O RH é avisado na hora com o código de retirada.",
+    description: "Nos dias de roleta, quem conclui o dia gira. O RH define a chance de ganhar e o estoque; quem ganha recebe um código de retirada e o RH é avisado na hora.",
   },
   {
     icon: Award,
@@ -97,7 +97,7 @@ export const FEATURE_BLOCKS: FeatureBlock[] = [
     id: "roleta",
     title: "Roleta e brindes",
     icon: FerrisWheel,
-    lead: "Todo giro ganha. O RH fica sabendo na hora.",
+    lead: "Sorteio justo, no servidor. O RH define a chance e fica sabendo na hora.",
     bullets: [
       "Sorteio no servidor, ponderado pelo peso e restrito ao estoque.",
       "O participante recebe só um código de retirada, nunca o nome do brinde.",
