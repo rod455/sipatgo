@@ -106,6 +106,26 @@ export function permutation(n: number, seed: string): number[] {
   return arr;
 }
 
+/**
+ * Ordem da coluna da direita no "Ligue os Pares": permutação sem pontos fixos
+ * (algoritmo de Sattolo), então nenhum par aparece alinhado na mesma linha.
+ */
+export function pairOrder(n: number, seed: string): number[] {
+  const arr = Array.from({ length: n }, (_, i) => i);
+  if (n < 2) return arr;
+  const rnd = mulberry32(hashSeed(`${seed}:pairs`));
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * i); // j < i: gera um ciclo único, nunca fixa posição
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/** Ordem das alternativas de uma pergunta, por participante: perm[posição exibida] = índice original. */
+export function optionOrder(n: number, seed: string, itemIndex: number): number[] {
+  return permutation(n, `${seed}:opt:${itemIndex}`);
+}
+
 // ---------------------------------------------------------------------------
 // Configuração pública (sem respostas) enviada ao cliente
 // ---------------------------------------------------------------------------
@@ -124,7 +144,11 @@ export function publicConfig(type: ActivityType, config: unknown, seed: string):
     }
     case "timed_quiz": {
       const c = config as TimedQuizConfig;
-      return { type, items: c.items.map((i) => ({ question: i.question, options: i.options })), time_limit_s: c.time_limit_s ?? 15 };
+      return {
+        type,
+        items: c.items.map((i, k) => ({ question: i.question, options: optionOrder(i.options.length, seed, k).map((o) => i.options[o]) })),
+        time_limit_s: c.time_limit_s ?? 15,
+      };
     }
     case "find_errors": {
       const c = config as FindErrorsConfig;
@@ -132,12 +156,12 @@ export function publicConfig(type: ActivityType, config: unknown, seed: string):
     }
     case "match_pairs": {
       const c = config as MatchPairsConfig;
-      const perm = permutation(c.pairs.length, seed);
+      const perm = pairOrder(c.pairs.length, seed);
       return { type, left: c.pairs.map((p) => p.left), right: perm.map((orig) => c.pairs[orig].right) };
     }
     case "new_habits": {
       const c = config as NewHabitsConfig;
-      return { type, items: c.items.map((i) => ({ situation: i.situation, options: i.options })) };
+      return { type, items: c.items.map((i, k) => ({ situation: i.situation, options: optionOrder(i.options.length, seed, k).map((o) => i.options[o]) })) };
     }
   }
 }
@@ -184,7 +208,9 @@ export function checkAnswer(
     case "new_habits": {
       const it = (config as TimedQuizConfig | NewHabitsConfig).items[itemIndex];
       if (!it || answer.kind !== "choice") return { status: "ignored" };
-      return answer.index !== null && answer.index === it.correct_index
+      // o participante vê as alternativas embaralhadas: converte a posição tocada no índice original
+      const orig = answer.index === null ? null : optionOrder(it.options.length, seed, itemIndex)[answer.index];
+      return orig !== null && orig !== undefined && orig === it.correct_index
         ? { status: "correct", itemIndex, explanation: it.explanation }
         : { status: "wrong", itemIndex };
     }
@@ -193,7 +219,7 @@ export function checkAnswer(
       if (answer.kind !== "pair") return { status: "ignored" };
       const left = answer.left;
       if (!c.pairs[left] || alreadyCorrect.has(left)) return { status: "ignored" };
-      const perm = permutation(c.pairs.length, seed);
+      const perm = pairOrder(c.pairs.length, seed);
       const orig = perm[answer.right];
       if (orig === undefined) return { status: "ignored" };
       return orig === left

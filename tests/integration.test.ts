@@ -93,7 +93,12 @@ describe.skipIf(!url)("semana simulada (integração)", () => {
 
   function answerFor(type: string, cfg: Record<string, unknown>, i: number, view: import("@/lib/game").ActivityView): import("@/lib/activities").Answer {
     if (type === "true_false") return { kind: "bool", value: (cfg.items as { answer: boolean }[])[i].answer };
-    if (type === "timed_quiz" || type === "new_habits") return { kind: "choice", index: (cfg.items as { correct_index: number }[])[i].correct_index };
+    if (type === "timed_quiz" || type === "new_habits") {
+      // alternativas chegam embaralhadas: acha a posição exibida do texto correto
+      const it = (cfg.items as { options: string[]; correct_index: number }[])[i];
+      const shown = (view.public as { items: { options: string[] }[] }).items[i].options;
+      return { kind: "choice", index: shown.indexOf(it.options[it.correct_index]) };
+    }
     if (type === "match_pairs") {
       const right = (cfg.pairs as { right: string }[])[i].right;
       return { kind: "pair", left: i, right: (view.public as { right: string[] }).right.indexOf(right) };
@@ -108,7 +113,9 @@ describe.skipIf(!url)("semana simulada (integração)", () => {
       const right = (cfg.pairs as { right: string }[])[(i + 1) % 5].right;
       return { kind: "pair", left: i, right: (view.public as { right: string[] }).right.indexOf(right) };
     }
-    const c = (cfg.items as { correct_index: number }[])[i].correct_index;
+    const it = (cfg.items as { options: string[]; correct_index: number }[])[i];
+    const shown = (view.public as { items: { options: string[] }[] }).items[i].options;
+    const c = shown.indexOf(it.options[it.correct_index]);
     return { kind: "choice", index: c === 0 ? 1 : 0 };
   }
 

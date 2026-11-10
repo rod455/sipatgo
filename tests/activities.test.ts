@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkAnswer, permutation, publicConfig, validateConfig } from "@/lib/activities";
+import { checkAnswer, optionOrder, pairOrder, permutation, publicConfig, validateConfig } from "@/lib/activities";
 
 const tf = { items: [0, 1, 2, 3, 4].map((i) => ({ statement: `A${i}`, answer: i % 2 === 0, explanation: `E${i}` })) };
 const pairs = { pairs: [0, 1, 2, 3, 4].map((i) => ({ left: `L${i}`, right: `R${i}`, explanation: "" })) };
@@ -33,6 +33,18 @@ describe("dinâmicas", () => {
     expect(permutation(5, seed)).toEqual(permutation(5, seed));
     expect(permutation(5, seed)).not.toEqual([0, 1, 2, 3, 4]);
   });
+  it("ligue os pares: nenhum par fica alinhado na mesma linha, para qualquer participante", () => {
+    for (let k = 0; k < 2000; k++) {
+      const order = pairOrder(5, `p${k}:atividade`);
+      expect([...order].sort()).toEqual([0, 1, 2, 3, 4]);
+      order.forEach((orig, pos) => expect(orig).not.toBe(pos));
+    }
+  });
+  it("alternativas embaralhadas por participante: resposta certa em posições variadas", () => {
+    const counts = [0, 0, 0, 0];
+    for (let k = 0; k < 4000; k++) counts[optionOrder(4, `p${k}:a`, 0).indexOf(1)]++;
+    for (const c of counts) expect(c / 4000).toBeGreaterThan(0.2);
+  });
   it("encontre os erros: acerto, erro e repetido", () => {
     const hit = checkAnswer("find_errors", fe, 0, { kind: "click", x: 45, y: 15 }, "s");
     expect(hit).toMatchObject({ status: "correct", itemIndex: 2 });
@@ -42,7 +54,9 @@ describe("dinâmicas", () => {
   it("acerte em tempo: null = tempo esgotado = erro", () => {
     const q = { time_limit_s: 15, items: [0, 1, 2, 3, 4].map(() => ({ question: "q", options: ["a", "b", "c", "d"], correct_index: 2, explanation: "" })) };
     expect(checkAnswer("timed_quiz", q, 0, { kind: "choice", index: null }, "s").status).toBe("wrong");
-    expect(checkAnswer("timed_quiz", q, 0, { kind: "choice", index: 2 }, "s").status).toBe("correct");
+    const shownPos = optionOrder(4, "s", 0).indexOf(2); // posição em que a correta aparece para este participante
+    expect(checkAnswer("timed_quiz", q, 0, { kind: "choice", index: shownPos }, "s").status).toBe("correct");
+    expect(checkAnswer("timed_quiz", q, 0, { kind: "choice", index: (shownPos + 1) % 4 }, "s").status).toBe("wrong");
   });
 });
 

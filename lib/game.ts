@@ -5,7 +5,7 @@ import {
   type DayState,
 } from "./calendar";
 import {
-  checkAnswer, itemCount, permutation, publicConfig, type Answer, type ActivityType, type PublicActivity,
+  checkAnswer, itemCount, pairOrder, publicConfig, type Answer, type ActivityType, type PublicActivity,
 } from "./activities";
 import { itemScore, videoScore, VIDEO_MIN_PCT, type ActivityScoring } from "./scoring";
 
@@ -201,7 +201,7 @@ export async function getActivityView(p: Participant, dayIndex: number): Promise
   }
   let matched_right: Record<number, number> | undefined;
   if (a.type === "match_pairs") {
-    const perm = permutation(total, seedFor(p, a.id));
+    const perm = pairOrder(total, seedFor(p, a.id));
     matched_right = {};
     for (const c of correct) matched_right[perm.indexOf(c.item_index)] = c.item_index;
   }

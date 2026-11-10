@@ -3,6 +3,7 @@ import { HttpError } from "./auth";
 import { dayContext } from "./game";
 import { generateWordSearch, type WordSearch } from "./wordsearch";
 import { evaluateBadges } from "./badges";
+import { optionOrder } from "./activities";
 import type { Participant } from "./types";
 
 export type FamilyGameView =
@@ -21,7 +22,13 @@ export async function getFamilyGame(p: Participant, dayIndex: number): Promise<F
     const words = (g.config.words as string[]) ?? [];
     return { id: g.id, type: "word_search", title, puzzle: generateWordSearch(words, g.id, Number(g.config.size ?? 10)), done: !!done };
   }
-  return { id: g.id, type: "light_quiz", title, items: (g.config.items as never) ?? [], done: !!done };
+  // alternativas embaralhadas por participante (a correção é no aparelho, então remapeia o índice certo)
+  const raw = (g.config.items as { question: string; options: string[]; correct_index: number; explanation?: string }[]) ?? [];
+  const items = raw.map((it, k) => {
+    const order = optionOrder(it.options.length, `${p.id}:${g.id}`, k);
+    return { ...it, options: order.map((o) => it.options[o]), correct_index: order.indexOf(it.correct_index) };
+  });
+  return { id: g.id, type: "light_quiz", title, items, done: !!done };
 }
 
 export async function completeFamilyGame(p: Participant, gameId: string) {
