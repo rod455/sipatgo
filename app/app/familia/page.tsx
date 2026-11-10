@@ -5,13 +5,19 @@ import { PageTitle, Empty } from "@/components/ui";
 import { FamilyGame } from "./FamilyGame";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { now } from "@/lib/clock";
+import { localDate } from "@/lib/dates";
 
 export default async function FamilyPage({ searchParams }: { searchParams: Promise<{ dia?: string }> }) {
   const { participant: p, company } = await requireViewer();
   const today = await getToday(p, company);
   const released = today?.days.filter((d) => d.state !== "locked").map((d) => d.day_index) ?? [];
   const wanted = Number((await searchParams).dia);
-  const day = released.includes(wanted) ? wanted : released[released.length - 1];
+  // Padrão: o dia de hoje no calendário da campanha; senão o último dia já passado; senão o primeiro liberado.
+  const todayStr = localDate(now(), company.timezone || "America/Sao_Paulo");
+  const open = (today?.days ?? []).filter((d) => released.includes(d.day_index));
+  const current = open.find((d) => d.date === todayStr) ?? [...open].reverse().find((d) => d.date <= todayStr) ?? open[0];
+  const day = released.includes(wanted) ? wanted : current?.day_index;
   const game = day ? await getFamilyGame(p, day) : null;
   const history = await familyHistory(p);
   return (
