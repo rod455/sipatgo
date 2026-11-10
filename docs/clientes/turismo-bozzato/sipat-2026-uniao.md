@@ -14,9 +14,9 @@
 | Dia | Data | Tema | Dinâmica (nível) | Extra |
 |---|---|---|---|---|
 | 1 | Seg 07/12 | Estigma, diversidade e inclusão: vamos respeitar as diferenças? | Acerte em Tempo (médio) | 🎡 Roleta de brindes |
-| 2 | Ter 08/12 | 10 mandamentos para prevenir acidentes no trabalho | Ligue os Pares (médio) | 🎡 Roleta de brindes |
+| 2 | Ter 08/12 | 10 mandamentos para prevenir acidentes no trabalho | Ligue os Pares (médio) | — |
 | 3 | Qua 09/12 | Coleguismo não é piada ofensiva: o limite do respeito | Fato ou Fake (médio) | 📍 Evento presencial (a confirmar) |
-| 4 | Qui 10/12 | Comportamento seguro: atitudes que evitam riscos na empresa e no trânsito | Novos Hábitos (médio) | 📍 Profissional de saúde (a confirmar) |
+| 4 | Qui 10/12 | Comportamento seguro: atitudes que evitam riscos na empresa e no trânsito | Novos Hábitos (médio) | 🎡 Roleta de brindes · 📍 Profissional de saúde (a confirmar) |
 | 5 | Sex 11/12 | Cuidado ativo: cuide de si, dos outros e permita-se ser cuidado | Acerte em Tempo (difícil) | 🏆 Encerramento e premiação |
 
 **Fio condutor da semana:** cada dia é uma "parada" da mesma viagem.
@@ -119,7 +119,7 @@
    - O que pode dar errado?
    - Como evito?
    - Estou com tudo de que preciso (EPI, ferramenta, autorização)?
-5. **Fechamento:** "Segurança não é sorte, é hábito. Responda o desafio e gire a roleta!"
+5. **Fechamento:** "Segurança não é sorte, é hábito. Agora é com você: responda o desafio de hoje!"
 
 **Dinâmica: Ligue os Pares (médio)**
 
@@ -300,7 +300,7 @@ Para definir o trecho: **Painel → Dias e dinâmicas →** escolha o dia → **
 O **cartaz A4, o banner e o post com QR code** saem prontos, com as cores e o logo da Bozzato, em **Painel → Divulgação**.
 
 ### Prêmios
-A roleta (dias 1 e 2) usa os brindes cadastrados em **Painel → Brindes**. Hoje são 5 brindes de exemplo; troque pelos brindes reais e pelo estoque antes de 07/12. A premiação final (top 3 e setor campeão) é entregue no evento de encerramento.
+A roleta (dias 1 e 4, com 30% de chance de ganhar por giro) usa os brindes cadastrados em **Painel → Brindes**. Hoje são 5 brindes de exemplo; troque pelos brindes reais e pelo estoque antes de 07/12. A premiação final (top 3 e setor campeão) é entregue no evento de encerramento.
 
 ### Conformidade NR-5 (o que ainda falta)
 - [ ] **Ata da CIPA aprovando a programação** (NR-5, item 5.3.1 "i"). Registre em Painel → Campanha → "Aprovação da CIPA".

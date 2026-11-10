@@ -57,3 +57,8 @@ body { @apply bg-white text-slate-900 antialiased; }
 @media print {
   .no-print { display: none !important; }
 }
+
+/* Ligue os Pares: a linha do par "se desenha" ao acertar */
+@keyframes sg-draw-line { from { stroke-dashoffset: 1 } to { stroke-dashoffset: 0 } }
+.sg-draw-line { stroke-dasharray: 1; animation: sg-draw-line .5s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .sg-draw-line { animation: none; stroke-dasharray: none; } }
