@@ -8,6 +8,9 @@ import {
   checkAnswer, itemCount, permutation, publicConfig, type Answer, type ActivityType, type PublicActivity,
 } from "./activities";
 import { itemScore, videoScore, VIDEO_MIN_PCT, type ActivityScoring } from "./scoring";
+
+/** Velocidade máxima aceita no vídeo do dia (1x, 1,5x, 2x...). */
+const MAX_PLAYBACK_RATE = 2;
 import { evaluateBadges } from "./badges";
 import { HttpError } from "./auth";
 import { pingScores } from "./realtime";
@@ -146,10 +149,11 @@ export async function completeVideo(p: Participant, dayIndex: number, watchedPct
   if (!view) throw new HttpError(400, "Inicie o vídeo antes de concluí-lo.");
   if (view.completed_at) return { ok: true, points: 0, already: true };
 
-  // anti-fraude: tempo mínimo de reprodução medido no servidor (85% da duração)
+  // anti-fraude: tempo mínimo de reprodução medido no servidor. Aceita assistir
+  // em até 2x (o player do YouTube permite); abaixo disso, é barra adiantada.
   const dur = ctx.day.video_duration_s ?? 0;
   const elapsed = (ctx.now.getTime() - new Date(view.started_at).getTime()) / 1000;
-  if (dur > 0 && elapsed < dur * 0.85 - 2) {
+  if (dur > 0 && elapsed < (dur * 0.85) / MAX_PLAYBACK_RATE - 2) {
     throw new HttpError(400, "Parece que o vídeo foi adiantado. Assista até o fim para liberar a dinâmica.");
   }
   const points = canPlay(ctx.state) ? videoScore(ctx.makeup, ctx.campaign.makeup_factor) : 0;

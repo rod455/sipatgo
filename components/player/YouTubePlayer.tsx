@@ -39,7 +39,7 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted, start, e
   const host = useRef<HTMLDivElement>(null);
   const [pct, setPct] = useState(alreadyDone ? 1 : 0);
   const [err, setErr] = useState("");
-  const state = useRef({ started: false, completed: alreadyDone, watched: 0, last: 0 });
+  const state = useRef({ started: false, completed: alreadyDone, watched: 0, last: 0, wall: 0, retryAt: 0 });
 
   useEffect(() => {
     let player: YTPlayer | null = null;
@@ -51,6 +51,7 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted, start, e
       state.current.completed = true;
       try {
         const r = await api<{ points: number }>("/api/game/video-complete", { day, watched_pct: Math.min(1, ratio) });
+        setErr("");
         onCompleted(r.points ?? 0);
       } catch (e) {
         state.current.completed = false;
@@ -80,6 +81,7 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted, start, e
             if (ev.data === YT.PlayerState.PLAYING && !state.current.started) {
               state.current.started = true;
               state.current.last = player!.getCurrentTime();
+              state.current.wall = Date.now();
               void api("/api/game/video-start", { day }).catch(() => {});
             }
             if (ev.data === YT.PlayerState.ENDED) {
@@ -95,15 +97,24 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted, start, e
       timer = setInterval(() => {
         if (!player || !state.current.started) return;
         const t = player.getCurrentTime();
+        const wallNow = Date.now();
+        const wallDelta = (wallNow - state.current.wall) / 1000;
         const delta = t - state.current.last;
         const inClip = t >= from - 1 && (!end || t <= end + 1);
-        if (delta > 0 && delta < 2.5 && inClip) state.current.watched += delta;
+        // conta o avanço natural do vídeo (até 2x a velocidade, com folga para o timer atrasar);
+        // saltos maiores que isso são a barra sendo arrastada e não contam
+        if (delta > 0 && delta <= Math.max(2.5, wallDelta * 2.2) && inClip) state.current.watched += delta;
         state.current.last = t;
+        state.current.wall = wallNow;
         const d = span(player);
         if (d > 0) {
           const ratio = Math.min(1, state.current.watched / d);
           setPct((p) => Math.max(p, ratio));
-          if (ratio >= 0.9 && !state.current.completed) void complete(ratio);
+          // se o servidor recusar (ex.: ainda cedo), tenta de novo a cada 5 s, sem martelar
+          if (ratio >= 0.9 && !state.current.completed && wallNow >= state.current.retryAt) {
+            state.current.retryAt = wallNow + 5000;
+            void complete(ratio);
+          }
         }
       }, 1000);
     });
