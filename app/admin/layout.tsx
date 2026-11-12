@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/auth";
 import { sql } from "@/lib/db";
@@ -36,6 +37,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <div className="ml-auto flex items-center gap-3">
             <ContextSwitcher campaigns={ctx.campaigns.map((c) => ({ id: c.id, name: c.name, status: c.status }))} campaignId={ctx.campaign?.id ?? null} companyId={ctx.adminCompany.id} />
             <Link href="/app" className="hidden text-sm font-medium text-slate-600 hover:text-slate-900 sm:inline">Ver como participante</Link>
+            <LogoutButton className="rounded-lg px-2 py-1.5 text-slate-600 hover:bg-slate-100 hover:text-slate-900" />
           </div>
         </div>
       </header>

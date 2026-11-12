@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 import type { Metadata } from "next";
 import { requireViewer, isAdmin } from "@/lib/auth";
 import { brandStyle } from "@/lib/theme";
@@ -28,6 +29,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <div className="flex items-center gap-2">
             {isAdmin(p) && <Link href="/admin" className="rounded-lg bg-white/15 px-2 py-1 text-xs font-semibold">Painel</Link>}
             <Link href="/app/perfil" aria-label="Perfil"><Avatar config={p.avatar_config} seed={p.id} size={34} className="ring-2 ring-white/70" /></Link>
+            <LogoutButton iconOnly label="Sair" className="rounded-lg bg-white/15 p-2 hover:bg-white/25" />
           </div>
         </div>
       </header>

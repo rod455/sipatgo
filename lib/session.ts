@@ -51,6 +51,9 @@ export async function setSession(p: SessionPayload) {
 export async function clearSession() {
   const jar = await cookies();
   jar.delete(SESSION_COOKIE);
+  // contexto do painel (empresa/campanha escolhidas) também sai
+  jar.delete("sg_admin_company");
+  jar.delete("sg_admin_campaign");
 }
 
 export async function getSession(): Promise<SessionPayload | null> {

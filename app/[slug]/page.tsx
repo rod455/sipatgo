@@ -1,9 +1,10 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { sql } from "@/lib/db";
 import { brandStyle } from "@/lib/theme";
 import { getViewer } from "@/lib/auth";
 import { LoginFlow } from "@/components/auth/LoginFlow";
+import { AlreadySignedIn } from "@/components/auth/AlreadySignedIn";
 import { MadeWith } from "@/components/app/MadeWith";
 import type { Company } from "@/lib/types";
 import { isCompanySlug } from "@/lib/slugs";
@@ -31,7 +32,7 @@ export default async function CompanyLogin({ params, searchParams }: { params: P
   const c = await load(slug);
   if (!c) notFound();
   const v = await getViewer();
-  if (v && v.company.id === c.id) redirect(next && next.startsWith("/") ? next : v.participant.role === "admin" || v.participant.role === "superadmin" ? "/admin" : "/app");
+  const dest = v ? (next && next.startsWith("/") ? next : v.participant.role === "admin" || v.participant.role === "superadmin" ? "/admin" : "/app") : null;
 
   return (
     <main style={brandStyle(c)} className="min-h-dvh bg-gradient-to-b from-brand to-brand-2">
@@ -47,7 +48,9 @@ export default async function CompanyLogin({ params, searchParams }: { params: P
           {c.theme && <p className="mt-1 opacity-90">{c.theme}</p>}
         </div>
         <div className="rounded-3xl bg-white p-6 shadow-xl">
-          <LoginFlow slug={c.slug} brandColors={[c.primary_color, c.secondary_color, c.accent_color]} next={next} />
+          {v && dest
+            ? <AlreadySignedIn name={v.participant.name} company={v.company.name} dest={dest} here={`/${c.slug}`} />
+            : <LoginFlow slug={c.slug} brandColors={[c.primary_color, c.secondary_color, c.accent_color]} next={next} />}
         </div>
         <div className="mt-auto pt-8 text-brand-fg"><MadeWith light /></div>
       </div>
