@@ -253,21 +253,21 @@
 
 ---
 
-## 2A. Vídeos do dia: palestras TEDx em português (trechos de 2 min)
+## 2A. Vídeos do dia (trechos selecionados)
 
-Os vídeos abaixo já estão cadastrados na plataforma e tocam dentro do app. Todas as palestras são brasileiras e permitem reprodução fora do YouTube.
+Todos estão cadastrados na plataforma e tocam dentro do app, com a abertura da logo SipatGo. Só os trechos abaixo são exibidos, em sequência. O tempo mínimo (90%), a trava contra pular o vídeo e a carga horária do certificado usam a duração dos trechos.
 
-**Falta definir o trecho de 2 minutos de cada uma.** Não consegui ler as transcrições automaticamente, porque o YouTube bloqueia esse acesso para robôs. Então os minutos exatos precisam ser escolhidos por alguém assistindo. Até lá, a plataforma toca a palestra inteira (13 a 19 min).
+| Dia | Vídeo | Trechos | Duração |
+|---|---|---|---|
+| 1 · 07/12 · Estigma, diversidade e inclusão | [Fernando Braga · Invisibilidade pública](https://www.youtube.com/watch?v=m1bL5I_TW_I) | 01:49–03:08 · 08:27–09:07 · 00:25–01:03 | 2min37s |
+| 2 · 08/12 · 10 mandamentos | [Portal SMS · Os 10 mandamentos da prevenção](https://www.youtube.com/watch?v=-to7rrlhD64) | vídeo completo (00:00–02:59) | 2min59s |
+| 3 · 09/12 · Coleguismo não é piada ofensiva | [Yuri Marçal · A quebra do estereótipo de humor negro](https://www.youtube.com/watch?v=HWRWeMK-Yjg) | 06:50–09:27 | 2min37s |
+| 4 · 10/12 · Comportamento seguro no trabalho e no trânsito | [Paola Antonini · A forma como você encara um momento pode mudar tudo](https://www.youtube.com/watch?v=m0mI4bA7wYY) | 00:10–02:11 | 2min01s |
+| 5 · 11/12 · Cuidado ativo | [Izabella Camargo · Antes que você adoeça, EPIs da Saúde Mental](https://www.youtube.com/watch?v=7SiWqsSvGwY) | 04:14–06:11 | 1min57s |
 
-Para definir o trecho: **Painel → Dias e dinâmicas →** escolha o dia → **Trecho: início** e **Trecho: fim** (ex.: `6:10` e `8:10`) → Salvar. Ao salvar, a duração do anti-pulo e da carga horária passa a ser a do trecho.
+**Tempo total dos cinco vídeos: 12min11s.**
 
-| Dia | Palestra | Duração | Por que essa | O que procurar para o trecho |
-|---|---|---|---|---|
-| 1 · Estigma e diversidade | [Invisibilidade pública · Fernando Braga · TEDxBeloHorizonte](https://www.youtube.com/watch?v=m1bL5I_TW_I) | 18:50 | O psicólogo varreu ruas de São Paulo por 8 anos, de uniforme de gari, e conta como passou a ser "invisível" para colegas e conhecidos. Mostra o estigma na prática, contra trabalhadores. | O relato de quando pessoas conhecidas passaram por ele de uniforme sem reconhecê-lo |
-| 2 · 10 mandamentos | [Os 10 mandamentos da prevenção · Portal SMS](https://www.youtube.com/watch?v=-to7rrlhD64) | 2:59 | Não há TEDx em português sobre o tema; este vídeo curto, de um canal de segurança do trabalho, explica exatamente os "10 mandamentos da prevenção". Não precisa cortar. | Vídeo inteiro. Confira se a lista dele bate com os 10 mandamentos da Bozzato (seção 2) e ajuste o roteiro do vídeo próprio, se gravarem um. |
-| 3 · Piada ofensiva | [A quebra do estereótipo de "humor negro" · Yuri Marçal · TEDxIbmec](https://www.youtube.com/watch?v=HWRWeMK-Yjg) | 16:17 | Humorista negro falando de piada, estereótipo e preconceito. É exatamente o limite entre rir junto e rir de alguém. | O trecho em que ele explica o que acontece com quem é alvo da piada |
-| 4 · Comportamento seguro e trânsito | [A forma como você encara um momento pode mudar tudo · Paola Antonini · TEDxNovaLima](https://www.youtube.com/watch?v=m0mI4bA7wYY) | 13:57 | Paola perdeu a perna em um acidente de trânsito. Dá rosto às consequências e faz a ponte com a prevenção. | O relato do acidente e do que mudou na vida dela (evite cortar só a parte de superação) |
-| 5 · Cuidado ativo | [Antes que você adoeça, EPIs da Saúde Mental · Izabella Camargo · TEDxSaoPaulo](https://www.youtube.com/watch?v=7SiWqsSvGwY) | 15:54 | Ela propõe tratar a saúde mental com o mesmo cuidado dos EPIs. Conversa direto com "cuide de si" e com a NR-1 (riscos psicossociais). | O momento em que ela apresenta os "EPIs da saúde mental" |
+Para alterar: **Painel → Dias e dinâmicas →** dia → campo **Trechos** (um por linha, ex.: `06:50-09:27`).
 
 **Alternativas, se preferir trocar:**
 - **Dia 1:** [A deficiência é uma característica humana · Deives Picáz · TEDxUnisinos](https://www.youtube.com/watch?v=lg5Ag0KBi7M) (8:52) ou [Qual a cara de nordestino? · Octávio Santiago · TEDxJoaoPessoaSalon](https://www.youtube.com/watch?v=-zbivWh8KTE) (13:18)
@@ -307,7 +307,7 @@ A roleta (dias 1 e 4, com 30% de chance de ganhar por giro) usa os brindes cadas
 - [x] Tema de prevenção ao assédio na programação (dia 3; NR-5, item 5.3.1 "j", e Lei 14.457/2022)
 - [x] Ações presenciais com registro de presença (eventos dos dias 3, 4 e 5)
 - [ ] Confirmar convidados e horários dos eventos dos dias 3 e 4
-- [ ] Definir o trecho de 2 min das palestras dos dias 1, 3, 4 e 5 (o vídeo do dia 2 já é curto)
+- [x] Vídeos e trechos dos 5 dias definidos (12min11s no total)
 - [ ] Importar a lista de colaboradores (CSV) e mudar o status da campanha para "Agendada"
 - [ ] Guardar o relatório final (PDF) e as listas de presença por 5 anos (NR-5, item 5.9.2)
 
