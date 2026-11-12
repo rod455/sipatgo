@@ -62,3 +62,10 @@ body { @apply bg-white text-slate-900 antialiased; }
 @keyframes sg-draw-line { from { stroke-dashoffset: 1 } to { stroke-dashoffset: 0 } }
 .sg-draw-line { stroke-dasharray: 1; animation: sg-draw-line .5s ease-out both; }
 @media (prefers-reduced-motion: reduce) { .sg-draw-line { animation: none; stroke-dasharray: none; } }
+
+/* Abertura do vídeo do dia: logo SipatGo */
+@keyframes sg-intro-logo { 0% { opacity: 0; transform: scale(.82) } 25% { opacity: 1; transform: scale(1) } 80% { opacity: 1; transform: scale(1.04) } 100% { opacity: 0; transform: scale(1.08) } }
+@keyframes sg-intro-tag { 0%, 20% { opacity: 0; transform: translateY(6px) } 40%, 80% { opacity: 1; transform: none } 100% { opacity: 0 } }
+.sg-intro-logo { animation: sg-intro-logo 2.6s ease-out both; }
+.sg-intro-tag { animation: sg-intro-tag 2.6s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .sg-intro-logo, .sg-intro-tag { animation: none; } }

@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useCallback, useState } from "react";
-import { YouTubePlayer } from "@/components/player/YouTubePlayer";
+import { YouTubePlayer, type VideoSegment } from "@/components/player/YouTubePlayer";
 import { buttonClass } from "@/components/ui";
 
-export function DayVideo({ day, videoId, alreadyDone, dayDone, activityLabel, canPlay, start, end }: {
+export function DayVideo({ day, videoId, alreadyDone, dayDone, activityLabel, canPlay, segments }: {
   day: number; videoId: string | null; alreadyDone: boolean; dayDone: boolean; activityLabel: string | null; canPlay: boolean;
-  start?: number | null; end?: number | null;
+  segments?: VideoSegment[] | null;
 }) {
   const [done, setDone] = useState(alreadyDone);
   const [pts, setPts] = useState<number | null>(null);
@@ -15,7 +15,7 @@ export function DayVideo({ day, videoId, alreadyDone, dayDone, activityLabel, ca
 
   return (
     <div className="space-y-4">
-      {videoId ? <YouTubePlayer videoId={videoId} day={day} alreadyDone={alreadyDone} onCompleted={onCompleted} start={start} end={end} /> : null}
+      {videoId ? <YouTubePlayer videoId={videoId} day={day} alreadyDone={alreadyDone} onCompleted={onCompleted} segments={segments} /> : null}
       {pts !== null && pts > 0 && <p className="animate-pop text-center font-display text-lg font-bold text-green-600">+{pts} pontos pelo vídeo!</p>}
       {dayDone ? (
         <Link href={`/app/dia/${day}/resultado`} className={buttonClass("secondary", "lg", "w-full")}>Ver resultado do dia</Link>

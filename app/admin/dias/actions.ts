@@ -22,19 +22,17 @@ export async function saveDay(_: ActionResult | null, fd: FormData) {
     const d = z.object({
       day_id: z.string().uuid(), title: z.string().trim().max(120), theme: z.string().trim().max(120),
       youtube: z.string().trim().max(300).default(""), video_duration_s: z.coerce.number().int().min(0).max(7200).default(0),
-      clip_start: z.string().trim().max(10).default(""), clip_end: z.string().trim().max(10).default(""),
+      clips: z.string().max(600).default(""),
     }).parse(Object.fromEntries(fd));
-    const start = parseClock(d.clip_start);
-    const end = parseClock(d.clip_end);
-    if (start === undefined || end === undefined) throw new HttpError(400, "Trecho inválido. Use minutos:segundos, ex.: 4:30.");
-    if (start !== null && end !== null && end <= start) throw new HttpError(400, "O fim do trecho precisa ser depois do início.");
-    // com trecho definido, a duração que vale (anti-pulo e carga horária) é a do trecho
-    const duration = start !== null && end !== null ? end - start : end !== null ? end : d.video_duration_s;
+    const segments = parseClips(d.clips);
+    // com trechos, a duração que vale (anti-pulo e carga horária) é a soma deles
+    const duration = segments.length ? segments.reduce((s, x) => s + (x.end - x.start), 0) : d.video_duration_s;
     await ownDay(d.day_id);
     const vid = d.youtube ? parseYoutubeId(d.youtube) : null;
     if (d.youtube && !vid) throw new HttpError(400, "Link do YouTube inválido.");
     await sql`update sipatgo.campaign_days set title = ${d.title}, theme = ${d.theme}, youtube_video_id = ${vid},
-              video_duration_s = ${duration || null}, video_start_s = ${vid ? start : null}, video_end_s = ${vid ? end : null},
+              video_duration_s = ${duration || null}, video_start_s = null, video_end_s = null,
+              video_segments = ${vid && segments.length ? sql.json(segments) : null},
               has_wheel = ${fd.get("has_wheel") === "on"} where id = ${d.day_id}`;
     revalidatePath("/admin/dias");
   });
@@ -137,4 +135,17 @@ function parseClock(v: string): number | null | undefined {
   const m = /^(?:(\d+):)?(\d{1,2}):(\d{2})$/.exec(v);
   if (!m) return undefined;
   return Number(m[1] ?? 0) * 3600 + Number(m[2]) * 60 + Number(m[3]);
+}
+
+/** "01:49-03:08" por linha (ou separados por vírgula) → trechos em segundos. */
+function parseClips(text: string): { start: number; end: number }[] {
+  const parts = text.split(/[\n,;]+/).map((x) => x.trim()).filter(Boolean);
+  return parts.map((part) => {
+    const m = /^(\S+)\s*(?:-|–|—|a|até)\s*(\S+)$/i.exec(part);
+    const start = m ? parseClock(m[1]) : undefined;
+    const end = m ? parseClock(m[2]) : undefined;
+    if (start == null || end == null) throw new HttpError(400, `Trecho inválido: “${part}”. Use início-fim, ex.: 01:49-03:08.`);
+    if (end <= start) throw new HttpError(400, `No trecho “${part}”, o fim precisa ser depois do início.`);
+    return { start, end };
+  });
 }
