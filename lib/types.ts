@@ -15,7 +15,7 @@ export type Campaign = {
   makeup_deadline: Date | null; makeup_factor: number; min_days_for_certificate: number;
   opening_message: string | null; opening_video_url: string | null;
   wall_challenge: string | null; wall_voting_deadline: Date | null;
-  status: "draft" | "scheduled" | "active" | "closed"; closed_at: Date | null; created_at: Date;
+  status: "draft" | "scheduled" | "active" | "closed"; closed_at: Date | null; created_at: Date; unlock_all_days?: boolean;
   cipa_approval: string | null;
 };
 

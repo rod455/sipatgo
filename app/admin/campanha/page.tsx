@@ -57,6 +57,10 @@ export default async function CampaignPage({ searchParams }: { searchParams: Pro
                   </Select>
                 </Field>
               </div>
+              <label className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+                <input type="checkbox" name="unlock_all_days" defaultChecked={!!c.unlock_all_days} className="mt-0.5 h-4 w-4" />
+                <span><b>Liberar todos os dias agora</b> para todos os colaboradores (teste ou treinamento), mesmo antes da data e com a campanha em rascunho. Desmarque no lançamento para voltar a liberar um dia por vez.</span>
+              </label>
               <Field label="Mensagem da liderança (exibida na segunda antes do conteúdo)"><Textarea name="opening_message" rows={3} defaultValue={c.opening_message ?? ""} /></Field>
               <Field label="Vídeo da liderança (YouTube, opcional)"><Input name="opening_video_url" defaultValue={c.opening_video_url ?? ""} placeholder="https://youtu.be/..." /></Field>
               <Field label="Desafio do mural"><Input name="wall_challenge" defaultValue={c.wall_challenge ?? ""} /></Field>
