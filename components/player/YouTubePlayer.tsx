@@ -14,10 +14,11 @@ declare global {
 type YTPlayer = {
   getCurrentTime(): number; getDuration(): number; destroy(): void;
   playVideo(): void; pauseVideo(): void; seekTo(s: number, allowSeekAhead: boolean): void; mute(): void; unMute(): void;
+  loadVideoById(o: { videoId: string; startSeconds?: number }): void;
 };
 
-/** Um trecho do vídeo, em segundos. `end` nulo = até o fim do vídeo. */
-export type VideoSegment = { start: number; end: number | null };
+/** Um trecho, em segundos. `end` nulo = até o fim do vídeo. `video` = outro vídeo do YouTube (padrão: o do dia). */
+export type VideoSegment = { start: number; end: number | null; video?: string | null };
 
 let apiPromise: Promise<void> | null = null;
 function loadApi(): Promise<void> {
@@ -55,7 +56,7 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted, segments
   const [err, setErr] = useState("");
   const segs: VideoSegment[] = segments && segments.length ? segments : [{ start: 0, end: null }];
   const segKey = JSON.stringify(segs);
-  const state = useRef({ started: false, completed: alreadyDone, watched: 0, last: 0, wall: 0, retryAt: 0, idx: 0, intro: false, finished: false });
+  const state = useRef({ started: false, completed: alreadyDone, watched: 0, last: 0, wall: 0, retryAt: 0, idx: 0, intro: false, finished: false, switching: false, cur: videoId });
 
   useEffect(() => {
     let player: YTPlayer | null = null;
@@ -89,12 +90,29 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted, segments
       else if (!state.current.completed) setErr("Parece que algumas partes foram puladas. Volte e assista o vídeo completo.");
     };
 
+    /** Vai para o próximo trecho: no mesmo vídeo, pula; em outro vídeo, carrega. */
+    const advance = (p: YTPlayer) => {
+      state.current.idx += 1;
+      const next = list[state.current.idx];
+      const vid = next.video || videoId;
+      state.current.last = next.start;
+      state.current.wall = Date.now();
+      if (vid !== state.current.cur) {
+        state.current.cur = vid;
+        state.current.switching = true;
+        p.loadVideoById({ videoId: vid, startSeconds: next.start });
+      } else {
+        p.seekTo(next.start, true);
+      }
+    };
+
     loadApi().then(() => {
       if (cancelled || !host.current || !window.YT) return;
       const el = document.createElement("div");
       host.current.appendChild(el);
+      state.current.cur = list[0].video || videoId;
       player = new window.YT.Player(el, {
-        videoId,
+        videoId: state.current.cur,
         width: "100%", height: "100%",
         playerVars: { rel: 0, modestbranding: 1, playsinline: 1, iv_load_policy: 3, start: Math.floor(list[0].start) },
         events: {
@@ -107,13 +125,23 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted, segments
               state.current.wall = Date.now();
               void api("/api/game/video-start", { day }).catch(() => {});
             }
-            if (ev.data === YT.PlayerState.ENDED && !state.current.finished) finish(player!);
+            if (ev.data === YT.PlayerState.PLAYING && state.current.switching) {
+              // novo vídeo da sequência começou: recomeça a medir daqui
+              state.current.switching = false;
+              state.current.last = player!.getCurrentTime();
+              state.current.wall = Date.now();
+            }
+            if (ev.data === YT.PlayerState.ENDED && !state.current.finished && !state.current.switching) {
+              // o vídeo acabou antes do fim marcado no trecho: segue para o próximo trecho
+              if (state.current.idx < list.length - 1) advance(player!);
+              else finish(player!);
+            }
           },
         },
       });
       timer = setInterval(() => {
         const p = player;
-        if (!p || !state.current.started || state.current.intro) return;
+        if (!p || !state.current.started || state.current.intro || state.current.switching) return;
         const t = p.getCurrentTime();
         const now = Date.now();
         const wallDelta = (now - state.current.wall) / 1000;
@@ -126,10 +154,7 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted, segments
           const tail = Math.min(segEnd, t) - state.current.last;
           if (tail > 0 && tail <= Math.max(1, wallDelta * 2.2 + 0.5)) state.current.watched += tail;
           if (state.current.idx < list.length - 1) {
-            state.current.idx += 1;
-            const next = list[state.current.idx];
-            p.seekTo(next.start, true);
-            state.current.last = next.start;
+            advance(p);
           } else {
             finish(p);
             state.current.last = t;
@@ -205,7 +230,7 @@ export function YouTubePlayer({ videoId, day, alreadyDone, onCompleted, segments
       </div>
       <p className="text-xs text-slate-500">
         {pct >= 0.9 ? "Vídeo concluído ✔" : `Assistido: ${Math.round(pct * 100)}% (mínimo 90%)`}
-        {segs.length > 1 ? ` · ${segs.length} trechos em sequência` : ""}
+        {segs.length > 1 ? ` · ${segs.length} ${segs.some((x) => x.video && x.video !== videoId) ? "vídeos" : "trechos"} em sequência` : ""}
       </p>
       {err && <p className="text-sm text-red-600">{err}</p>}
     </div>

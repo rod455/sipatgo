@@ -6,9 +6,9 @@ import { Button, Input, Label } from "@/components/ui";
 const clock = (n?: number | null) => (n == null ? "" : `${Math.floor(n / 60)}:${String(n % 60).padStart(2, "0")}`);
 
 export function YoutubeField({ initialId, initialDuration, initialSegments }: {
-  initialId: string | null; initialDuration: number | null; initialSegments?: { start: number; end: number | null }[] | null;
+  initialId: string | null; initialDuration: number | null; initialSegments?: { start: number; end: number | null; video?: string | null }[] | null;
 }) {
-  const [clips, setClips] = useState((initialSegments ?? []).map((s) => `${clock(s.start)}-${clock(s.end)}`).join("\n"));
+  const [clips, setClips] = useState((initialSegments ?? []).map((s) => `${s.video ? `https://youtu.be/${s.video} ` : ""}${clock(s.start)}-${clock(s.end)}`).join("\n"));
   const [url, setUrl] = useState(initialId ? `https://youtu.be/${initialId}` : "");
   const [dur, setDur] = useState(initialDuration ? String(initialDuration) : "");
   const [msg, setMsg] = useState("");
@@ -37,10 +37,10 @@ export function YoutubeField({ initialId, initialDuration, initialSegments }: {
       </div>
       <div className="sm:col-span-2 sm:max-w-md">
         <Label>Trechos (opcional)</Label>
-        <textarea name="clips" value={clips} onChange={(e) => setClips(e.target.value)} rows={3}
-          placeholder={"01:49-03:08\n08:27-09:07"}
+        <textarea name="clips" value={clips} onChange={(e) => setClips(e.target.value)} rows={4}
+          placeholder={"01:49-03:08\n08:27-09:07\nhttps://youtu.be/OUTRO_VIDEO 00:00-02:05"}
           className="w-full rounded-xl border border-brand-200 bg-white px-3 py-2 font-mono text-sm text-brand-ink outline-none focus:border-brand focus:ring-2 focus:ring-brand/30" />
-        <p className="mt-1 text-xs text-slate-500">Um trecho por linha, no formato início-fim. Tocam em sequência, na ordem da lista. Em branco, toca o vídeo inteiro.</p>
+        <p className="mt-1 text-xs text-slate-500">Um trecho por linha, no formato início-fim. Tocam em sequência, na ordem da lista. Para emendar outro vídeo, comece a linha com o link dele. Em branco, toca o vídeo inteiro.</p>
       </div>
     </div>
   );

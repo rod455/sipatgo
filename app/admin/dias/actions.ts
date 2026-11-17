@@ -22,14 +22,17 @@ export async function saveDay(_: ActionResult | null, fd: FormData) {
     const d = z.object({
       day_id: z.string().uuid(), title: z.string().trim().max(120), theme: z.string().trim().max(120),
       youtube: z.string().trim().max(300).default(""), video_duration_s: z.coerce.number().int().min(0).max(7200).default(0),
-      clips: z.string().max(600).default(""),
+      clips: z.string().max(3000).default(""),
     }).parse(Object.fromEntries(fd));
     const segments = parseClips(d.clips);
     // com trechos, a duração que vale (anti-pulo e carga horária) é a soma deles
     const duration = segments.length ? segments.reduce((s, x) => s + (x.end - x.start), 0) : d.video_duration_s;
     await ownDay(d.day_id);
-    const vid = d.youtube ? parseYoutubeId(d.youtube) : null;
+    let vid = d.youtube ? parseYoutubeId(d.youtube) : null;
     if (d.youtube && !vid) throw new HttpError(400, "Link do YouTube inválido.");
+    if (!vid && segments[0]?.video) vid = segments[0].video;
+    // trecho do próprio vídeo do dia não precisa guardar o link
+    for (const x of segments) if (x.video === vid) delete x.video;
     await sql`update sipatgo.campaign_days set title = ${d.title}, theme = ${d.theme}, youtube_video_id = ${vid},
               video_duration_s = ${duration || null}, video_start_s = null, video_end_s = null,
               video_segments = ${vid && segments.length ? sql.json(segments) : null},
@@ -137,15 +140,27 @@ function parseClock(v: string): number | null | undefined {
   return Number(m[1] ?? 0) * 3600 + Number(m[2]) * 60 + Number(m[3]);
 }
 
-/** "01:49-03:08" por linha (ou separados por vírgula) → trechos em segundos. */
-function parseClips(text: string): { start: number; end: number }[] {
-  const parts = text.split(/[\n,;]+/).map((x) => x.trim()).filter(Boolean);
-  return parts.map((part) => {
+/**
+ * Trechos, um por linha (ou separados por ; ): "01:49-03:08". Para tocar outro
+ * vídeo na sequência, comece a linha com o link: "https://youtu.be/ID 00:00-02:05".
+ */
+function parseClips(text: string): { start: number; end: number; video?: string }[] {
+  const parts = text.split(/[\n;]+/).map((x) => x.trim()).filter(Boolean);
+  return parts.map((raw) => {
+    let part = raw;
+    let video: string | undefined;
+    const lead = /^(\S*(?:youtu\.be|youtube\.com)\S*|[A-Za-z0-9_-]{11})\s+(.+)$/.exec(part);
+    if (lead) {
+      const id = parseYoutubeId(lead[1]);
+      if (!id) throw new HttpError(400, `Link inválido no trecho “${raw}”.`);
+      video = id;
+      part = lead[2].trim();
+    }
     const m = /^(\S+)\s*(?:-|–|—|a|até)\s*(\S+)$/i.exec(part);
     const start = m ? parseClock(m[1]) : undefined;
     const end = m ? parseClock(m[2]) : undefined;
-    if (start == null || end == null) throw new HttpError(400, `Trecho inválido: “${part}”. Use início-fim, ex.: 01:49-03:08.`);
-    if (end <= start) throw new HttpError(400, `No trecho “${part}”, o fim precisa ser depois do início.`);
-    return { start, end };
+    if (start == null || end == null) throw new HttpError(400, `Trecho inválido: “${raw}”. Use início-fim, ex.: 01:49-03:08.`);
+    if (end <= start) throw new HttpError(400, `No trecho “${raw}”, o fim precisa ser depois do início.`);
+    return video ? { start, end, video } : { start, end };
   });
 }
